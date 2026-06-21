@@ -10,6 +10,10 @@ import ChapterOutline from "./pages/ChapterOutline/ChapterOutline";
 import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./pages/History/History";
 import Profile from "./pages/Profile/Profile";
+import Projects from "./pages/Projects/Projects";
+import ProjectDetails from "./pages/Projects/ProjectDetails";
+import ProblemStatement from "./pages/ResearchWriter/ProblemStatement";
+import Objectives from "./pages/ResearchWriter/Objectives";
 
 function App() {
   return (
@@ -64,6 +68,32 @@ function App() {
           </ProtectedRoute>
   }
 />
+        <Route
+            path="/projects"
+            element={
+          <ProtectedRoute>
+          <Projects />
+          </ProtectedRoute>
+  }
+/>
+        <Route
+            path="/projects/:id"
+            element={
+          <ProtectedRoute>
+          <ProjectDetails />
+          </ProtectedRoute>
+  }
+/>
+
+        <Route
+          path="/problem-statement"
+          element={<ProblemStatement />}
+/>
+        <Route
+          path="/objectives"
+          element={<Objectives />}
+/>
+
       </Routes>
     </BrowserRouter>
   );

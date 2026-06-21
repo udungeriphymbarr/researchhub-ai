@@ -201,6 +201,44 @@ const handleLogout = () => {
   </p>
 </Link>
 
+<Link
+  to="/projects"
+  className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition"
+>
+  <h2 className="text-xl font-semibold mb-2">
+    My Projects
+  </h2>
+
+  <p className="text-gray-500">
+    Organize all your research work.
+  </p>
+</Link>
+
+<Link
+  to="/problem-statement"
+  className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition"
+>
+  <h2 className="text-xl font-semibold mb-2">
+    AI Problem Statement
+  </h2>
+
+  <p className="text-gray-500">
+    Generate academic problem statements.
+  </p>
+</Link>
+
+<Link
+  to="/objectives"
+  className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition"
+>
+  <h2 className="text-xl font-semibold mb-2">
+    AI Objectives Generator
+  </h2>
+
+  <p className="text-gray-500">
+    Generate general and specific objectives.
+  </p>
+</Link>
       </div>
 
     </div>

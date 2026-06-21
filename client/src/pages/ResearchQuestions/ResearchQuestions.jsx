@@ -25,11 +25,12 @@ await fetch(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
+      body: JSON.stringify({
       userId: user.id,
-      type: "question",
-      input: topic,
-      output: generatedQuestions,
+      projectId,
+      type: "topic",
+      input: interest,
+      output: data.topics,
     }),
   }
 );

@@ -70,8 +70,39 @@ const deleteGeneration = async (req, res) => {
   }
 };
 
+const getProjectGenerations =
+async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const generations =
+      await Generation.find({
+        projectId,
+      }).sort({
+        createdAt: -1,
+      });
+
+    res.status(200).json({
+      success: true,
+      generations,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   saveGeneration,
   getGenerations,
   deleteGeneration,
+};
+
+module.exports = {
+  saveGeneration,
+  getGenerations,
+  deleteGeneration,
+  getProjectGenerations,
 };

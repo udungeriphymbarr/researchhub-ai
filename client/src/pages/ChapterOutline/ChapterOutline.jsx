@@ -29,10 +29,11 @@ function ChapterOutline() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: user.id,
-          type: "outline",
-          input: topic,
-          output: generatedOutline,
+        userId: user.id,
+        projectId,
+        type: "topic",
+        input: interest,
+        output: data.topics,
         }),
       }
     );

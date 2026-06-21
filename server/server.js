@@ -7,10 +7,10 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 
 const generationRoutes = require("./routes/generationRoutes");
-
 const userRoutes = require("./routes/userRoutes");
-
 const aiRoutes = require("./routes/aiRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const researchRoutes = require("./routes/researchRoutes");
 
 const app = express();
 
@@ -26,7 +26,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/generations", generationRoutes);
 app.use("/api/ai", aiRoutes);
-
+app.use("/api/projects", projectRoutes);
+app.use("/api/research", researchRoutes);
 // Test Route
 app.get("/", (req, res) => {
   res.send("ResearchHub AI API Running 🚀");

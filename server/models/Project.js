@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const generationSchema = new mongoose.Schema(
+const projectSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -8,24 +8,14 @@ const generationSchema = new mongoose.Schema(
       required: true,
     },
 
-    projectId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
-    },
-
-    type: {
+    title: {
       type: String,
       required: true,
     },
 
-    input: {
+    description: {
       type: String,
-      required: true,
-    },
-
-    output: {
-      type: [String],
-      required: true,
+      default: "",
     },
   },
   {
@@ -34,6 +24,6 @@ const generationSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model(
-  "Generation",
-  generationSchema
+  "Project",
+  projectSchema
 );

@@ -50,11 +50,12 @@ function TopicGenerator() {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                userId: user.id,
-                type: "topic",
-                input: `${course} - ${interest}`,
-                output: data.topics,
-              }),
+              userId: user.id,
+              projectId,
+              type: "topic",
+              input: interest,
+              output: data.topics,
+            }),
             }
           );
         }
