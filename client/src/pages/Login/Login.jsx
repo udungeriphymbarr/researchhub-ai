@@ -107,6 +107,15 @@ localStorage.setItem(
           </button>
         </form>
 
+        <div className="text-right mt-2">
+  <Link
+    to="/forgot-password"
+    className="text-blue-600 text-sm"
+  >
+    Forgot Password?
+  </Link>
+</div>
+
         <p className="text-center mt-6">
           Don't have an account?{" "}
           <Link

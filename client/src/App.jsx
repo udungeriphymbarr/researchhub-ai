@@ -22,6 +22,8 @@ import Abstract from "./pages/ResearchWriter/Abstract";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 function App() {
   return (
@@ -169,6 +171,16 @@ function App() {
               <Abstract />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route 
+          path="/reset-password/:token"
+          element={<ResetPassword />}
         />
       </Routes>
 

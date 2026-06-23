@@ -40,19 +40,19 @@ function Footer() {
       </h3>
 
       <p>
-        Email:
-        support@researchhubai.com
+        <a href="mailto:researchhubai.ng@gmail.com">Email Us</a>
+
       </p>
 
       <p>
-<a
-  href="https://wa.me/2348057663703"
-  target="_blank"
-  rel="noreferrer"
-  className="text-green-500 hover:underline"
->
-  Chat on WhatsApp
-</a>
+        <a
+          href="https://wa.me/2348057663703"
+          target="_blank"
+          rel="noreferrer"
+          className="text-green-500 hover:underline"
+        >
+         Chat on WhatsApp
+        </a>
       </p>
     </div>
 

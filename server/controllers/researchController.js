@@ -259,10 +259,54 @@ Include:
   }
 };
 
+const generateResearchQuestions =
+async (req, res) => {
+  try {
+    const { topic } = req.body;
+
+    const prompt = `
+You are an academic research supervisor.
+
+Generate:
+
+- 5 unique research questions
+- 3 research hypotheses
+- 1 main research objective
+
+Topic:
+${topic}
+
+Requirements:
+- Undergraduate level
+- Questions must be directly related to the topic
+- Make every output unique
+- Avoid generic templates
+`;
+
+    const content =
+      await generateAIContent(prompt);
+
+    res.json({
+      success: true,
+      content,
+    });
+
+  } catch (error) {
+    console.log(error.message);
+
+    res.json({
+      success: false,
+      message:
+        "Failed to generate research questions",
+    });
+  }
+};
+
 module.exports = {
   generateProblemStatement,
   generateObjectives,
   generateMethodology,
+  generateResearchQuestions,
   generateSignificance,
   generateLiteratureReview,
   generateAbstract,
