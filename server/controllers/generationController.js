@@ -94,11 +94,6 @@ async (req, res) => {
   }
 };
 
-module.exports = {
-  saveGeneration,
-  getGenerations,
-  deleteGeneration,
-};
 
 module.exports = {
   saveGeneration,

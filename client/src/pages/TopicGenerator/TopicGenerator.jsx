@@ -51,7 +51,6 @@ function TopicGenerator() {
               },
               body: JSON.stringify({
               userId: user.id,
-              projectId,
               type: "topic",
               input: interest,
               output: data.topics,

@@ -1,15 +1,32 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import exportProjectPDF from "../../utils/exportProjectPDF";
 
 function ProjectDetails() {
   const { id } = useParams();
 
-  const [generations, setGenerations] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [project, setProject] = useState(null);
+const [generations, setGenerations] = useState([]);
+const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchProject();
     fetchGenerations();
-  }, []);
+  }, [id]);
+
+  const fetchProject = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/projects/${id}`);
+
+      const data = await response.json();
+
+      if (data.success) {
+        setProject(data.project);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchGenerations = async () => {
     try {
@@ -42,54 +59,78 @@ function ProjectDetails() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+<div className="p-6">
+  <div className="mb-8">
 
-      {/* Header */}
+    <h1 className="text-4xl font-bold">
+      {project?.title}
+    </h1>
 
-      <h1 className="text-3xl font-bold mb-2">
-        Project Details
-      </h1>
+    <p className="text-gray-500 mt-2">
+      {project?.description}
+    </p>
 
-      <p className="text-gray-500 mb-8">
-        Manage all research generations
-        inside this project.
-      </p>
+    {generations.length > 0 && (
+      <button
+      onClick={() =>
+        exportProjectPDF(
+          project,
+          generations
+        )
+      }
+      className="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700"
+    >
+      Export PDF
+    </button>
+  )}
+
+</div>
 
       {/* Stats */}
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
 
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="text-gray-500">
-            Topics
-          </h3>
+  <div className="bg-white p-6 rounded-xl shadow text-center">
+    <h3 className="text-gray-500">
+      Topics
+    </h3>
 
-          <p className="text-3xl font-bold text-blue-600 mt-2">
-            {topics.length}
-          </p>
-        </div>
+    <p className="text-3xl font-bold text-blue-600 mt-2">
+      {topics.length}
+    </p>
+  </div>
 
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="text-gray-500">
-            Questions
-          </h3>
+  <div className="bg-white p-6 rounded-xl shadow text-center">
+    <h3 className="text-gray-500">
+      Questions
+    </h3>
 
-          <p className="text-3xl font-bold text-green-600 mt-2">
-            {questions.length}
-          </p>
-        </div>
+    <p className="text-3xl font-bold text-green-600 mt-2">
+      {questions.length}
+    </p>
+  </div>
 
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="text-gray-500">
-            Outlines
-          </h3>
+  <div className="bg-white p-6 rounded-xl shadow text-center">
+    <h3 className="text-gray-500">
+      Outlines
+    </h3>
 
-          <p className="text-3xl font-bold text-purple-600 mt-2">
-            {outlines.length}
-          </p>
-        </div>
+    <p className="text-3xl font-bold text-purple-600 mt-2">
+      {outlines.length}
+    </p>
+  </div>
 
-      </div>
+  <div className="bg-white p-6 rounded-xl shadow text-center">
+    <h3 className="text-gray-500">
+      Total Generations
+    </h3>
+
+    <p className="text-3xl font-bold text-orange-600 mt-2">
+      {generations.length}
+    </p>
+  </div>
+
+</div>
 
       {/* Loading */}
 
@@ -102,21 +143,19 @@ function ProjectDetails() {
       {/* Empty State */}
 
       {!loading &&
-        generations.length === 0 && (
-          <div className="bg-white p-8 rounded-xl shadow text-center">
+  generations.length === 0 && (
+    <div className="bg-white p-8 rounded-xl shadow text-center">
 
-            <h2 className="text-xl font-semibold mb-2">
-              No Generations Yet
-            </h2>
+      <h2 className="text-xl font-semibold mb-2">
+        No Generations Yet
+      </h2>
 
-            <p className="text-gray-500">
-              Start generating topics,
-              questions or outlines for
-              this project.
-            </p>
+      <p className="text-gray-500">
+        Start generating content for this project.
+      </p>
 
-          </div>
-        )}
+    </div>
+)}
 
       {/* History */}
 
@@ -146,18 +185,20 @@ function ProjectDetails() {
               {item.input}
             </p>
 
-            <ul className="space-y-2">
-              {item.output.map(
-                (result, index) => (
-                  <li
-                    key={index}
-                    className="border rounded-lg p-3"
-                  >
+            <div className="space-y-2">
+  {(Array.isArray(item.output)
+    ? item.output
+    : [item.output]
+  ).map((result, index) => (
+                <li
+                  key={index}
+                  className="border rounded-lg p-3"
+                >
                     {result}
                   </li>
                 )
               )}
-            </ul>
+            </div>
 
           </div>
         ))}

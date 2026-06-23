@@ -13,10 +13,7 @@ router.post("/", saveGeneration);
 
 router.get("/", getGenerations);
 
-router.get(
-  "/project/:projectId",
-  getProjectGenerations
-);
+router.get("/project/:projectId", getProjectGenerations);
 
 router.delete("/:id", deleteGeneration);
 

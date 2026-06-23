@@ -11,6 +11,7 @@ const generationSchema = new mongoose.Schema(
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
+      default: null,
     },
 
     type: {
@@ -23,10 +24,10 @@ const generationSchema = new mongoose.Schema(
       required: true,
     },
 
-    output: {
-      type: [String],
-      required: true,
-    },
+ output: {
+  type: mongoose.Schema.Types.Mixed,
+  required: true,
+},
   },
   {
     timestamps: true,

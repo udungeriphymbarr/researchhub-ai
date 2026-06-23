@@ -54,13 +54,13 @@ function Objectives() {
             "Content-Type":
               "application/json",
           },
-            body: JSON.stringify({
-            userId: user.id,
-            projectId: user.projectId,
-            type: "objectives",
-            input: topic,
-            output: [content],
-          }),
+body: JSON.stringify({
+  userId: user.id,
+  projectId: user.projectId,
+  type: "objectives",
+  input: topic,
+  output: [content],
+}),
         }
       );
 

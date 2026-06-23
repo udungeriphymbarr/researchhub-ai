@@ -44,7 +44,74 @@ const getProjects = async (req, res) => {
   }
 };
 
+const getProjectById = async (req, res) => {
+  try {
+    const project =
+      await Project.findById(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      project,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteProject = async (req, res) => {
+  try {
+    await Project.findByIdAndDelete(
+      req.params.id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Project deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const updateProject = async (req, res) => {
+  try {
+    const { title, description } =
+      req.body;
+
+    const project =
+      await Project.findByIdAndUpdate(
+        req.params.id,
+        {
+          title,
+          description,
+        },
+        {
+          new: true,
+        }
+      );
+
+    res.status(200).json({
+      success: true,
+      project,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
+  getProjectById,
+  deleteProject,
+  updateProject,
 };

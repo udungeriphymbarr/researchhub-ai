@@ -54,13 +54,13 @@ function ProblemStatement() {
             "Content-Type":
               "application/json",
           },
-            body: JSON.stringify({
-            userId: user.id,
-            projectId: user.projectId,
-            type: "problem-statement",
-            input: topic,
-            output: [content],
-          }),
+body: JSON.stringify({
+  userId: user.id,
+  projectId: user.projectId,
+  type: "problem-statement",
+  input: topic,
+  output: [content],
+}),
         }
       );
 
