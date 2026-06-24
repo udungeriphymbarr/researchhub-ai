@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import API from "../../api/api";
 
 function Signup() {
 const navigate = useNavigate();
@@ -52,7 +53,7 @@ try {
   setLoading(true);
 
   const response = await fetch(
-    "https://researchhub-api-k9pv.onrender.com/api/auth/register",
+    `${API}/api/auth/register`,
     {
       method: "POST",
       headers: {

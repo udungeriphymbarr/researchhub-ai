@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function ChapterOutline() {
   const [topic, setTopic] = useState("");
@@ -22,7 +23,7 @@ function ChapterOutline() {
     );
 
     await fetch(
-      "https://researchhub-api-k9pv.onrender.com/api/generations",
+      `${API}/api/generations`,
       {
         method: "POST",
         headers: {

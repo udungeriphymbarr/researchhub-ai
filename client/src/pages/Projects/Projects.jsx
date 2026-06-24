@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API from "../../api/api";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -28,7 +29,7 @@ const [editDescription,
       );
 
       const response = await fetch(
-        `https://researchhub-api-k9pv.onrender.com/api/projects?userId=${user.id}`
+        `${API}/api/projects?userId=${user.id}`
       );
 
       const data = await response.json();
@@ -55,7 +56,7 @@ const createProject = async () => {
     );
 
     const response = await fetch(
-      "https://researchhub-api-k9pv.onrender.com/api/projects",
+      `${API}/api/projects`,
       {
         method: "POST",
         headers: {
@@ -93,7 +94,7 @@ const createProject = async () => {
 
   try {
     const response = await fetch(
-      `https://researchhub-api-k9pv.onrender.com/api/projects/${id}`,
+      `${API}/api/projects/${id}`,
       {
         method: "DELETE",
       }
@@ -120,7 +121,7 @@ const startEdit = (project) => {
 const saveEdit = async () => {
   try {
     const response = await fetch(
-      `https://researchhub-api-k9pv.onrender.com/api/projects/${editingProject._id}`,
+      `${API}/api/projects/${editingProject._id}`,
       {
         method: "PUT",
         headers: {

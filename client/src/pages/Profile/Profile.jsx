@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function Profile() {
   const user = JSON.parse(
@@ -27,7 +28,7 @@ function Profile() {
     );
 
     const response = await fetch(
-      "https://researchhub-api-k9pv.onrender.com/api/users/profile",
+      `${API}/api/users/profile`,
       {
         method: "PUT",
         headers: {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function Methodology() {
   const [topic, setTopic] = useState("");
@@ -10,7 +11,7 @@ function Methodology() {
       setLoading(true);
 
       const response = await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/research/methodology",
+        `${API}/api/research/methodology`,
         {
           method: "POST",
           headers: {
@@ -47,7 +48,7 @@ function Methodology() {
       );
 
       await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/research/generations",
+        `${API}/api/research/generations`,
         {
           method: "POST",
           headers: {

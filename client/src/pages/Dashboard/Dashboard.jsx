@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import API from "../../api/api";
 
 function Dashboard() {
 const navigate = useNavigate();
@@ -26,7 +27,7 @@ localStorage.getItem("user")
 );
 
   const response = await fetch(
-    `https://researchhub-api-k9pv.onrender.com/api/generations?userId=${user.id}`
+    `${API}/api/generations?userId=${user.id}`
   );
 
   const data = await response.json();

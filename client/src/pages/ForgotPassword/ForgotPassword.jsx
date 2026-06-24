@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
+import API from "../../api/api";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ function ForgotPassword() {
       setLoading(true);
 
       const response = await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/auth/forgot-password",
+        `${API}/api/auth/forgot-password`,
         {
           method: "POST",
           headers: {

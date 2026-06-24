@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function TopicGenerator() {
   const [course, setCourse] = useState("");
@@ -17,7 +18,7 @@ function TopicGenerator() {
       setLoading(true);
 
       const response = await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/ai/topics",
+        `${API}/api/ai/topics`,
         {
           method: "POST",
           headers: {
@@ -43,7 +44,7 @@ function TopicGenerator() {
 
         if (user) {
           await fetch(
-            "https://researchhub-api-k9pv.onrender.com/api/generations",
+            `${API}/api/generations`,
             {
               method: "POST",
               headers: {

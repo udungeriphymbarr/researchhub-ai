@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function ResearchQuestions() {
   const [topic, setTopic] = useState("");
@@ -20,7 +21,7 @@ function ResearchQuestions() {
 
         const response =
           await fetch(
-            "https://researchhub-api-k9pv.onrender.com/api/research/research-questions",
+            `${API}/api/research/research-questions`,
             {
               method: "POST",
               headers: {
@@ -45,7 +46,7 @@ function ResearchQuestions() {
 
           if (user) {
             await fetch(
-              "https://researchhub-api-k9pv.onrender.com/api/generations",
+              `${API}/api/generations`,
               {
                 method: "POST",
                 headers: {

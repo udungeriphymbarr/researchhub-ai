@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function Significance() {
   const [topic, setTopic] = useState("");
@@ -10,7 +11,7 @@ function Significance() {
       setLoading(true);
 
       const response = await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/research/significance",
+        `${API}/api/research/significance`,
         {
           method: "POST",
           headers: {
@@ -47,7 +48,7 @@ function Significance() {
       );
 
       await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/generations",
+        `${API}/api/generations`,
         {
           method: "POST",
           headers: {

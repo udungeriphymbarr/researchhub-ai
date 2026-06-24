@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import exportProjectPDF from "../../utils/exportProjectPDF";
+import API from "../../api/api";
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const [loading, setLoading] = useState(true);
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`https://researchhub-api-k9pv.onrender.com/api/projects/${id}`);
+      const response = await fetch(`${API}/api/projects/${id}`);
 
       const data = await response.json();
 
@@ -31,7 +32,7 @@ const [loading, setLoading] = useState(true);
   const fetchGenerations = async () => {
     try {
       const response = await fetch(
-        `https://researchhub-api-k9pv.onrender.com/api/generations/project/${id}`
+        `${API}/api/generations/project/${id}`
       );
 
       const data = await response.json();

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API from "../../api/api";
 
 function History() {
   const [generations, setGenerations] = useState([]);
@@ -14,7 +15,7 @@ function History() {
       );
 
       const response = await fetch(
-        `https://researchhub-api-k9pv.onrender.com/api/generations?userId=${user.id}`
+        `${API}/api/generations?userId=${user.id}`
       );
 
       const data = await response.json();
@@ -30,7 +31,7 @@ function History() {
   const deleteGeneration = async (id) => {
     try {
       const response = await fetch(
-        `https://researchhub-api-k9pv.onrender.com/api/generations/${id}`,
+        `${API}/api/generations/${id}`,
         {
           method: "DELETE",
         }

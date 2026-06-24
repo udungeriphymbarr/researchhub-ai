@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../../api/api";
 
 function Login() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const handleLogin = async (e) => {
     setLoading(true);
 
     const response = await fetch(
-      "https://researchhub-api-k9pv.onrender.com/api/auth/login",
+      `${API}/api/auth/login`,
       {
         method: "POST",
         headers: {

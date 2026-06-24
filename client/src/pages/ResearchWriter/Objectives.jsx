@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../api/api";
 
 function Objectives() {
   const [topic, setTopic] = useState("");
@@ -10,7 +11,7 @@ function Objectives() {
       setLoading(true);
 
       const response = await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/research/objectives",
+        `${API}/api/research/objectives`,
         {
           method: "POST",
           headers: {
@@ -47,7 +48,7 @@ function Objectives() {
       );
 
       await fetch(
-        "https://researchhub-api-k9pv.onrender.com/api/generations",
+        `${API}/api/generations`,
         {
           method: "POST",
           headers: {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import API from "../../api/api";
 
 function ResetPassword() {
 
@@ -69,7 +70,7 @@ try {
 
   const response =
     await fetch(
-      `https://researchhub-api-k9pv.onrender.com/api/auth/reset-password/${token}`,
+      `${API}/api/auth/reset-password/${token}`,
       {
         method: "POST",
 
