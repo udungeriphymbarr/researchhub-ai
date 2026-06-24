@@ -18,7 +18,15 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://researchhub-ai-gamma.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Routes
@@ -33,16 +41,10 @@ app.get("/", (req, res) => {
   res.send("ResearchHub AI API Running 🚀");
 });
 
-app.get("/test-gemini", async (req, res) => {
-  res.json({
-    keyExists: !!process.env.GEMINI_API_KEY,
-    firstChars: process.env.GEMINI_API_KEY?.slice(0, 8),
-  });
-});
-
 // Start Server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
