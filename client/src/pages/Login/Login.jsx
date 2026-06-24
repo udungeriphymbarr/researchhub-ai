@@ -15,7 +15,7 @@ const handleLogin = async (e) => {
     setLoading(true);
 
     const response = await fetch(
-      "http://localhost:5000/api/auth/login",
+      "https://researchhub-api-k9pv.onrender.com/api/auth/login",
       {
         method: "POST",
         headers: {

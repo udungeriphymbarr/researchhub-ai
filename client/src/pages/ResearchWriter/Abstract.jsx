@@ -10,7 +10,7 @@ function Abstract() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/research/abstract",
+        "https://researchhub-api-k9pv.onrender.com/api/research/abstract",
         {
           method: "POST",
           headers: {
@@ -32,7 +32,7 @@ function Abstract() {
         );
 
         await fetch(
-          "http://localhost:5000/api/generations",
+          "https://researchhub-api-k9pv.onrender.com/api/generations",
           {
             method: "POST",
             headers: {

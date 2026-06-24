@@ -10,7 +10,7 @@ function Significance() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/research/significance",
+        "https://researchhub-api-k9pv.onrender.com/api/research/significance",
         {
           method: "POST",
           headers: {
@@ -47,7 +47,7 @@ function Significance() {
       );
 
       await fetch(
-        "http://localhost:5000/api/generations",
+        "https://researchhub-api-k9pv.onrender.com/api/generations",
         {
           method: "POST",
           headers: {

@@ -20,7 +20,7 @@ function ResearchQuestions() {
 
         const response =
           await fetch(
-            "http://localhost:5000/api/research/research-questions",
+            "https://researchhub-api-k9pv.onrender.com/api/research/research-questions",
             {
               method: "POST",
               headers: {
@@ -45,7 +45,7 @@ function ResearchQuestions() {
 
           if (user) {
             await fetch(
-              "http://localhost:5000/api/generations",
+              "https://researchhub-api-k9pv.onrender.com/api/generations",
               {
                 method: "POST",
                 headers: {

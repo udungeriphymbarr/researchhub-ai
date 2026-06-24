@@ -52,7 +52,7 @@ try {
   setLoading(true);
 
   const response = await fetch(
-    "http://localhost:5000/api/auth/register",
+    "https://researchhub-api-k9pv.onrender.com/api/auth/register",
     {
       method: "POST",
       headers: {

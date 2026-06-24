@@ -17,7 +17,7 @@ function TopicGenerator() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/ai/topics",
+        "https://researchhub-api-k9pv.onrender.com/api/ai/topics",
         {
           method: "POST",
           headers: {
@@ -43,7 +43,7 @@ function TopicGenerator() {
 
         if (user) {
           await fetch(
-            "http://localhost:5000/api/generations",
+            "https://researchhub-api-k9pv.onrender.com/api/generations",
             {
               method: "POST",
               headers: {

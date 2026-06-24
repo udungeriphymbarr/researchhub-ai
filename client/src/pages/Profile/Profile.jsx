@@ -27,7 +27,7 @@ function Profile() {
     );
 
     const response = await fetch(
-      "http://localhost:5000/api/users/profile",
+      "https://researchhub-api-k9pv.onrender.com/api/users/profile",
       {
         method: "PUT",
         headers: {

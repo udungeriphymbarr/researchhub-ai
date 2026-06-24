@@ -16,7 +16,7 @@ const [loading, setLoading] = useState(true);
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${id}`);
+      const response = await fetch(`https://researchhub-api-k9pv.onrender.com/api/projects/${id}`);
 
       const data = await response.json();
 
@@ -31,7 +31,7 @@ const [loading, setLoading] = useState(true);
   const fetchGenerations = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/generations/project/${id}`
+        `https://researchhub-api-k9pv.onrender.com/api/generations/project/${id}`
       );
 
       const data = await response.json();

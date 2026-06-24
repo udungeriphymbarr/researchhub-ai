@@ -22,7 +22,7 @@ function ChapterOutline() {
     );
 
     await fetch(
-      "http://localhost:5000/api/generations",
+      "https://researchhub-api-k9pv.onrender.com/api/generations",
       {
         method: "POST",
         headers: {

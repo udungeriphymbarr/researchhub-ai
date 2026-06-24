@@ -28,7 +28,7 @@ const [editDescription,
       );
 
       const response = await fetch(
-        `http://localhost:5000/api/projects?userId=${user.id}`
+        `https://researchhub-api-k9pv.onrender.com/api/projects?userId=${user.id}`
       );
 
       const data = await response.json();
@@ -55,7 +55,7 @@ const createProject = async () => {
     );
 
     const response = await fetch(
-      "http://localhost:5000/api/projects",
+      "https://researchhub-api-k9pv.onrender.com/api/projects",
       {
         method: "POST",
         headers: {
@@ -93,7 +93,7 @@ const createProject = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:5000/api/projects/${id}`,
+      `https://researchhub-api-k9pv.onrender.com/api/projects/${id}`,
       {
         method: "DELETE",
       }
@@ -120,7 +120,7 @@ const startEdit = (project) => {
 const saveEdit = async () => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/projects/${editingProject._id}`,
+      `https://researchhub-api-k9pv.onrender.com/api/projects/${editingProject._id}`,
       {
         method: "PUT",
         headers: {

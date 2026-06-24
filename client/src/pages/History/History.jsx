@@ -14,7 +14,7 @@ function History() {
       );
 
       const response = await fetch(
-        `http://localhost:5000/api/generations?userId=${user.id}`
+        `https://researchhub-api-k9pv.onrender.com/api/generations?userId=${user.id}`
       );
 
       const data = await response.json();
@@ -30,7 +30,7 @@ function History() {
   const deleteGeneration = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/generations/${id}`,
+        `https://researchhub-api-k9pv.onrender.com/api/generations/${id}`,
         {
           method: "DELETE",
         }

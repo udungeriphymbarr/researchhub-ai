@@ -10,7 +10,7 @@ function Methodology() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/research/methodology",
+        "https://researchhub-api-k9pv.onrender.com/api/research/methodology",
         {
           method: "POST",
           headers: {
@@ -47,7 +47,7 @@ function Methodology() {
       );
 
       await fetch(
-        "http://localhost:5000/api/research/generations",
+        "https://researchhub-api-k9pv.onrender.com/api/research/generations",
         {
           method: "POST",
           headers: {

@@ -26,7 +26,7 @@ localStorage.getItem("user")
 );
 
   const response = await fetch(
-    `http://localhost:5000/api/generations?userId=${user.id}`
+    `https://researchhub-api-k9pv.onrender.com/api/generations?userId=${user.id}`
   );
 
   const data = await response.json();
