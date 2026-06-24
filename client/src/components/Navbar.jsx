@@ -43,7 +43,7 @@ function Navbar() {
 
         {/* Navigation */}
 
-        <div className="flex items-center gap-6">
+        <div className="hidden md:flex gap-6">
 
           <Link
             to="/"
