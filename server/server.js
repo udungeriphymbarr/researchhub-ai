@@ -22,11 +22,12 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://researchhub-ai-gamma.vercel.app",
+      "https://researchhub-ai-one.vercel.app"
     ],
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 // Routes
