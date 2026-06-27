@@ -1,11 +1,11 @@
 const express = require("express");
 
 const {
-  generateTopicsAI,
+    generateAI,
 } = require("../controllers/aiController");
 
 const router = express.Router();
 
-router.post("/topics", generateTopicsAI);
+router.post("/generate", generateAI);
 
 module.exports = router;

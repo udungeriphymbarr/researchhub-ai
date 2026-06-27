@@ -70,14 +70,15 @@ const deleteGeneration = async (req, res) => {
   }
 };
 
-const getProjectGenerations =
-async (req, res) => {
+const getProjectGenerations = async (
+  req,
+  res
+) => {
   try {
-    const { projectId } = req.params;
 
     const generations =
       await Generation.find({
-        projectId,
+        projectId: req.params.id,
       }).sort({
         createdAt: -1,
       });
@@ -86,11 +87,14 @@ async (req, res) => {
       success: true,
       generations,
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 

@@ -1,115 +1,159 @@
 const {
-generateAIResponse,
+  generateAIResponse,
 } = require("../services/aiService");
 
-const generateTopicsAI = async (
-req,
-res
-) => {
-try {
-const { course, interest } =
-req.body;
+const generateAI = async (req, res) => {
+  try {
+    const {
+      type,
+      course,
+      prompt,
+    } = req.body;
 
-const prompt = `
+    let aiPrompt = "";
 
-Generate 10 unique undergraduate research project topics.
+    switch (type) {
+      case "topic":
+        aiPrompt = `
+Generate 10 unique undergraduate research topics.
 
-Department: ${course}
-Area of Interest: ${interest}
+Department:
+${course}
 
-Return only topics.
-One topic per line.
+Area of Interest:
+${prompt}
+
+Rules:
+- Undergraduate level
+- Modern topics
+- One topic per line
+- No numbering
 `;
+        break;
 
-const response =
-  await generateAIResponse(
-    prompt
-  );
-
-const topics = response
-  .split("\n")
-  .filter(
-    (item) =>
-      item.trim() !== ""
-  );
-
-res.status(200).json({
-  success: true,
-  topics,
-});
-
-} catch (error) {
-console.log(error);
-
-res.status(500).json({
-  success: false,
-  message:
-    "Failed to generate topics",
-});
-
-}
-};
-
-
-const generateQuestions = async (
-req,
-res
-) => {
-try {
-const { course, interest } =
-req.body;
-
-const prompt = `
-You are an academic research supervisor.
+      case "question":
+        aiPrompt = `
+You are an academic supervisor.
 
 Generate:
 
-- 5 unique research questions
-- 3 research hypotheses
-- 1 main research objective
+• 5 Research Questions
 
-Topic:
-${topic}
+Research Topic:
+
+${prompt}
+
+Rules:
+
+- Undergraduate level
+
+- No explanations
+
+- One question per line
+`;
+        break;
+
+      case "objective":
+        aiPrompt = `
+Generate:
+
+• One General Objective
+
+• Five Specific Objectives
+
+Research Topic:
+
+${prompt}
+
+Return only objectives.
+`;
+        break;
+
+      case "literature":
+        aiPrompt = `
+Write a Literature Review for:
+
+${prompt}
 
 Requirements:
+
 - Undergraduate level
-- Questions must be directly related to the topic
-- Make every output unique
-- Avoid generic templates
+
+- Academic writing
+
+- Clear headings
+
+- Around 700 words
 `;
+        break;
 
-const response =
-  await generateAIResponse(
-    prompt
-  );
+      case "methodology":
+        aiPrompt = `
+Write Chapter Three Methodology.
 
-const topics = response
-  .split("\n")
-  .filter(
-    (item) =>
-      item.trim() !== ""
-  );
+Topic:
 
-res.status(200).json({
-  success: true,
-  topics,
-});
+${prompt}
 
-} catch (error) {
-console.log(error);
+Include:
 
-res.status(500).json({
-  success: false,
-  message:
-    "Failed to generate questions",
-});
+Research Design
 
-}
+Study Area
+
+Population
+
+Sampling
+
+Data Collection
+
+Data Analysis
+`;
+        break;
+
+      case "abstract":
+        aiPrompt = `
+Write an academic Abstract.
+
+Research Topic:
+
+${prompt}
+
+Maximum 300 words.
+`;
+        break;
+
+      default:
+        return res.status(400).json({
+          success: false,
+          message: "Invalid AI tool."
+        });
+    }
+
+    const response =
+      await generateAIResponse(aiPrompt);
+
+    const output = response
+      .split("\n")
+      .filter((item) => item.trim() !== "");
+
+    res.status(200).json({
+      success: true,
+      output,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "AI Generation Failed",
+    });
+
+  }
 };
 
-
-
 module.exports = {
-generateTopicsAI,
-generateQuestions,
+  generateAI,
 };
