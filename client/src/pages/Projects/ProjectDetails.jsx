@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import exportProjectPDF from "../../utils/exportProjectPDF";
 import API from "../../api/api";
+import AIWorkspace from "../../components/project/AIWorkspace";
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -9,6 +10,7 @@ function ProjectDetails() {
 const [project, setProject] = useState(null);
 const [generations, setGenerations] = useState([]);
 const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     fetchProject();
@@ -34,6 +36,10 @@ const [loading, setLoading] = useState(true);
       const response = await fetch(
         `${API}/api/generations/project/${id}`
       );
+
+const refreshWorkspace = () => {
+  fetchGenerations();
+};
 
       const data = await response.json();
 
@@ -61,13 +67,13 @@ const [loading, setLoading] = useState(true);
 
   return (
 <div className="p-6">
-  <div className="mb-8">
+  <div className="bg-white rounded-2xl shadow p-8 mb-8">
 
-    <h1 className="text-4xl font-bold">
+    <h1 className="text-4xl font-bold text-gray-900">
       {project?.title}
     </h1>
 
-    <p className="text-gray-500 mt-2">
+    <p className="text-gray-500 mt-3 max-w-3xl">
       {project?.description}
     </p>
 
@@ -79,7 +85,7 @@ const [loading, setLoading] = useState(true);
           generations
         )
       }
-      className="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700"
+      className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl transition"
     >
       Export PDF
     </button>
@@ -91,7 +97,7 @@ const [loading, setLoading] = useState(true);
 
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
 
-  <div className="bg-white p-6 rounded-xl shadow text-center">
+  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
     <h3 className="text-gray-500">
       Topics
     </h3>
@@ -101,7 +107,7 @@ const [loading, setLoading] = useState(true);
     </p>
   </div>
 
-  <div className="bg-white p-6 rounded-xl shadow text-center">
+  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
     <h3 className="text-gray-500">
       Questions
     </h3>
@@ -111,7 +117,7 @@ const [loading, setLoading] = useState(true);
     </p>
   </div>
 
-  <div className="bg-white p-6 rounded-xl shadow text-center">
+  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
     <h3 className="text-gray-500">
       Outlines
     </h3>
@@ -121,7 +127,7 @@ const [loading, setLoading] = useState(true);
     </p>
   </div>
 
-  <div className="bg-white p-6 rounded-xl shadow text-center">
+  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
     <h3 className="text-gray-500">
       Total Generations
     </h3>
@@ -133,29 +139,60 @@ const [loading, setLoading] = useState(true);
 
 </div>
 
+{/* AI Workspace */}
+
+<AIWorkspace
+    projectId={id}
+    onGenerate={fetchGenerations}
+/>
+
       {/* Loading */}
 
       {loading && (
-        <div className="bg-white p-6 rounded-xl shadow">
-          Loading...
-        </div>
+        <div className="bg-white rounded-2xl shadow p-10 text-center">
+
+<div className="text-6xl mb-5">
+🤖
+</div>
+
+<h2 className="text-2xl font-bold">
+
+Nothing Generated Yet
+
+</h2>
+
+<p className="text-gray-500 mt-3">
+
+Use the AI Workspace above to begin generating research content for this project.
+
+</p>
+
+</div>
       )}
 
       {/* Empty State */}
 
       {!loading &&
   generations.length === 0 && (
-    <div className="bg-white p-8 rounded-xl shadow text-center">
+   <div className="bg-white rounded-2xl shadow p-10 text-center">
 
-      <h2 className="text-xl font-semibold mb-2">
-        No Generations Yet
-      </h2>
+<div className="text-6xl mb-5">
+🤖
+</div>
 
-      <p className="text-gray-500">
-        Start generating content for this project.
-      </p>
+<h2 className="text-2xl font-bold">
 
-    </div>
+Nothing Generated Yet
+
+</h2>
+
+<p className="text-gray-500 mt-3">
+
+Use the AI Workspace above to begin generating research content for this project.
+
+</p>
+
+</div>
 )}
 
       {/* History */}
@@ -165,7 +202,7 @@ const [loading, setLoading] = useState(true);
         {generations.map((item) => (
           <div
             key={item._id}
-            className="bg-white p-5 rounded-xl shadow"
+           className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
           >
 
             <div className="flex justify-between items-center mb-3">
@@ -185,7 +222,11 @@ const [loading, setLoading] = useState(true);
             <p className="font-semibold mb-3">
               {item.input}
             </p>
+          <h2 className="text-2xl font-bold mb-6">
 
+Generation History
+
+</h2>
             <div className="space-y-2">
   {(Array.isArray(item.output)
     ? item.output
@@ -193,7 +234,7 @@ const [loading, setLoading] = useState(true);
   ).map((result, index) => (
                 <li
                   key={index}
-                  className="border rounded-lg p-3"
+                  className="bg-gray-50 rounded-xl p-4 leading-7"
                 >
                     {result}
                   </li>
