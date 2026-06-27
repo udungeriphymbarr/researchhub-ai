@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import exportProjectPDF from "../../utils/exportProjectPDF";
 import API from "../../api/api";
 import AIWorkspace from "../../components/project/AIWorkspace";
+import GenerationCard from "../../components/project/GenerationCard";
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -31,27 +32,27 @@ const [loading, setLoading] = useState(true);
     }
   };
 
-  const fetchGenerations = async () => {
-    try {
-      const response = await fetch(
-        `${API}/api/generations/project/${id}`
-      );
+const fetchGenerations = async () => {
+  try {
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
 
-const refreshWorkspace = () => {
-  fetchGenerations();
-};
+    const response = await fetch(
+      `${API}/api/generations/project/${id}?userId=${user.id}`
+    );
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (data.success) {
-        setGenerations(data.generations);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    if (data.success) {
+      setGenerations(data.generations);
     }
-  };
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const topics = generations.filter(
     (item) => item.type === "topic"
@@ -199,51 +200,14 @@ Use the AI Workspace above to begin generating research content for this project
 
       <div className="space-y-4">
 
-        {generations.map((item) => (
-          <div
-            key={item._id}
-           className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
-          >
+{generations.map((item) => (
 
-            <div className="flex justify-between items-center mb-3">
+    <GenerationCard
+        key={item._id}
+        generation={item}
+    />
 
-              <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                {item.type}
-              </span>
-
-              <p className="text-sm text-gray-500">
-                {new Date(
-                  item.createdAt
-                ).toLocaleString()}
-              </p>
-
-            </div>
-
-            <p className="font-semibold mb-3">
-              {item.input}
-            </p>
-          <h2 className="text-2xl font-bold mb-6">
-
-Generation History
-
-</h2>
-            <div className="space-y-2">
-  {(Array.isArray(item.output)
-    ? item.output
-    : [item.output]
-  ).map((result, index) => (
-                <li
-                  key={index}
-                  className="bg-gray-50 rounded-xl p-4 leading-7"
-                >
-                    {result}
-                  </li>
-                )
-              )}
-            </div>
-
-          </div>
-        ))}
+))}
 
       </div>
 
