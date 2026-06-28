@@ -21,7 +21,7 @@ function ResearchQuestions() {
 
         const response =
           await fetch(
-            `${API}/api/research/research-questions`,
+            `${API}/api/ai/generate`,
             {
               method: "POST",
               headers: {
@@ -29,7 +29,8 @@ function ResearchQuestions() {
                   "application/json",
               },
               body: JSON.stringify({
-                topic,
+                type: "question",
+                prompt: topic,
               }),
             }
           );
@@ -38,7 +39,7 @@ function ResearchQuestions() {
           await response.json();
 
         if (data.success) {
-          setResult(data.content);
+          setResult(data.output);
 
           const user = JSON.parse(
             localStorage.getItem("user")
@@ -57,7 +58,7 @@ function ResearchQuestions() {
                   userId: user.id,
                   type: "question",
                   input: topic,
-                  output: [data.content],
+                  output: data.output,
                 }),
               }
             );

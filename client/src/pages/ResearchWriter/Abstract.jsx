@@ -6,27 +6,38 @@ function Abstract() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generateAbstract = async () => {
-    try {
-      setLoading(true);
+  const generateAbstract =
+    async () => {
+      if (!topic.trim()) {
+        alert(
+          "Please enter a research topic"
+        );
+        return;
+      }
 
-      const response = await fetch(
-        `${API}/api/research/abstract`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic,
-          }),
-        }
-      );
+      try {
+        setLoading(true);
+
+        const response =
+          await fetch(
+            `${API}/api/ai/generate`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                type: "abstract",
+                prompt: topic,
+              }),
+            }
+          );
 
       const data = await response.json();
 
       if (data.success) {
-        setContent(data.content);
+        setContent(data.output);
 
         const user = JSON.parse(
           localStorage.getItem("user")
@@ -44,7 +55,7 @@ function Abstract() {
           projectId: user.projectId,
           type: "abstract",
           input: topic,
-          output: [data.content],
+          output: data.output,
           }),
           }
         );

@@ -6,22 +6,33 @@ function ProblemStatement() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generateProblemStatement = async () => {
-    try {
-      setLoading(true);
+   const generateProblemStatement =
+    async () => {
+      if (!topic.trim()) {
+        alert(
+          "Please enter a research topic"
+        );
+        return;
+      }
 
-      const response = await fetch(
-        `${API}/api/research/problem-statement`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic,
-          }),
-        }
-      );
+      try {
+        setLoading(true);
+
+        const response =
+          await fetch(
+            `${API}/api/ai/generate`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                type: "problem-statement",
+                prompt: topic,
+              }),
+            }
+          );
 
       const data = await response.json();
 
@@ -30,7 +41,7 @@ function ProblemStatement() {
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to generate content");
+      alert("Failed to generate problem statement");
     } finally {
       setLoading(false);
     }

@@ -6,27 +6,38 @@ function Objectives() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generateObjectives = async () => {
-    try {
-      setLoading(true);
+  const generateObjectives =
+    async () => {
+      if (!topic.trim()) {
+        alert(
+          "Please enter a research topic"
+        );
+        return;
+      }
 
-      const response = await fetch(
-        `${API}/api/research/objectives`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic,
-          }),
-        }
-      );
+      try {
+        setLoading(true);
+
+        const response =
+          await fetch(
+            `${API}/api/ai/generate`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                type: "objectives",
+                prompt: topic,
+              }),
+            }
+          );
 
       const data = await response.json();
 
       if (data.success) {
-        setContent(data.content);
+        setContent(data.output);
       }
     } catch (error) {
       console.error(error);
@@ -48,7 +59,7 @@ function Objectives() {
       );
 
       await fetch(
-        `${API}/api/generations`,
+        `${API}/api/ai/generate`,
         {
           method: "POST",
           headers: {

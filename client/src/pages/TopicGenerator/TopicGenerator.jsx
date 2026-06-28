@@ -26,7 +26,7 @@ function TopicGenerator() {
       setLoading(true);
 
       const response = await fetch(
-        `${API}/api/ai/topics`,
+        `${API}/api/ai/generate`,
         {
           method: "POST",
           headers: {
@@ -34,8 +34,9 @@ function TopicGenerator() {
               "application/json",
           },
           body: JSON.stringify({
+            type: "topic",
             course,
-            interest,
+            prompt: interest,
           }),
         }
       );
@@ -47,7 +48,7 @@ function TopicGenerator() {
         return;
       }
 
-      setTopics(data.topics);
+      setTopics(data.output);
       setIsFallback(
         data.aiFallback || false
       );
@@ -70,7 +71,7 @@ function TopicGenerator() {
               projectId,
               type: "topic",
               input: interest,
-              output: data.topics,
+              output: data.output,
             }),
           }
         );

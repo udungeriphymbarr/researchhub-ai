@@ -6,22 +6,33 @@ function Significance() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generateSignificance = async () => {
-    try {
-      setLoading(true);
+  const generateSignificance =
+    async () => {
+      if (!topic.trim()) {
+        alert(
+          "Please enter a research topic"
+        );
+        return;
+      }
 
-      const response = await fetch(
-        `${API}/api/research/significance`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic,
-          }),
-        }
-      );
+      try {
+        setLoading(true);
+
+        const response =
+          await fetch(
+            `${API}/api/ai/generate`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                type: "significance",
+                prompt: topic,
+              }),
+            }
+          );
 
       const data = await response.json();
 

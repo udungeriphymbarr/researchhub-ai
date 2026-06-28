@@ -2,14 +2,21 @@ const Generation = require("../models/Generation");
 
 const saveGeneration = async (req, res) => {
   try {
-    const { userId, type, input, output } = req.body;
+const {
+    userId,
+    projectId,
+    type,
+    input,
+    output,
+} = req.body;
 
-    const generation = await Generation.create({
-      userId,
-      type,
-      input,
-      output,
-    });
+const generation = await Generation.create({
+    userId,
+    projectId,
+    type,
+    input,
+    output,
+});
 
     res.status(201).json({
       success: true,

@@ -32,10 +32,18 @@ function AIGeneratorModal({
 
     const handleGenerate = async () => {
 
-        if (!interest.trim()) {
-            alert("Please fill the field.");
-            return;
-        }
+if (!interest || interest.trim().length < 5) {
+    alert(
+      type === "topic"
+        ? "Please enter an area of interest."
+        : "Please enter a research topic."
+    );
+    return;
+}
+if (type === "topic" && !course.trim()) {
+    alert("Please enter your department/course.");
+    return;
+}
 
         try {
 
@@ -70,19 +78,29 @@ const result = data.output;
             const user = JSON.parse(
                 localStorage.getItem("user")
             );
+           
+    console.log({
+    userId: user.id,
+    projectId,
+    type,
+    input: interest,
+    output: result,
+});
+
+console.log("Project ID received:", projectId);
 
             await fetch(`${API}/api/generations`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    userId: user.id,
-                    projectId,
-                    type,
-                    input: interest,
-                    output: result,
-                }),
+body: JSON.stringify({
+    userId: user.id,
+    projectId,
+    type,
+    input: interest,
+    output: result,
+}),
             });
 
             alert("Generated Successfully ✅");

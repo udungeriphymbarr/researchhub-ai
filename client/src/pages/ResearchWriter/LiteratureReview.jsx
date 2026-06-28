@@ -6,27 +6,38 @@ function LiteratureReview() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generateLiteratureReview = async () => {
-    try {
-      setLoading(true);
+  const generateLiteratureReview =
+    async () => {
+      if (!topic.trim()) {
+        alert(
+          "Please enter a research topic"
+        );
+        return;
+      }
 
-      const response = await fetch(
-        `${API}/api/research/literature-review`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic,
-          }),
-        }
-      );
+      try {
+        setLoading(true);
+
+        const response =
+          await fetch(
+            `${API}/api/ai/generate`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                type: "literature-review",
+                prompt: topic,
+              }),
+            }
+          );
 
       const data = await response.json();
 
       if (data.success) {
-        setContent(data.content);
+        setContent(data.output);
       }
     } catch (error) {
       console.error(error);
