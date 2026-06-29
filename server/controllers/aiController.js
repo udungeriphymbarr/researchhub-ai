@@ -14,8 +14,10 @@ const generateAI = async (req, res) => {
 
     switch (type) {
       case "topic":
-        aiPrompt = `
-Generate 10 unique undergraduate research topics.
+aiPrompt = `
+You are an experienced university research supervisor.
+
+Generate 10 unique undergraduate research project topics.
 
 Department:
 ${course}
@@ -23,73 +25,98 @@ ${course}
 Area of Interest:
 ${prompt}
 
-Rules:
-- Undergraduate level
-- Modern topics
-- One topic per line
-- No numbering
+Requirements:
+
+• Suitable for undergraduate students
+• Practical and researchable
+• Current and relevant
+• Specific and clear
+• Avoid repetition
+• Do not number the topics
+• One topic per line
 `;
         break;
 
       case "question":
-        aiPrompt = `
-You are an academic supervisor.
-
-Generate:
-
-• 5 Research Questions
+aiPrompt = `
+You are an academic research supervisor.
 
 Research Topic:
 
 ${prompt}
 
+Generate:
+
+1. Five Research Questions
+
+2. Three Research Hypotheses
+
+3. One Null Hypothesis
+
+4. One Alternative Hypothesis
+
 Rules:
 
-- Undergraduate level
-
-- No explanations
-
-- One question per line
+• Undergraduate level
+• Clear academic language
+• No explanations
+• Use headings
 `;
         break;
 
       case "objective":
-        aiPrompt = `
+aiPrompt = `
+Research Topic:
+
+${prompt}
+
 Generate:
 
-• One General Objective
+GENERAL OBJECTIVE
 
-• Five Specific Objectives
+SPECIFIC OBJECTIVES
+(5)
+
+SCOPE OF STUDY
+
+DELIMITATION OF STUDY
+
+Use proper academic headings.
+`;
+        break;
+
+      case "literature":
+aiPrompt = `
+Write an undergraduate literature review.
 
 Research Topic:
 
 ${prompt}
 
-Return only objectives.
-`;
-        break;
+Include:
 
-      case "literature":
-        aiPrompt = `
-Write a Literature Review for:
+1. Introduction
 
-${prompt}
+2. Conceptual Review
+
+3. Theoretical Framework
+
+4. Empirical Review
+
+5. Knowledge Gap
 
 Requirements:
 
-- Undergraduate level
-
-- Academic writing
-
-- Clear headings
-
-- Around 700 words
+• Academic writing
+• Around 1000 words
+• Proper headings
+• No numbering inside paragraphs
 `;
         break;
 
       case "methodology":
-        aiPrompt = `
-Write Chapter Three Methodology.
+aiPrompt = `
+Write Chapter Three for this project.
 
 Topic:
 
@@ -97,27 +124,47 @@ ${prompt}
 
 Include:
 
-Research Design
+3.1 Research Design
 
-Study Area
+3.2 Study Area
 
-Population
+3.3 Population
 
-Sampling
+3.4 Sample Size
 
-Data Collection
+3.5 Sampling Technique
 
-Data Analysis
+3.6 Data Collection
+
+3.7 Data Analysis
+
+3.8 Ethical Considerations
+
+Write professionally.
 `;
         break;
 
       case "abstract":
-        aiPrompt = `
-Write an academic Abstract.
+aiPrompt = `
+Write an undergraduate research abstract.
 
-Research Topic:
+Topic:
 
 ${prompt}
+
+Include:
+
+Background
+
+Aim
+
+Methodology
+
+Results
+
+Conclusion
+
+Keywords
 
 Maximum 300 words.
 `;
