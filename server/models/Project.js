@@ -17,6 +17,11 @@ const projectSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+  selectedTopic: {
+  type: String,
+  default: "",
+},
   },
   {
     timestamps: true,

@@ -1,16 +1,54 @@
 const {
   generateAIResponse,
 } = require("../services/aiService");
+const Generation = require("../models/Generation");
 
 const generateAI = async (req, res) => {
   try {
-    const {
-      type,
-      course,
-      prompt,
-    } = req.body;
+const {
+    type,
+    course,
+    prompt,
+    projectId,
+} = req.body;
 
     let aiPrompt = "";
+
+    let projectContext = "";
+
+if (projectId) {
+
+    const history = await Generation.find({
+        projectId,
+    }).sort({
+        createdAt: 1,
+    });
+
+    if (history.length > 0) {
+
+        projectContext = history
+            .map(item => {
+
+                const output = Array.isArray(item.output)
+                    ? item.output.join("\n")
+                    : item.output;
+
+                return `
+${item.type.toUpperCase()}
+
+Prompt:
+${item.input}
+
+Result:
+${output}
+`;
+
+            })
+            .join("\n\n");
+
+    }
+
+}
 
     switch (type) {
       case "topic":

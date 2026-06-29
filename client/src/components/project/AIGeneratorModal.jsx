@@ -53,6 +53,7 @@ const body = {
     type,
     course,
     prompt: interest,
+    projectId,
 };
 
             const response = await fetch(

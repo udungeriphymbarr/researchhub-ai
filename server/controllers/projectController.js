@@ -108,10 +108,42 @@ const updateProject = async (req, res) => {
   }
 };
 
+const selectTopic = async (req, res) => {
+  try {
+
+    const { topic } = req.body;
+
+    const project =
+      await Project.findByIdAndUpdate(
+        req.params.id,
+        {
+          selectedTopic: topic,
+        },
+        {
+          new: true,
+        }
+      );
+
+    res.status(200).json({
+      success: true,
+      project,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
   getProjectById,
   deleteProject,
   updateProject,
+  selectTopic,
 };
