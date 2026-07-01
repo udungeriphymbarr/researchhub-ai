@@ -1,7 +1,13 @@
 const { generateAIResponse } = require("../services/aiService");
 const Project = require("../models/Project");
-const Generation = require("../models/Generation");
 const buildProjectMemory = require("../services/aiMemory");
+const validateProjectFlow = require("../services/projectFlow");
+
+
+
+// ======================================================
+// MAIN AI GENERATOR
+// ======================================================
 
 const generateAI = async (req, res) => {
   try {
@@ -12,40 +18,50 @@ const generateAI = async (req, res) => {
       projectId,
     } = req.body;
 
-    // ===========================
-    // Load Project + AI Memory
-    // ===========================
-
     let project = null;
-    let previousGenerations = [];
 
     if (projectId) {
       project = await Project.findById(projectId);
-
-      previousGenerations = await Generation.find({
-        projectId,
-      }).sort({
-        createdAt: 1,
-      });
     }
 
     const selectedTopic =
       project?.selectedTopic || prompt;
 
     const memory = projectId
-  ? await buildProjectMemory(projectId)
-  : {
-      topic: "",
-      questions: "",
-      objectives: "",
-      literature: "",
-      methodology: "",
-      abstract: "",
-    };
+      ? await buildProjectMemory(projectId)
+      : {
+          topic: "",
+          questions: "",
+          objectives: "",
+          literature: "",
+          methodology: "",
+          abstract: "",
+        };
 
-    // ===========================
-    // Validation
-    // ===========================
+
+
+    // ===============================
+    // FLOW VALIDATION
+    // ===============================
+
+    const flowError = validateProjectFlow(
+      type,
+      memory,
+      selectedTopic
+    );
+
+    if (flowError) {
+      return res.status(400).json({
+        success: false,
+        message: flowError,
+      });
+    }
+
+
+
+    // ===============================
+    // TOPIC VALIDATION
+    // ===============================
 
     if (type === "topic") {
       if (!course || !prompt) {
@@ -57,24 +73,20 @@ const generateAI = async (req, res) => {
       }
     }
 
-    if (
-      type !== "topic" &&
-      !selectedTopic
-    ) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Please select a research topic first.",
-      });
-    }
 
-    // ===========================
-    // Prompt Builder
-    // ===========================
+
+    let aiPrompt = "";
+
+
+
+    // ======================================================
+    // PROMPTS
+    // ======================================================
 
     switch (type) {
 
       case "topic":
+
         aiPrompt = `
 You are a senior university research supervisor.
 
@@ -97,19 +109,17 @@ Requirements:
 • One topic per line
 • No explanations
 `;
+
         break;
 
-      case "question":
-        aiPrompt = `
-You are preparing an undergraduate research project.
 
+
+      case "question":
+
+        aiPrompt = `
 Research Topic
 
 ${selectedTopic}
-
-Previously Generated Topic
-
-${memory.topic}
 
 Generate:
 
@@ -121,19 +131,23 @@ Generate:
 
 • One Alternative Hypothesis
 
-Rules:
+Project Memory
 
-- Follow the selected topic.
-- Follow previous AI generations.
-- Don't contradict previous outputs.
-- Academic language only.
+${memory.topic}
 
-The questions MUST directly answer the selected topic.
-Do not repeat previous generations.
+Rules
+
+- Follow the topic
+- Don't contradict previous work
+- Academic language
 `;
+
         break;
 
+
+
       case "objective":
+
         aiPrompt = `
 Research Topic
 
@@ -143,7 +157,7 @@ Research Questions
 
 ${memory.questions}
 
-Generate:
+Generate
 
 GENERAL OBJECTIVE
 
@@ -155,25 +169,29 @@ DELIMITATION OF STUDY
 
 The objectives must answer every research question.
 `;
+
         break;
 
+
+
       case "literature":
+
         aiPrompt = `
-Write Chapter Two (Literature Review).
+Write Chapter Two.
 
 Research Topic
 
 ${selectedTopic}
 
-Research Questions
-
-${memory.questions}
-
 Objectives
 
 ${memory.objectives}
 
-Include:
+Research Questions
+
+${memory.questions}
+
+Include
 
 2.1 Introduction
 
@@ -185,20 +203,19 @@ Include:
 
 2.5 Knowledge Gap
 
-Requirements:
+Academic writing only.
 
-- Academic writing
-- About 2000 words
-- Proper headings
-- Consistent with objectives and research questions.
-
-Everything must align with the objectives.
+About 2000 words.
 `;
+
         break;
 
+
+
       case "methodology":
+
         aiPrompt = `
-Write Chapter Three (Methodology).
+Write Chapter Three.
 
 Research Topic
 
@@ -212,36 +229,37 @@ Research Questions
 
 ${memory.questions}
 
-Literature Summary
+Literature
 
 ${memory.literature}
 
+Include
 
-Include:
+Research Design
 
-3.1 Research Design
+Population
 
-3.2 Study Area
+Sampling
 
-3.3 Population
+Instrument
 
-3.4 Sample Size
+Data Collection
 
-3.5 Sampling Technique
+Data Analysis
 
-3.6 Data Collection
+Ethics
 
-3.7 Data Analysis
-
-3.8 Ethical Considerations
-
-Everything must align with previous chapters.
+Everything must align.
 `;
+
         break;
 
+
+
       case "abstract":
+
         aiPrompt = `
-Write a complete undergraduate Abstract.
+Write an undergraduate Abstract.
 
 Research Topic
 
@@ -263,43 +281,46 @@ Methodology
 
 ${memory.methodology}
 
-Include:
-
-• Background
-
-• Aim
-
-• Methodology
-
-• Findings
-
-• Conclusion
-
-• Keywords
-
 Maximum 300 words.
 
-Ensure it summarizes the entire project consistently.
+Include
+
+Background
+
+Aim
+
+Method
+
+Findings
+
+Conclusion
+
+Keywords
 `;
+
         break;
 
+
+
       default:
+
         return res.status(400).json({
           success: false,
-          message: "Invalid AI tool.",
+          message: "Invalid AI Tool",
         });
+
     }
 
-    // ===========================
-    // Generate AI
-    // ===========================
+
+
+    // ======================================================
+    // AI RESPONSE
+    // ======================================================
 
     const response =
       await generateAIResponse(aiPrompt);
 
-    // ===========================
-    // Format Output
-    // ===========================
+
 
     let output;
 
@@ -308,32 +329,192 @@ Ensure it summarizes the entire project consistently.
       type === "question" ||
       type === "objective"
     ) {
+
       output = response
         .split("\n")
-        .filter(
-          (line) => line.trim() !== ""
-        );
+        .filter((line) => line.trim() !== "");
+
     } else {
+
       output = response;
+
     }
 
-    res.status(200).json({
+
+
+    return res.json({
       success: true,
       output,
     });
 
   } catch (error) {
 
-    console.error("AI ERROR:", error);
+    console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "AI Generation Failed.",
+      message: "AI Generation Failed",
     });
 
   }
 };
 
+
+
+// ======================================================
+// AI SUPERVISOR
+// ======================================================
+
+const supervisorAI = async (req, res) => {
+
+  try {
+
+    const {
+      action,
+      content,
+      projectId,
+    } = req.body;
+
+    const memory =
+      await buildProjectMemory(projectId);
+
+    let prompt = "";
+
+
+
+    switch (action) {
+
+      case "rewrite":
+
+        prompt = `
+Rewrite academically.
+
+Project Topic
+
+${memory.topic}
+
+Objectives
+
+${memory.objectives}
+
+Content
+
+${content}
+`;
+
+        break;
+
+
+
+      case "expand":
+
+        prompt = `
+Expand this academically.
+
+Topic
+
+${memory.topic}
+
+Objectives
+
+${memory.objectives}
+
+Content
+
+${content}
+`;
+
+        break;
+
+
+
+      case "simplify":
+
+        prompt = `
+Simplify this for an undergraduate student.
+
+${content}
+`;
+
+        break;
+
+
+
+      case "continue":
+
+        prompt = `
+Continue writing.
+
+Topic
+
+${memory.topic}
+
+Objectives
+
+${memory.objectives}
+
+Literature
+
+${memory.literature}
+
+Content
+
+${content}
+`;
+
+        break;
+
+
+
+      case "explain":
+
+        prompt = `
+Explain this clearly.
+
+${content}
+`;
+
+        break;
+
+
+
+      default:
+
+        return res.status(400).json({
+          success: false,
+          message: "Invalid Action",
+        });
+
+    }
+
+
+
+    const response =
+      await generateAIResponse(prompt);
+
+
+
+    return res.json({
+      success: true,
+      output: response,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Supervisor Failed",
+    });
+
+  }
+
+};
+
+
+
 module.exports = {
   generateAI,
+  supervisorAI,
 };

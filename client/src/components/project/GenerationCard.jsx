@@ -1,8 +1,10 @@
 import { useState } from "react";
 import API from "../../api/api";
+import SupervisorModal from "./SupervisorModal";
 
 function GenerationCard({ generation, onDelete }) {
   const [deleting, setDeleting] = useState(false);
+  const [action, setAction] = useState(null);
   const [selecting, setSelecting] = useState(false);
 
   const copyResult = () => {
@@ -137,22 +139,62 @@ function GenerationCard({ generation, onDelete }) {
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 mt-6">
-        <button
-          onClick={copyResult}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
-        >
-          📋 Copy
-        </button>
+<div className="flex flex-wrap gap-3 mt-6">
 
-        <button
-          onClick={deleteGeneration}
-          disabled={deleting}
-          className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 disabled:bg-red-300"
-        >
-          {deleting ? "Deleting..." : "🗑 Delete"}
-        </button>
-      </div>
+    <button
+        onClick={copyResult}
+        className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
+    >
+        📋 Copy
+    </button>
+
+    <button
+        onClick={() => setAction("rewrite")}
+        className="bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600"
+    >
+        ✏ Rewrite
+    </button>
+
+    <button
+        onClick={() => setAction("expand")}
+        className="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700"
+    >
+        ➕ Expand
+    </button>
+
+    <button
+        onClick={() => setAction("explain")}
+        className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700"
+    >
+        📖 Explain
+    </button>
+
+    <button
+        onClick={() => setAction("continue")}
+        className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700"
+    >
+        ▶ Continue
+    </button>
+
+    <button
+        onClick={deleteGeneration}
+        disabled={deleting}
+        className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 disabled:bg-red-300"
+    >
+        {deleting ? "Deleting..." : "🗑 Delete"}
+    </button>
+
+</div>
+{action && (
+
+    <SupervisorModal
+        action={action}
+        generation={generation}
+        projectId={generation.projectId}
+        onClose={() => setAction(null)}
+    />
+
+)}
     </div>
   );
 }
