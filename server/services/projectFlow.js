@@ -1,51 +1,55 @@
-const validateProjectFlow = (type, memory, selectedTopic) => {
+const hasContent = (value) => {
+  if (!value) return false;
 
-    if (type !== "topic" && !selectedTopic) {
-        return "Please select a research topic first.";
-    }
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
 
-    switch (type) {
+  return String(value).trim().length > 0;
+};
 
-        case "question":
-            return null;
+const validateProjectFlow = (
+  type,
+  memory,
+  selectedTopic
+) => {
+  // STEP 1
+  if (type !== "topic" && !selectedTopic) {
+    return "Please select a research topic first.";
+  }
 
-        case "objective":
+  // STEP 2
+  switch (type) {
+    case "question":
+      return null;
 
-            if (!memory.questions.trim()) {
-                return "Generate Research Questions first.";
-            }
+    case "objective":
+      if (!hasContent(memory.questions)) {
+        return "Generate Research Questions first.";
+      }
+      return null;
 
-            return null;
+    case "literature":
+      if (!hasContent(memory.objectives)) {
+        return "Generate Objectives first.";
+      }
+      return null;
 
-        case "literature":
+    case "methodology":
+      if (!hasContent(memory.literature)) {
+        return "Generate Literature Review first.";
+      }
+      return null;
 
-            if (!memory.objectives.trim()) {
-                return "Generate Objectives first.";
-            }
+    case "abstract":
+      if (!hasContent(memory.methodology)) {
+        return "Generate Methodology first.";
+      }
+      return null;
 
-            return null;
-
-        case "methodology":
-
-            if (!memory.literature.trim()) {
-                return "Generate Literature Review first.";
-            }
-
-            return null;
-
-        case "abstract":
-
-            if (!memory.methodology.trim()) {
-                return "Generate Methodology first.";
-            }
-
-            return null;
-
-        default:
-            return null;
-
-    }
-
+    default:
+      return null;
+  }
 };
 
 module.exports = validateProjectFlow;

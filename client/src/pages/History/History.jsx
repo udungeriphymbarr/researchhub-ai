@@ -102,14 +102,17 @@ function History() {
 
             {/* Output */}
             <ul className="space-y-2">
-              {item.output.map((output, index) => (
-                <li
-                  key={index}
-                  className="border rounded p-2"
-                >
-                  {output}
-                </li>
-              ))}
+{(Array.isArray(item.output)
+  ? item.output
+  : [item.output]
+).map((result, index) => (
+  <div
+    key={index}
+    className="border rounded-lg p-3 mb-2"
+  >
+    {result}
+  </div>
+))}
             </ul>
 
             {/* Actions */}

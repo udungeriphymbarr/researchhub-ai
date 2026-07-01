@@ -23,6 +23,8 @@ const buildProjectMemory = async (projectId) => {
             ? item.output.join("\n")
             : item.output;
 
+            console.log(item.type);
+
         switch (item.type) {
 
             case "topic":
@@ -55,6 +57,8 @@ const buildProjectMemory = async (projectId) => {
         }
 
     });
+
+    console.log("AI MEMORY", memory);
 
     return memory;
 };

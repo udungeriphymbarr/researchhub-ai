@@ -4,6 +4,10 @@ import SupervisorModal from "./SupervisorModal";
 
 function GenerationCard({ generation, onDelete }) {
   const [deleting, setDeleting] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContent, setModalContent] = useState("");
   const [action, setAction] = useState(null);
   const [selecting, setSelecting] = useState(false);
 
@@ -89,6 +93,63 @@ function GenerationCard({ generation, onDelete }) {
     }
   };
 
+  const supervisorAction = async (action) => {
+
+    try {
+
+        setAiLoading(true);
+
+        const response = await fetch(
+            `${API}/api/ai/supervisor`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+
+                    action,
+
+                    projectId: generation.projectId,
+
+                    content: Array.isArray(generation.output)
+                        ? generation.output.join("\n")
+                        : generation.output,
+
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+
+            alert(data.message);
+
+            return;
+
+        }
+
+        setModalTitle(action.toUpperCase());
+
+        setModalContent(data.output);
+
+        setModalOpen(true);
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert("AI Supervisor failed.");
+
+    } finally {
+
+        setAiLoading(false);
+
+    }
+
+};
+
   return (
     <div className="bg-white rounded-2xl shadow p-6 border">
       {/* Header */}
@@ -141,58 +202,73 @@ function GenerationCard({ generation, onDelete }) {
       {/* Actions */}
 <div className="flex flex-wrap gap-3 mt-6">
 
-    <button
-        onClick={copyResult}
-        className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
-    >
-        📋 Copy
-    </button>
+<button
+onClick={copyResult}
+className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+>
+📋 Copy
+</button>
 
-    <button
-        onClick={() => setAction("rewrite")}
-        className="bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600"
-    >
-        ✏ Rewrite
-    </button>
+<button
+onClick={() => supervisorAction("rewrite")}
+className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
+disabled={aiLoading}
+>
+✏ Rewrite
+</button>
 
-    <button
-        onClick={() => setAction("expand")}
-        className="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700"
-    >
-        ➕ Expand
-    </button>
+<button
+onClick={() => supervisorAction("expand")}
+className="bg-green-600 text-white px-4 py-2 rounded-lg"
+disabled={aiLoading}
+>
+➕ Expand
+</button>
 
-    <button
-        onClick={() => setAction("explain")}
-        className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700"
-    >
-        📖 Explain
-    </button>
+<button
+onClick={() => supervisorAction("explain")}
+className="bg-purple-600 text-white px-4 py-2 rounded-lg"
+disabled={aiLoading}
+>
+📖 Explain
+</button>
 
-    <button
-        onClick={() => setAction("continue")}
-        className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700"
-    >
-        ▶ Continue
-    </button>
+<button
+onClick={() => supervisorAction("continue")}
+className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+disabled={aiLoading}
+>
+➡ Continue
+</button>
 
-    <button
-        onClick={deleteGeneration}
-        disabled={deleting}
-        className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 disabled:bg-red-300"
-    >
-        {deleting ? "Deleting..." : "🗑 Delete"}
-    </button>
+<button
+onClick={() => supervisorAction("simplify")}
+className="bg-pink-600 text-white px-4 py-2 rounded-lg"
+disabled={aiLoading}
+>
+✨ Simplify
+</button>
+
+<button
+onClick={deleteGeneration}
+disabled={deleting}
+className="bg-red-600 text-white px-4 py-2 rounded-lg"
+>
+🗑 Delete
+</button>
 
 </div>
-{action && (
+{modalOpen && (
 
-    <SupervisorModal
-        action={action}
-        generation={generation}
-        projectId={generation.projectId}
-        onClose={() => setAction(null)}
-    />
+<SupervisorModal
+
+title={modalTitle}
+
+content={modalContent}
+
+onClose={() => setModalOpen(false)}
+
+/>
 
 )}
     </div>
