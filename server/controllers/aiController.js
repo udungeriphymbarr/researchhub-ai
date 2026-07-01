@@ -1,52 +1,84 @@
-const {
-  generateAIResponse,
-} = require("../services/aiService");
+const { generateAIResponse } = require("../services/aiService");
 const Project = require("../models/Project");
 const Generation = require("../models/Generation");
+const buildProjectMemory = require("../services/aiMemory");
 
 const generateAI = async (req, res) => {
   try {
-const {
-    type,
-    course,
-    prompt,
-    projectId,
-} = req.body;
+    const {
+      type,
+      course,
+      prompt,
+      projectId,
+    } = req.body;
 
-let project = null;
-let previousGenerations = [];
+    // ===========================
+    // Load Project + AI Memory
+    // ===========================
 
-if (projectId) {
-  project = await Project.findById(projectId);
+    let project = null;
+    let previousGenerations = [];
 
-  previousGenerations = await Generation.find({
-    projectId,
-  }).sort({
-    createdAt: 1,
-  });
-}
+    if (projectId) {
+      project = await Project.findById(projectId);
 
-const selectedTopic =
-  project?.selectedTopic || prompt;
+      previousGenerations = await Generation.find({
+        projectId,
+      }).sort({
+        createdAt: 1,
+      });
+    }
 
-const memory = previousGenerations
-  .map((item) => {
-    return `
-${item.type.toUpperCase()}
+    const selectedTopic =
+      project?.selectedTopic || prompt;
 
-${Array.isArray(item.output)
-  ? item.output.join("\n")
-  : item.output}
-`;
-  })
-  .join("\n\n");
+    const memory = projectId
+  ? await buildProjectMemory(projectId)
+  : {
+      topic: "",
+      questions: "",
+      objectives: "",
+      literature: "",
+      methodology: "",
+      abstract: "",
+    };
+
+    // ===========================
+    // Validation
+    // ===========================
+
+    if (type === "topic") {
+      if (!course || !prompt) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Department and Area of Interest are required.",
+        });
+      }
+    }
+
+    if (
+      type !== "topic" &&
+      !selectedTopic
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please select a research topic first.",
+      });
+    }
+
+    // ===========================
+    // Prompt Builder
+    // ===========================
 
     switch (type) {
-      case "topic":
-aiPrompt = `
-You are an experienced university research supervisor.
 
-Generate 10 unique undergraduate research project topics.
+      case "topic":
+        aiPrompt = `
+You are a senior university research supervisor.
+
+Generate TEN unique undergraduate research project topics.
 
 Department:
 ${course}
@@ -56,119 +88,134 @@ ${prompt}
 
 Requirements:
 
-• Suitable for undergraduate students
-• Practical and researchable
-• Current and relevant
-• Specific and clear
-• Avoid repetition
-• Do not number the topics
+• Undergraduate level
+• Practical
+• Current
+• Specific
+• Researchable
+• No numbering
 • One topic per line
+• No explanations
 `;
         break;
 
       case "question":
-aiPrompt = `
-You are an academic research supervisor.
+        aiPrompt = `
+You are preparing an undergraduate research project.
 
-Research Topic:
+Research Topic
 
 ${selectedTopic}
 
-Existing Research Memory:
+Previously Generated Topic
 
-${memory}
+${memory.topic}
 
 Generate:
 
-1. Five Research Questions
+• Five Research Questions
 
-2. Three Research Hypotheses
+• Three Research Hypotheses
 
-3. One Null Hypothesis
+• One Null Hypothesis
 
-4. One Alternative Hypothesis
+• One Alternative Hypothesis
 
 Rules:
 
-• Undergraduate level
-• Clear academic language
-• No explanations
-• Use headings
-• Don't repeat previous generations.
-• Make them consistent with the topic.
-• Return only the questions.
+- Follow the selected topic.
+- Follow previous AI generations.
+- Don't contradict previous outputs.
+- Academic language only.
+
+The questions MUST directly answer the selected topic.
+Do not repeat previous generations.
 `;
         break;
 
       case "objective":
-aiPrompt = `
-Research Topic:
+        aiPrompt = `
+Research Topic
 
 ${selectedTopic}
 
-Existing Research Memory:
+Research Questions
 
-${memory}
+${memory.questions}
 
 Generate:
 
 GENERAL OBJECTIVE
 
-SPECIFIC OBJECTIVES
-(5)
+SPECIFIC OBJECTIVES (5)
 
 SCOPE OF STUDY
 
 DELIMITATION OF STUDY
 
-Use proper academic headings.
+The objectives must answer every research question.
 `;
         break;
 
       case "literature":
-aiPrompt = `
-Research Topic:
+        aiPrompt = `
+Write Chapter Two (Literature Review).
+
+Research Topic
 
 ${selectedTopic}
 
-Existing Research Memory:
+Research Questions
 
-${memory}
+${memory.questions}
 
-Write a Literature Review that follows the objectives and research questions.
+Objectives
+
+${memory.objectives}
 
 Include:
 
-1. Introduction
+2.1 Introduction
 
-2. Conceptual Review
+2.2 Conceptual Review
 
-3. Theoretical Framework
+2.3 Theoretical Framework
 
-4. Empirical Review
+2.4 Empirical Review
 
-5. Knowledge Gap
+2.5 Knowledge Gap
 
 Requirements:
 
-• Academic writing
-• Around 1000 words
-• Proper headings
-• No numbering inside paragraphs
+- Academic writing
+- About 2000 words
+- Proper headings
+- Consistent with objectives and research questions.
+
+Everything must align with the objectives.
 `;
         break;
 
       case "methodology":
-aiPrompt = `
-Research Topic:
+        aiPrompt = `
+Write Chapter Three (Methodology).
+
+Research Topic
 
 ${selectedTopic}
 
-Existing Research Memory:
+Objectives
 
-${memory}
+${memory.objectives}
 
-Write Chapter Three that aligns with the literature review and objectives.
+Research Questions
+
+${memory.questions}
+
+Literature Summary
+
+${memory.literature}
+
 
 Include:
 
@@ -188,53 +235,87 @@ Include:
 
 3.8 Ethical Considerations
 
-Write professionally.
+Everything must align with previous chapters.
 `;
         break;
 
       case "abstract":
-aiPrompt = `
-Research Topic:
+        aiPrompt = `
+Write a complete undergraduate Abstract.
+
+Research Topic
 
 ${selectedTopic}
 
-Existing Research Memory:
+Objectives
 
-${memory}
+${memory.objectives}
 
-Write an undergraduate abstract based on the entire project.
+Research Questions
 
-Include:
+${memory.questions}
 
-Background
+Literature
 
-Aim
+${memory.literature}
 
 Methodology
 
-Results
+${memory.methodology}
 
-Conclusion
+Include:
 
-Keywords
+• Background
+
+• Aim
+
+• Methodology
+
+• Findings
+
+• Conclusion
+
+• Keywords
 
 Maximum 300 words.
+
+Ensure it summarizes the entire project consistently.
 `;
         break;
 
       default:
         return res.status(400).json({
           success: false,
-          message: "Invalid AI tool."
+          message: "Invalid AI tool.",
         });
     }
+
+    // ===========================
+    // Generate AI
+    // ===========================
 
     const response =
       await generateAIResponse(aiPrompt);
 
-    const output = response
-      .split("\n")
-      .filter((item) => item.trim() !== "");
+    // ===========================
+    // Format Output
+    // ===========================
+
+    let output;
+
+    if (
+      type === "topic" ||
+      type === "question" ||
+      type === "objective"
+    ) {
+      output = response
+        .split("\n")
+        .filter(
+          (line) => line.trim() !== ""
+        );
+    } else {
+      output = response;
+    }
 
     res.status(200).json({
       success: true,
@@ -243,11 +324,11 @@ Maximum 300 words.
 
   } catch (error) {
 
-    console.log(error);
+    console.error("AI ERROR:", error);
 
     res.status(500).json({
       success: false,
-      message: "AI Generation Failed",
+      message: "AI Generation Failed.",
     });
 
   }
