@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AIGeneratorModal from "./AIGeneratorModal";
+import API, { authFetch } from "../../api/api";
 
 function AIWorkspace({
     project,

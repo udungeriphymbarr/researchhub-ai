@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../../api/api";
+import API, { authFetch } from "../../api/api";
 
 function AIGeneratorModal({
     type,
@@ -63,8 +63,8 @@ const body = {
     projectId: project?._id,
 };
 
-            const response = await fetch(
-                `${API}${endpoints[type]}`,
+            const response = await authFetch(
+                `${endpoints[type]}`,
                 {
                     method: "POST",
                     headers: {
@@ -82,13 +82,8 @@ const body = {
             }
 
 const result = data.output;
-
-            const user = JSON.parse(
-                localStorage.getItem("user")
-            );
            
 console.log({
-    userId: user.id,
     projectId: project?._id,
     type,
     input: interest,
@@ -97,13 +92,12 @@ console.log({
 
 console.log("Project ID received:", project?._id);
 
-            await fetch(`${API}/api/generations`, {
+            await authFetch(`/api/generations`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
 body: JSON.stringify({
-    userId: user.id,
     projectId: project?._id,
     type,
     input:

@@ -1,14 +1,12 @@
 const express = require("express");
+const protect = require("../middleware/authMiddleware");
 
 const {
     generateAI,
-    supervisorAI,
 } = require("../controllers/aiController");
 
 const router = express.Router();
 
-router.post("/generate", generateAI);
-
-router.post("/supervisor", supervisorAI);
+router.post("/generate", protect, generateAI);
 
 module.exports = router;

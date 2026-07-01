@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API from "../../api/api";
+import API, { authFetch } from "../../api/api";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -28,8 +28,8 @@ const [editDescription,
         localStorage.getItem("user")
       );
 
-      const response = await fetch(
-        `${API}/api/projects?userId=${user.id}`
+      const response = await authFetch(
+        `/api/projects?userId=${user.id}`
       );
 
       const data = await response.json();
@@ -55,8 +55,8 @@ const createProject = async () => {
       localStorage.getItem("user")
     );
 
-    const response = await fetch(
-      `${API}/api/projects`,
+    const response = await authFetch(
+      `/api/projects`,
       {
         method: "POST",
         headers: {
@@ -93,8 +93,8 @@ const createProject = async () => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(
-      `${API}/api/projects/${id}`,
+    const response = await authFetch(
+      `/api/projects/${id}`,
       {
         method: "DELETE",
       }
@@ -120,8 +120,8 @@ const startEdit = (project) => {
 
 const saveEdit = async () => {
   try {
-    const response = await fetch(
-      `${API}/api/projects/${editingProject._id}`,
+    const response = await authFetch(
+      `/api/projects/${editingProject._id}`,
       {
         method: "PUT",
         headers: {

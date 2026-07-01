@@ -3,7 +3,6 @@ const Generation = require("../models/Generation");
 const saveGeneration = async (req, res) => {
   try {
 const {
-    userId,
     projectId,
     type,
     input,
@@ -11,7 +10,7 @@ const {
 } = req.body;
 
 const generation = await Generation.create({
-    userId,
+    userId: req.user.id,
     projectId,
     type,
     input,
@@ -32,7 +31,7 @@ const generation = await Generation.create({
 
 const getGenerations = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.user.id;
 
     const generations = await Generation.find({
       userId,
@@ -54,21 +53,33 @@ const getGenerations = async (req, res) => {
 
 const deleteGeneration = async (req, res) => {
   try {
-    const generation = await Generation.findByIdAndDelete(
-      req.params.id
-    );
+const generation = await Generation.findById(
+    req.params.id
+);
 
-    if (!generation) {
-      return res.status(404).json({
-        success: false,
-        message: "Generation not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Generation deleted",
+if (!generation) {
+    return res.status(404).json({
+        success:false,
+        message:"Generation not found",
     });
+}
+
+if (
+    generation.userId.toString() !==
+    req.user.id
+){
+    return res.status(403).json({
+        success:false,
+        message:"Unauthorized",
+    });
+}
+
+await generation.deleteOne();
+
+res.status(200).json({
+    success:true,
+    message:"Generation deleted",
+});
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -80,7 +91,7 @@ const deleteGeneration = async (req, res) => {
 const getProjectGenerations = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { userId } = req.query;
+    const userId = req.user.id;
 
     const generations = await Generation.find({
       projectId,

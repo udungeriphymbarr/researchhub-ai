@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../../api/api";
+import API, { authFetch } from "../../api/api";
 import SupervisorModal from "./SupervisorModal";
 
 function GenerationCard({ generation, onDelete }) {
@@ -31,8 +31,8 @@ function GenerationCard({ generation, onDelete }) {
     try {
       setSelecting(true);
 
-      const response = await fetch(
-        `${API}/api/projects/${generation.projectId}/topic`,
+      const response = await authFetch(
+        `/api/projects/${generation.projectId}/topic`,
         {
           method: "PUT",
           headers: {
@@ -69,8 +69,8 @@ function GenerationCard({ generation, onDelete }) {
     try {
       setDeleting(true);
 
-      const response = await fetch(
-        `${API}/api/generations/${generation._id}`,
+      const response = await authFetch(
+        `/api/generations/${generation._id}`,
         {
           method: "DELETE",
         }
@@ -99,8 +99,8 @@ function GenerationCard({ generation, onDelete }) {
 
         setAiLoading(true);
 
-        const response = await fetch(
-            `${API}/api/ai/supervisor`,
+        const response = await authFetch(
+            `/api/ai/supervisor`,
             {
                 method: "POST",
                 headers: {
@@ -207,46 +207,6 @@ onClick={copyResult}
 className="bg-blue-600 text-white px-4 py-2 rounded-lg"
 >
 📋 Copy
-</button>
-
-<button
-onClick={() => supervisorAction("rewrite")}
-className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
-disabled={aiLoading}
->
-✏ Rewrite
-</button>
-
-<button
-onClick={() => supervisorAction("expand")}
-className="bg-green-600 text-white px-4 py-2 rounded-lg"
-disabled={aiLoading}
->
-➕ Expand
-</button>
-
-<button
-onClick={() => supervisorAction("explain")}
-className="bg-purple-600 text-white px-4 py-2 rounded-lg"
-disabled={aiLoading}
->
-📖 Explain
-</button>
-
-<button
-onClick={() => supervisorAction("continue")}
-className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-disabled={aiLoading}
->
-➡ Continue
-</button>
-
-<button
-onClick={() => supervisorAction("simplify")}
-className="bg-pink-600 text-white px-4 py-2 rounded-lg"
-disabled={aiLoading}
->
-✨ Simplify
 </button>
 
 <button

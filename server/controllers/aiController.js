@@ -365,16 +365,6 @@ Keywords
 // AI SUPERVISOR
 // ======================================================
 
-const supervisorAI = async (req, res) => {
-
-  try {
-
-    const {
-      action,
-      content,
-      projectId,
-    } = req.body;
-
     const memory =
       await buildProjectMemory(projectId);
 
@@ -499,22 +489,10 @@ ${content}
       output: response,
     });
 
-  } catch (error) {
 
-    console.error(error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Supervisor Failed",
-    });
-
-  }
-
-};
 
 
 
 module.exports = {
   generateAI,
-  supervisorAI,
 };

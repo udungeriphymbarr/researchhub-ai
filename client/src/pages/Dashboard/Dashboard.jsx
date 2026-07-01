@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import API from "../../api/api";
+import API, { authFetch } from "../../api/api";
 
 function Dashboard() {
 const navigate = useNavigate();
@@ -26,8 +26,8 @@ const user = JSON.parse(
 localStorage.getItem("user")
 );
 
-  const response = await fetch(
-    `${API}/api/generations?userId=${user.id}`
+  const response = await authFetch(
+    `/api/generations?userId=${user.id}`
   );
 
   const data = await response.json();

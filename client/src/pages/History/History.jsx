@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../../api/api";
+import API, { authFetch } from "../../api/api";
 
 function History() {
   const [generations, setGenerations] = useState([]);
@@ -10,13 +10,9 @@ function History() {
 
   const fetchGenerations = async () => {
     try {
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
-
-      const response = await fetch(
-        `${API}/api/generations?userId=${user.id}`
-      );
+const response = await authFetch(
+"/api/generations"
+);
 
       const data = await response.json();
 
@@ -30,8 +26,8 @@ function History() {
 
   const deleteGeneration = async (id) => {
     try {
-      const response = await fetch(
-        `${API}/api/generations/${id}`,
+      const response = await authFetch(
+        `/api/generations/${id}`,
         {
           method: "DELETE",
         }
@@ -120,7 +116,9 @@ function History() {
               <button
                 onClick={() =>
                   copyToClipboard(
-                    item.output.join("\n")
+                    Array.isArray(item.output)
+                    ? item.output.join("\n")
+                    : item.output
                   )
                 }
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"

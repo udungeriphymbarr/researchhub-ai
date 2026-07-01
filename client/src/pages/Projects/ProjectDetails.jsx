@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import API from "../../api/api";
+import API, { authFetch } from "../../api/api";
 import exportProjectPDF from "../../utils/exportProjectPDF";
 
 import AIWorkspace from "../../components/project/AIWorkspace";
@@ -24,7 +24,7 @@ function ProjectDetails() {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`${API}/api/projects/${id}`);
+      const response = await authFetch(`/api/projects/${id}`);
       const data = await response.json();
 
       if (data.success) {
@@ -43,8 +43,8 @@ function ProjectDetails() {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
 
-      const response = await fetch(
-        `${API}/api/generations/project/${id}?userId=${user.id}`
+      const response = await authFetch(
+        `/api/generations/project/${id}?userId=${user.id}`
       );
 
       const data = await response.json();
