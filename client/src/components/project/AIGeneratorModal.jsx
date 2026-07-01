@@ -58,7 +58,9 @@ const body = {
     prompt:
         type === "topic"
             ? interest
-            : project.selectedTopic,
+            : project?.selectedTopic,
+
+    projectId: project?._id,
 };
 
             const response = await fetch(
@@ -85,15 +87,15 @@ const result = data.output;
                 localStorage.getItem("user")
             );
            
-    console.log({
+console.log({
     userId: user.id,
-    projectId: project._id,
+    projectId: project?._id,
     type,
     input: interest,
     output: result,
 });
 
-console.log("Project ID received:", projectId);
+console.log("Project ID received:", project?._id);
 
             await fetch(`${API}/api/generations`, {
                 method: "POST",
@@ -102,9 +104,12 @@ console.log("Project ID received:", projectId);
                 },
 body: JSON.stringify({
     userId: user.id,
-    projectId,
+    projectId: project?._id,
     type,
-    input: interest,
+    input:
+    type === "topic"
+        ? interest
+        : project?.selectedTopic,
     output: result,
 }),
             });
