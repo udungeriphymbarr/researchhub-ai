@@ -3,7 +3,7 @@ import API from "../../api/api";
 
 function AIGeneratorModal({
     type,
-    projectId,
+    project,
     onClose,
     onGenerate
 }) {
@@ -32,7 +32,10 @@ function AIGeneratorModal({
 
     const handleGenerate = async () => {
 
-if (!interest || interest.trim().length < 5) {
+if (
+    type === "topic" &&
+    !interest.trim()
+) {
     alert(
       type === "topic"
         ? "Please enter an area of interest."
@@ -52,8 +55,10 @@ if (type === "topic" && !course.trim()) {
 const body = {
     type,
     course,
-    prompt: interest,
-    projectId,
+    prompt:
+        type === "topic"
+            ? interest
+            : project.selectedTopic,
 };
 
             const response = await fetch(
@@ -82,7 +87,7 @@ const result = data.output;
            
     console.log({
     userId: user.id,
-    projectId,
+    projectId: project._id,
     type,
     input: interest,
     output: result,
@@ -154,28 +159,38 @@ body: JSON.stringify({
                     </>
 
                 )}
+{type === "topic" ? (
+    <>
+        <label className="font-medium">
+            Area of Interest
+        </label>
 
-                <label className="font-medium">
+        <textarea
+            rows="5"
+            className="w-full border rounded-lg px-4 py-3 mt-2"
+            value={interest}
+            onChange={(e) =>
+                setInterest(e.target.value)
+            }
+        />
+    </>
+) : (
+    <>
+        <label className="font-medium">
+            Research Topic
+        </label>
 
-                    {type === "topic"
-                        ? "Area of Interest"
-                        : "Research Topic"}
+        <div className="mt-2 bg-green-50 border border-green-300 rounded-lg p-4">
+            <p className="font-semibold">
+                {project?.selectedTopic}
+            </p>
 
-                </label>
-
-                <textarea
-
-                    rows="5"
-
-                    className="w-full border rounded-lg px-4 py-3 mt-2"
-
-                    value={interest}
-
-                    onChange={(e)=>
-                        setInterest(e.target.value)
-                    }
-
-                />
+            <p className="text-green-700 text-sm mt-2">
+                ✓ Using selected project topic
+            </p>
+        </div>
+    </>
+)}
 
                 <div className="flex justify-end gap-3 mt-8">
 

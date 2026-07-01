@@ -21,6 +21,7 @@ import Abstract from "./pages/ResearchWriter/Abstract";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/Footer";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
@@ -28,6 +29,7 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 function App() {
   return (
     <>
+    <ScrollToTop />
       <Navbar />
 
       <Routes>

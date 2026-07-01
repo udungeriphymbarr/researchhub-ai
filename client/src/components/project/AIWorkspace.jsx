@@ -2,8 +2,8 @@ import { useState } from "react";
 import AIGeneratorModal from "./AIGeneratorModal";
 
 function AIWorkspace({
-  projectId,
-  onGenerate,
+    project,
+    onGenerate
 }) {
   const [openModal, setOpenModal] = useState(null);
 
@@ -128,14 +128,12 @@ function AIWorkspace({
       </div>
 
       {openModal && (
-        <AIGeneratorModal
-          type={openModal}
-          projectId={projectId}
-          onClose={() =>
-            setOpenModal(null)
-          }
-          onGenerate={onGenerate}
-        />
+<AIGeneratorModal
+    type={openModal}
+    project={project}
+    onClose={() => setOpenModal(null)}
+    onGenerate={onGenerate}
+/>
       )}
     </>
   );

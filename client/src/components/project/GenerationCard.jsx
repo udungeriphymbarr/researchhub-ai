@@ -3,6 +3,7 @@ import API from "../../api/api";
 
 function GenerationCard({ generation, onDelete }) {
   const [deleting, setDeleting] = useState(false);
+  const [selecting, setSelecting] = useState(false);
 
   const copyResult = () => {
     const text = Array.isArray(generation.output)
@@ -10,15 +11,54 @@ function GenerationCard({ generation, onDelete }) {
       : generation.output;
 
     navigator.clipboard.writeText(text);
+
     alert("Copied!");
   };
 
-  const deleteGeneration = async () => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this item?"
+  const selectTopic = async (topic) => {
+    const confirmSelect = window.confirm(
+      "Use this as the official research topic for this project?"
     );
 
-    if (!confirm) return;
+    if (!confirmSelect) return;
+
+    try {
+      setSelecting(true);
+
+      const response = await fetch(
+        `${API}/api/projects/${generation.projectId}/topic`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            topic,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("✅ Topic selected successfully!");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to select topic.");
+    } finally {
+      setSelecting(false);
+    }
+  };
+
+  const deleteGeneration = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this generation?"
+    );
+
+    if (!confirmDelete) return;
 
     try {
       setDeleting(true);
@@ -33,13 +73,15 @@ function GenerationCard({ generation, onDelete }) {
       const data = await response.json();
 
       if (data.success) {
-        if (onDelete) onDelete(generation._id);
+        if (onDelete) {
+          onDelete(generation._id);
+        }
       } else {
-        alert(data.message || "Delete failed");
+        alert(data.message || "Delete failed.");
       }
     } catch (error) {
       console.error(error);
-      alert("Error deleting generation");
+      alert("Something went wrong.");
     } finally {
       setDeleting(false);
     }
@@ -47,10 +89,8 @@ function GenerationCard({ generation, onDelete }) {
 
   return (
     <div className="bg-white rounded-2xl shadow p-6 border">
-
       {/* Header */}
       <div className="flex justify-between items-center mb-5">
-
         <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
           {generation.type.toUpperCase()}
         </span>
@@ -58,7 +98,6 @@ function GenerationCard({ generation, onDelete }) {
         <small className="text-gray-500">
           {new Date(generation.createdAt).toLocaleString()}
         </small>
-
       </div>
 
       {/* Prompt */}
@@ -68,8 +107,8 @@ function GenerationCard({ generation, onDelete }) {
         {generation.input}
       </div>
 
-      {/* Output */}
-      <h3 className="font-bold mb-2">AI Result</h3>
+      {/* AI Result */}
+      <h3 className="font-bold mb-3">AI Result</h3>
 
       <div className="space-y-3">
         {(Array.isArray(generation.output)
@@ -78,16 +117,27 @@ function GenerationCard({ generation, onDelete }) {
         ).map((line, index) => (
           <div
             key={index}
-            className="border rounded-lg p-3"
+            className="border rounded-lg p-4"
           >
-            {line}
+            <p>{line}</p>
+
+            {generation.type === "topic" && (
+              <button
+                onClick={() => selectTopic(line)}
+                disabled={selecting}
+                className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-green-300"
+              >
+                {selecting
+                  ? "Selecting..."
+                  : "✅ Select Topic"}
+              </button>
+            )}
           </div>
         ))}
       </div>
 
       {/* Actions */}
       <div className="flex gap-3 mt-6">
-
         <button
           onClick={copyResult}
           className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
@@ -102,7 +152,6 @@ function GenerationCard({ generation, onDelete }) {
         >
           {deleting ? "Deleting..." : "🗑 Delete"}
         </button>
-
       </div>
     </div>
   );

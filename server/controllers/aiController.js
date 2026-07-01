@@ -1,6 +1,7 @@
 const {
   generateAIResponse,
 } = require("../services/aiService");
+const Project = require("../models/Project");
 const Generation = require("../models/Generation");
 
 const generateAI = async (req, res) => {
@@ -12,43 +13,33 @@ const {
     projectId,
 } = req.body;
 
-    let aiPrompt = "";
-
-    let projectContext = "";
+let project = null;
+let previousGenerations = [];
 
 if (projectId) {
+  project = await Project.findById(projectId);
 
-    const history = await Generation.find({
-        projectId,
-    }).sort({
-        createdAt: 1,
-    });
+  previousGenerations = await Generation.find({
+    projectId,
+  }).sort({
+    createdAt: 1,
+  });
+}
 
-    if (history.length > 0) {
+const selectedTopic =
+  project?.selectedTopic || prompt;
 
-        projectContext = history
-            .map(item => {
-
-                const output = Array.isArray(item.output)
-                    ? item.output.join("\n")
-                    : item.output;
-
-                return `
+const memory = previousGenerations
+  .map((item) => {
+    return `
 ${item.type.toUpperCase()}
 
-Prompt:
-${item.input}
-
-Result:
-${output}
+${Array.isArray(item.output)
+  ? item.output.join("\n")
+  : item.output}
 `;
-
-            })
-            .join("\n\n");
-
-    }
-
-}
+  })
+  .join("\n\n");
 
     switch (type) {
       case "topic":
@@ -81,7 +72,11 @@ You are an academic research supervisor.
 
 Research Topic:
 
-${prompt}
+${selectedTopic}
+
+Existing Research Memory:
+
+${memory}
 
 Generate:
 
@@ -99,6 +94,9 @@ Rules:
 • Clear academic language
 • No explanations
 • Use headings
+• Don't repeat previous generations.
+• Make them consistent with the topic.
+• Return only the questions.
 `;
         break;
 
@@ -106,7 +104,11 @@ Rules:
 aiPrompt = `
 Research Topic:
 
-${prompt}
+${selectedTopic}
+
+Existing Research Memory:
+
+${memory}
 
 Generate:
 
@@ -125,11 +127,15 @@ Use proper academic headings.
 
       case "literature":
 aiPrompt = `
-Write an undergraduate literature review.
-
 Research Topic:
 
-${prompt}
+${selectedTopic}
+
+Existing Research Memory:
+
+${memory}
+
+Write a Literature Review that follows the objectives and research questions.
 
 Include:
 
@@ -154,11 +160,15 @@ Requirements:
 
       case "methodology":
 aiPrompt = `
-Write Chapter Three for this project.
+Research Topic:
 
-Topic:
+${selectedTopic}
 
-${prompt}
+Existing Research Memory:
+
+${memory}
+
+Write Chapter Three that aligns with the literature review and objectives.
 
 Include:
 
@@ -184,11 +194,15 @@ Write professionally.
 
       case "abstract":
 aiPrompt = `
-Write an undergraduate research abstract.
+Research Topic:
 
-Topic:
+${selectedTopic}
 
-${prompt}
+Existing Research Memory:
+
+${memory}
+
+Write an undergraduate abstract based on the entire project.
 
 Include:
 
