@@ -12,6 +12,12 @@ const aiRoutes = require("./routes/aiRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const researchRoutes = require("./routes/researchRoutes");
 
+const subscriptionRoutes = 
+require("./routes/subscriptionRoutes");
+
+const paymentRoutes =
+require("./routes/paymentRoutes");
+
 const app = express();
 
 // Connect Database
@@ -37,6 +43,8 @@ app.use("/api/generations", generationRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/research", researchRoutes);
+app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/payment", paymentRoutes);
 // Test Route
 app.get("/", (req, res) => {
   res.send("ResearchHub AI API Running 🚀");

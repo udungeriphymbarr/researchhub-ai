@@ -2,6 +2,7 @@ const { generateAIResponse } = require("../services/aiService");
 const Project = require("../models/Project");
 const buildProjectMemory = require("../services/aiMemory");
 const validateProjectFlow = require("../services/projectFlow");
+const User = require("../models/User");
 
 const generateAI = async (req, res) => {
   try {
@@ -349,6 +350,16 @@ Keywords
       output = response;
 
     }
+
+    // Increase AI usage count
+await User.findByIdAndUpdate(
+  req.user.id,
+  {
+    $inc: {
+      usageCount: 1,
+    },
+  }
+);
 
     return res.status(200).json({
       success: true,

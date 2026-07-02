@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    // ===========================
+    // BASIC INFO
+    // ===========================
+
     name: {
       type: String,
       required: true,
@@ -18,14 +22,6 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    resetPasswordToken: {
-      type: String,
-    },
-
-    resetPasswordExpires: {
-      type: Date,
-    },
-
     department: {
       type: String,
       default: "",
@@ -39,6 +35,59 @@ const userSchema = new mongoose.Schema(
     university: {
       type: String,
       default: "",
+    },
+
+    // ===========================
+    // PASSWORD RESET
+    // ===========================
+
+    resetPasswordToken: String,
+
+    resetPasswordExpires: Date,
+
+    // ===========================
+    // SUBSCRIPTION
+    // ===========================
+
+    plan: {
+      type: String,
+      enum: ["free", "premium"],
+      default: "free",
+    },
+
+    subscriptionStatus: {
+      type: String,
+      enum: ["inactive", "active"],
+      default: "inactive",
+    },
+
+    subscriptionExpires: {
+      type: Date,
+      default: null,
+    },
+
+    paymentReference: {
+      type: String,
+      default: "",
+    },
+
+    // ===========================
+    // AI USAGE
+    // ===========================
+
+    usageCount: {
+      type: Number,
+      default: 0,
+    },
+
+    usageLimit: {
+      type: Number,
+      default: 20,
+    },
+
+    usageResetDate: {
+      type: Date,
+      default: Date.now,
     },
   },
   {

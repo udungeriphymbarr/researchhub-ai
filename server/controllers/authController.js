@@ -99,11 +99,13 @@ const loginUser = async (req, res) => {
       success: true,
       message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    plan: user.plan,
+    usageCount: user.usageCount,
+},
     });
 
   } catch (error) {
