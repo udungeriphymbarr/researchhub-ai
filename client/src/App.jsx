@@ -26,6 +26,7 @@ import Footer from "./components/Footer";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Subscription from "./pages/Subscription/Subscription";
+import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
 
 function App() {
   return (

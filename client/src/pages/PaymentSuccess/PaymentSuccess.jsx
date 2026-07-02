@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { authFetch } from "../api/api";
+import { authFetch } from "../../api/api";
 
 function PaymentSuccess(){
 
