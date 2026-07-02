@@ -25,6 +25,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/Footer";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import Subscription from "./pages/Subscription/Subscription";
 
 function App() {
   return (
@@ -57,6 +58,23 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+
+    path="/subscription"
+
+    element={
+        <ProtectedRoute>
+            <Subscription />
+        </ProtectedRoute>
+    }
+
+/>
+
+<Route
+    path="/payment-success"
+    element={<PaymentSuccess/>}
+/>
 
         <Route
           path="/topic-generator"

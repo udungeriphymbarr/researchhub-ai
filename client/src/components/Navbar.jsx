@@ -115,6 +115,12 @@ return ( <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b
             Profile
           </Link>
 
+          <Link to="/subscription" 
+          className="text-gray-700 hover:text-red-600"
+          >
+            Subscription
+            </Link>
+
           <button
             onClick={handleLogout}
             className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
@@ -211,6 +217,12 @@ return ( <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b
           >
             Profile
           </Link>
+
+          <Link to="/subscription" 
+          className="text-gray-700 hover:text-red-600"
+          >
+            Subscription
+            </Link>
 
           <button
             onClick={handleLogout}

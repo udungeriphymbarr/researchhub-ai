@@ -76,9 +76,16 @@ const body = {
 
             const data = await response.json();
 
-            if (!data.success) {
-                alert(data.message);
-                return;
+if (!data.success) {
+    alert(data.message);
+
+    if (
+        data.message.includes(
+            "You have reached your monthly limit"
+        )
+    ) {
+        window.location.href = "/subscription";
+    }
             }
 
 const result = data.output;
@@ -92,29 +99,45 @@ console.log({
 
 console.log("Project ID received:", project?._id);
 
-            await authFetch(`/api/generations`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-body: JSON.stringify({
-    projectId: project?._id,
-    type,
-    input:
-    type === "topic"
-        ? interest
-        : project?.selectedTopic,
-    output: result,
-}),
-            });
+const saveResponse = await authFetch("/api/generations", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        projectId: project?._id,
+        type,
+        input:
+            type === "topic"
+                ? interest
+                : project?.selectedTopic,
+        output: result,
+    }),
+});
 
-            alert("Generated Successfully ✅");
+const saveData = await saveResponse.json();
 
-            onGenerate();
+if (!saveData.success) {
+    alert(saveData.message);
+    return;
+}
 
-            onClose();
+// Update local user usage count
+const user = JSON.parse(localStorage.getItem("user"));
 
-        } catch (error) {
+if (user) {
+    user.usageCount = (user.usageCount || 0) + 1;
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+    );
+}
+
+    alert("Generated Successfully ✅");
+    onGenerate();
+    onClose();
+    } catch (error) {
 
             console.log(error);
 

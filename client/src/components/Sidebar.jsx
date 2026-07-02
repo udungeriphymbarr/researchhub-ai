@@ -30,6 +30,19 @@ function Sidebar() {
               Chapter Outline
             </Link>
           </li>
+          <li>
+            <Link
+
+    to="/subscription"
+
+    className="sidebar-link"
+
+>
+
+    Subscription
+
+</Link>
+          </li>
         </ul>
       </nav>
     </aside>
