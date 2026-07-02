@@ -3,12 +3,6 @@ const Project = require("../models/Project");
 const buildProjectMemory = require("../services/aiMemory");
 const validateProjectFlow = require("../services/projectFlow");
 
-
-
-// ======================================================
-// MAIN AI GENERATOR
-// ======================================================
-
 const generateAI = async (req, res) => {
   try {
     const {
@@ -38,11 +32,9 @@ const generateAI = async (req, res) => {
           abstract: "",
         };
 
-
-
-    // ===============================
+    // ===========================
     // FLOW VALIDATION
-    // ===============================
+    // ===========================
 
     const flowError = validateProjectFlow(
       type,
@@ -57,11 +49,9 @@ const generateAI = async (req, res) => {
       });
     }
 
-
-
-    // ===============================
+    // ===========================
     // TOPIC VALIDATION
-    // ===============================
+    // ===========================
 
     if (type === "topic") {
       if (!course || !prompt) {
@@ -73,24 +63,20 @@ const generateAI = async (req, res) => {
       }
     }
 
-
-
     let aiPrompt = "";
 
-
-
-    // ======================================================
-    // PROMPTS
-    // ======================================================
-
     switch (type) {
+
+      // ===========================
+      // TOPIC
+      // ===========================
 
       case "topic":
 
         aiPrompt = `
-You are a senior university research supervisor.
+You are an experienced university research supervisor.
 
-Generate TEN unique undergraduate research project topics.
+Generate exactly TEN unique undergraduate research topics.
 
 Department:
 ${course}
@@ -112,14 +98,22 @@ Requirements:
 
         break;
 
-
+      // ===========================
+      // QUESTIONS
+      // ===========================
 
       case "question":
 
         aiPrompt = `
+You are writing an undergraduate research project.
+
 Research Topic
 
 ${selectedTopic}
+
+Previous Memory
+
+${memory.topic}
 
 Generate:
 
@@ -131,20 +125,22 @@ Generate:
 
 • One Alternative Hypothesis
 
-Project Memory
-
-${memory.topic}
-
 Rules
 
-- Follow the topic
-- Don't contradict previous work
-- Academic language
+• Questions must align with the topic.
+
+• Do not contradict previous outputs.
+
+• Academic language only.
+
+• No explanations.
 `;
 
         break;
 
-
+      // ===========================
+      // OBJECTIVES
+      // ===========================
 
       case "objective":
 
@@ -167,12 +163,14 @@ SCOPE OF STUDY
 
 DELIMITATION OF STUDY
 
-The objectives must answer every research question.
+Every objective MUST answer at least one research question.
 `;
 
         break;
 
-
+      // ===========================
+      // LITERATURE
+      // ===========================
 
       case "literature":
 
@@ -191,7 +189,7 @@ Research Questions
 
 ${memory.questions}
 
-Include
+Include:
 
 2.1 Introduction
 
@@ -203,14 +201,22 @@ Include
 
 2.5 Knowledge Gap
 
-Academic writing only.
+Requirements
 
-About 2000 words.
+• About 2000 words
+
+• Academic writing
+
+• Consistent with the objectives
+
+• Proper headings
 `;
 
         break;
 
-
+      // ===========================
+      // METHODOLOGY
+      // ===========================
 
       case "methodology":
 
@@ -229,7 +235,7 @@ Research Questions
 
 ${memory.questions}
 
-Literature
+Literature Summary
 
 ${memory.literature}
 
@@ -237,9 +243,13 @@ Include
 
 Research Design
 
+Study Area
+
 Population
 
-Sampling
+Sample Size
+
+Sampling Technique
 
 Instrument
 
@@ -247,14 +257,16 @@ Data Collection
 
 Data Analysis
 
-Ethics
+Ethical Considerations
 
-Everything must align.
+Everything must align with previous chapters.
 `;
 
         break;
 
-
+      // ===========================
+      // ABSTRACT
+      // ===========================
 
       case "abstract":
 
@@ -281,6 +293,8 @@ Methodology
 
 ${memory.methodology}
 
+Requirements
+
 Maximum 300 words.
 
 Include
@@ -289,9 +303,9 @@ Background
 
 Aim
 
-Method
+Methodology
 
-Findings
+Expected Findings
 
 Conclusion
 
@@ -299,8 +313,6 @@ Keywords
 `;
 
         break;
-
-
 
       default:
 
@@ -311,16 +323,12 @@ Keywords
 
     }
 
-
-
-    // ======================================================
+    // ===========================
     // AI RESPONSE
-    // ======================================================
+    // ===========================
 
     const response =
       await generateAIResponse(aiPrompt);
-
-
 
     let output;
 
@@ -332,7 +340,9 @@ Keywords
 
       output = response
         .split("\n")
-        .filter((line) => line.trim() !== "");
+        .filter(
+          (line) => line.trim() !== ""
+        );
 
     } else {
 
@@ -340,9 +350,7 @@ Keywords
 
     }
 
-
-
-    return res.json({
+    return res.status(200).json({
       success: true,
       output,
     });
@@ -358,140 +366,6 @@ Keywords
 
   }
 };
-
-
-
-// ======================================================
-// AI SUPERVISOR
-// ======================================================
-
-    const memory =
-      await buildProjectMemory(projectId);
-
-    let prompt = "";
-
-
-
-    switch (action) {
-
-      case "rewrite":
-
-        prompt = `
-Rewrite academically.
-
-Project Topic
-
-${memory.topic}
-
-Objectives
-
-${memory.objectives}
-
-Content
-
-${content}
-`;
-
-        break;
-
-
-
-      case "expand":
-
-        prompt = `
-Expand this academically.
-
-Topic
-
-${memory.topic}
-
-Objectives
-
-${memory.objectives}
-
-Content
-
-${content}
-`;
-
-        break;
-
-
-
-      case "simplify":
-
-        prompt = `
-Simplify this for an undergraduate student.
-
-${content}
-`;
-
-        break;
-
-
-
-      case "continue":
-
-        prompt = `
-Continue writing.
-
-Topic
-
-${memory.topic}
-
-Objectives
-
-${memory.objectives}
-
-Literature
-
-${memory.literature}
-
-Content
-
-${content}
-`;
-
-        break;
-
-
-
-      case "explain":
-
-        prompt = `
-Explain this clearly.
-
-${content}
-`;
-
-        break;
-
-
-
-      default:
-
-        return res.status(400).json({
-          success: false,
-          message: "Invalid Action",
-        });
-
-    }
-
-
-
-    const response =
-      await generateAIResponse(prompt);
-
-
-
-    return res.json({
-      success: true,
-      output: response,
-    });
-
-
-
-
 
 module.exports = {
   generateAI,

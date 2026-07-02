@@ -9,12 +9,15 @@ const {
     output,
 } = req.body;
 
+console.log("USER:", req.user);
+console.log("BODY:", req.body);
+
 const generation = await Generation.create({
-    userId: req.user.id,
-    projectId,
-    type,
-    input,
-    output,
+  userId: req.user._id,
+  projectId,
+  type,
+  input,
+  output,
 });
 
     res.status(201).json({
@@ -22,16 +25,19 @@ const generation = await Generation.create({
       generation,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  console.log("SAVE GENERATION ERROR");
+  console.log(error);
+
+  res.status(500).json({
+    success: false,
+    message: error.message,
+  });
   }
 };
 
 const getGenerations = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     const generations = await Generation.find({
       userId,
@@ -66,7 +72,7 @@ if (!generation) {
 
 if (
     generation.userId.toString() !==
-    req.user.id
+    req.user._id
 ){
     return res.status(403).json({
         success:false,
@@ -91,7 +97,7 @@ res.status(200).json({
 const getProjectGenerations = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     const generations = await Generation.find({
       projectId,
