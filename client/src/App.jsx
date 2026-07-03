@@ -39,15 +39,23 @@ function App() {
 
         <Route path="/" element={<Home />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+<Route
+  path="/login"
+  element={
+    <GuestRoute>
+      <Login />
+    </GuestRoute>
+  }
+/>
 
-        <Route
-          path="/signup"
-          element={<Signup />}
-        />
+<Route
+  path="/signup"
+  element={
+    <GuestRoute>
+      <Signup />
+    </GuestRoute>
+  }
+/>
 
         {/* Protected Routes */}
 

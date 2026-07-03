@@ -36,14 +36,18 @@ const initializePayment = async (req, res) => {
 
     } catch (error) {
 
-        console.log(error.response?.data);
+    console.log("========== PAYSTACK ERROR ==========");
 
-        res.status(500).json({
-            success: false,
-            message: "Payment initialization failed.",
-        });
+    console.log(error.response?.data || error.message);
 
-    }
+    console.log("===================================");
+
+    res.status(500).json({
+        success: false,
+        message: "Payment initialization failed.",
+    });
+
+}
 };
 
 const User = require("../models/User");

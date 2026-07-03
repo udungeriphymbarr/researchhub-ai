@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { authFetch } from "../../api/api";
 
 function Subscription() {
 
@@ -15,6 +16,7 @@ function Subscription() {
     }, []);
 
     if (!user) return null;
+    
 
     const percentage =
         Math.min(
@@ -22,28 +24,19 @@ function Subscription() {
             100
         );
 
-        const upgrade = async () => {
+const upgrade = async () => {
+  const response = await authFetch("/api/payment/initialize", {
+    method: "POST",
+  });
 
-    const response = await authFetch(
-        "/api/payment/initialize",
-        {
-            method: "POST",
-        }
-    );
+  const data = await response.json();
 
-    const data = await response.json();
+  if (!data.success) {
+    alert(data.message);
+    return;
+  }
 
-    if (!data.success) {
-
-        alert(data.message);
-
-        return;
-
-    }
-
-    window.location.href =
-        data.authorization_url;
-
+  window.location.href = data.authorization_url;
 };
 
     return (
