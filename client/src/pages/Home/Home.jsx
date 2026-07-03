@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 function Home() {
+  const token = localStorage.getItem("token");
+
+if (token) {
+    return <Navigate to="/dashboard" replace />;
+}
+
   const features = [
     {
       title: "Topic Generator",

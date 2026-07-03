@@ -24,13 +24,15 @@ export const authFetch = async (
     headers,
   });
 
-  if (response.status === 401) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+if (response.status === 401) {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
 
-    window.location.href = "/login";
-    return;
-  }
+  alert("Your session has expired. Please login again.");
+
+  window.location.href = "/login";
+  return;
+}
 
   return response;
 };
