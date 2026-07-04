@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
 
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    verificationToken: {
+      type: String,
+      default: "",
+    },
+
     password: {
       type: String,
       required: true,

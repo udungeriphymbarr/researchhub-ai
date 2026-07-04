@@ -2,7 +2,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail, 
+  sendVerificationEmail,
+  } = require("../utils/sendEmail");
 
 const registerUser = async (req, res) => {
   try {
@@ -18,42 +20,47 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Generate salt
-    const salt = await bcrypt.genSalt(10);
-
     // Hash password
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(
       password,
       salt
     );
 
-const user = await User.create({
-  name,
-  email,
-  password: hashedPassword,
-});
+    // Generate verification token
+    const verificationToken =
+      crypto.randomBytes(32).toString("hex");
 
-await sendEmail(
-  user.email,
-  "Welcome to ResearchHub AI 🎉🎉",
-  `
-    <h2>Welcome ${user.name} 🙌</h2>
-    <p>Thank you for joining ResearchHub AI.</p>
-    <p>Start generating research projects today.</p>
-  `
-);
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      isVerified: false,
+      verificationToken,
+    });
+
+    // Send verification email
+    await sendVerificationEmail(
+      user.email,
+      verificationToken
+    );
 
     res.status(201).json({
       success: true,
-      message: "User registered successfully",
-      user,
+      message:
+        "Registration successful. Please check your email to verify your account.",
     });
 
   } catch (error) {
+
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 
@@ -243,10 +250,47 @@ const resetPassword = async (
   }
 };
 
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const user = await User.findOne({
+      verificationToken: token,
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification link.",
+      });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = "";
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully.",
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Verification failed.",
+    });
+
+  }
+};
 
 module.exports = {
   registerUser,
   loginUser,
   forgotPassword,
   resetPassword,
+  verifyEmail,
 };
