@@ -41,16 +41,20 @@ const registerUser = async (req, res) => {
     });
 
     // Send verification email
+try {
     await sendVerificationEmail(
-      user.email,
-      verificationToken
+        user.email,
+        verificationToken
     );
+} catch (emailError) {
+    console.log("Email Error:", emailError);
+}
 
-    res.status(201).json({
-      success: true,
-      message:
+res.status(201).json({
+    success: true,
+    message:
         "Registration successful. Please check your email to verify your account.",
-    });
+});
 
   } catch (error) {
 
