@@ -110,10 +110,18 @@ const verifyPayment = async (req, res) => {
 
         await user.save();
 
-        res.json({
-            success:true,
-            message:"Subscription activated.",
-        });
+res.json({
+    success: true,
+    message: "Subscription activated.",
+    user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        plan: user.plan,
+        subscriptionStatus: user.subscriptionStatus,
+        usageCount: user.usageCount,
+    },
+});
 
     }
 

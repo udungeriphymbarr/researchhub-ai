@@ -2,10 +2,10 @@ const Project = require("../models/Project");
 
 const createProject = async (req, res) => {
   try {
-    const { userId, title, description } = req.body;
+    const { title, description } = req.body;
 
     const project = await Project.create({
-      userId,
+      userId: req.user.id,
       title,
       description,
     });
@@ -24,10 +24,8 @@ const createProject = async (req, res) => {
 
 const getProjects = async (req, res) => {
   try {
-    const { userId } = req.query;
-
     const projects = await Project.find({
-      userId,
+      userId: req.user.id,
     }).sort({
       createdAt: -1,
     });
