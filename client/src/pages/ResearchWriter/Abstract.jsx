@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function Abstract() {
   const [topic, setTopic] = useState("");
@@ -9,9 +10,7 @@ function Abstract() {
   const generateAbstract =
     async () => {
       if (!topic.trim()) {
-        alert(
-          "Please enter a research topic"
-        );
+        toast.error("Please enter a research topic");
         return;
       }
 

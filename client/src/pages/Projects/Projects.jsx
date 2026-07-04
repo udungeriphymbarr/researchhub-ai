@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API, { authFetch } from "../../api/api";
+import { toast } from "react-toastify";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
 
   const [editingProject, setEditingProject] =
   useState(null);
@@ -22,64 +26,69 @@ const [editDescription,
     fetchProjects();
   }, []);
 
-  const fetchProjects = async () => {
-    try {
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
-
-      const response = await authFetch(
-        `/api/projects?userId=${user.id}`
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setProjects(data.projects);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-const createProject = async () => {
+const fetchProjects = async () => {
   try {
-    if (!title.trim()) {
-      alert("Project title is required");
-      return;
-    }
-
-    setLoading(true);
+    setLoadingProjects(true);
 
     const user = JSON.parse(
       localStorage.getItem("user")
     );
 
     const response = await authFetch(
-      `/api/projects`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          title,
-          description,
-        }),
-      }
+      `/api/projects?userId=${user.id}`
     );
+
+    const data = await response.json();
+
+    if (data.success) {
+      setProjects(data.projects);
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  } finally {
+
+    setLoadingProjects(false);
+
+  }
+};
+
+const createProject = async () => {
+  try {
+    if (!title.trim()) {
+      toast.error("Project title is required");
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await authFetch("/api/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        description,
+      }),
+    });
 
     const data = await response.json();
 
     if (data.success) {
       setTitle("");
       setDescription("");
-      fetchProjects();
+      toast.success("Project created successfully!");
+
+      await fetchProjects();
+    } else {
+      toast.error(data.message);
     }
   } catch (error) {
     console.error(error);
+    toast.error("Failed to create project.");
   } finally {
     setLoading(false);
   }
@@ -105,8 +114,10 @@ const createProject = async () => {
     if (data.success) {
       fetchProjects();
     }
+    toast.success("Project deleted successfully!");
   } catch (error) {
     console.error(error);
+    toast.error("Failed to delete project.");
   }
 };
 
@@ -146,6 +157,42 @@ const saveEdit = async () => {
   }
 };
 
+const filteredProjects = [...projects]
+  .filter((project) =>
+    project.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  )
+  .sort((a, b) => {
+    if (sortBy === "newest") {
+      return (
+        new Date(b.createdAt) -
+        new Date(a.createdAt)
+      );
+    }
+
+    if (sortBy === "oldest") {
+      return (
+        new Date(a.createdAt) -
+        new Date(b.createdAt)
+      );
+    }
+
+    if (sortBy === "az") {
+      return a.title.localeCompare(
+        b.title
+      );
+    }
+
+    if (sortBy === "za") {
+      return b.title.localeCompare(
+        a.title
+      );
+    }
+
+    return 0;
+  });
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
 
@@ -175,6 +222,7 @@ const saveEdit = async () => {
         </div>
 
       </div>
+
 
       {/* Create Project */}
 
@@ -220,8 +268,35 @@ const saveEdit = async () => {
 
       </div>
 
+      {loadingProjects && (
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    {[1,2,3,4,5,6].map((item) => (
+
+      <div
+        key={item}
+        className="bg-white rounded-2xl shadow p-6 animate-pulse"
+      >
+
+        <div className="w-12 h-12 bg-gray-300 rounded-xl mb-4"></div>
+
+        <div className="h-5 bg-gray-300 rounded mb-3"></div>
+
+        <div className="h-4 bg-gray-200 rounded mb-2"></div>
+
+        <div className="h-4 bg-gray-200 rounded mb-6"></div>
+
+        <div className="h-10 bg-gray-300 rounded-lg"></div>
+
+      </div>
+
+    ))}
+
+  </div>
+)}
+
       {/* Empty State */}
-{projects.length === 0 && (
+{!loadingProjects && filteredProjects.length === 0 && (
 
   <div className="bg-white p-12 rounded-2xl shadow text-center">
 
@@ -243,13 +318,52 @@ const saveEdit = async () => {
 
 )}
 
+<div className="mb-6 flex flex-col md:flex-row gap-4">
+
+  <input
+    type="text"
+    placeholder="🔍 Search projects..."
+    value={search}
+    onChange={(e) =>
+      setSearch(e.target.value)
+    }
+    className="flex-1 border rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+
+  <select
+    value={sortBy}
+    onChange={(e) =>
+      setSortBy(e.target.value)
+    }
+    className="border rounded-xl px-5 py-3"
+  >
+    <option value="newest">
+      Newest First
+    </option>
+
+    <option value="oldest">
+      Oldest First
+    </option>
+
+    <option value="az">
+      A → Z
+    </option>
+
+    <option value="za">
+      Z → A
+    </option>
+
+  </select>
+
+</div>
+
       {/* Projects Grid */}
 
-{projects.length > 0 && (
+{!loadingProjects && filteredProjects.length > 0 && (
 
   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    {projects.map((project) => (
+    {filteredProjects.map((project) => (
 
       <div
         key={project._id}

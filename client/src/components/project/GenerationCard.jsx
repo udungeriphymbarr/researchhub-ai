@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API, { authFetch } from "../../api/api";
 import SupervisorModal from "./SupervisorModal";
+import { toast } from "react-toastify";
 
 function GenerationCard({ generation, onDelete }) {
   const [deleting, setDeleting] = useState(false);
@@ -18,7 +19,7 @@ function GenerationCard({ generation, onDelete }) {
 
     navigator.clipboard.writeText(text);
 
-    alert("Copied!");
+    toast.success("Copied!");
   };
 
   const selectTopic = async (topic) => {
@@ -47,13 +48,13 @@ function GenerationCard({ generation, onDelete }) {
       const data = await response.json();
 
       if (data.success) {
-        alert("✅ Topic selected successfully!");
+        toast.success("✅ Topic selected successfully!");
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to select topic.");
+      toast.error("Failed to select topic.");
     } finally {
       setSelecting(false);
     }
@@ -83,11 +84,11 @@ function GenerationCard({ generation, onDelete }) {
           onDelete(generation._id);
         }
       } else {
-        alert(data.message || "Delete failed.");
+        toast.error(data.message || "Delete failed.");
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      toast.error("Something went wrong.");
     } finally {
       setDeleting(false);
     }

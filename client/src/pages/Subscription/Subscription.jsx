@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../../api/api";
+import { toast } from "react-toastify";
 
 function Subscription() {
 
@@ -32,7 +33,7 @@ const upgrade = async () => {
   const data = await response.json();
 
   if (!data.success) {
-    alert(data.message);
+    toast.error(data.message);
     return;
   }
 
@@ -113,18 +114,27 @@ const upgrade = async () => {
 
                 </div>
 
-                {
-                    user.plan === "free" && (
+               {
+user.plan === "premium" ? (
 
 <button
-    onClick={upgrade}
-    className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-semibold"
+disabled
+className="bg-green-600 text-white px-6 py-3 rounded-lg cursor-default"
 >
-    Upgrade to Premium
+Premium Active ✅
 </button>
 
-                    )
-                }
+) : (
+
+<button
+onClick={upgrade}
+className="bg-blue-600 text-white px-6 py-3 rounded-lg"
+>
+Upgrade to Premium
+</button>
+
+)
+}
 
             </div>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function Significance() {
   const [topic, setTopic] = useState("");
@@ -9,9 +10,7 @@ function Significance() {
   const generateSignificance =
     async () => {
       if (!topic.trim()) {
-        alert(
-          "Please enter a research topic"
-        );
+        toast.error("Please enter a research topic");
         return;
       }
 
@@ -41,7 +40,7 @@ function Significance() {
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to generate significance");
+      toast.error("Failed to generate significance");
     } finally {
       setLoading(false);
     }
@@ -49,7 +48,7 @@ function Significance() {
 
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    alert("Copied successfully!");
+    toast.success("Copied successfully!");
   };
 
   const saveToHistory = async () => {
@@ -76,10 +75,10 @@ body: JSON.stringify({
         }
       );
 
-      alert("Significance saved successfully!");
+      toast.success("Significance saved successfully!");
     } catch (error) {
       console.error(error);
-      alert("Failed to save significance");
+      toast.error("Failed to save significance");
     }
   };
 

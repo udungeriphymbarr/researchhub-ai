@@ -1,81 +1,66 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { authFetch } from "../../api/api";
+import { toast } from "react-toastify";
 
-function PaymentSuccess(){
+function PaymentSuccess() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-    const navigate = useNavigate();
+  useEffect(() => {
+    verifyPayment();
+  }, []);
 
-    useEffect(()=>{
+  const verifyPayment = async () => {
+    try {
+      const reference = searchParams.get("reference");
 
-        const verify = async()=>{
+      if (!reference) {
+        toast.error("Invalid payment.");
+        navigate("/subscription");
+        return;
+      }
 
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
+      const response = await authFetch(
+        `/api/payment/verify/${reference}`
+      );
 
-            const reference =
-                params.get("reference");
+      const data = await response.json();
 
-            if(!reference){
+      if (!data.success) {
+        toast.error(data.message);
+        navigate("/subscription");
+        return;
+      }
 
-                navigate("/dashboard");
+      // Update local user
+const user = data.user;
 
-                return;
+localStorage.setItem(
+    "user",
+    JSON.stringify(user)
+);
 
-            }
+toast.success("🎉 Premium activated!");
 
-            const response =
-                await authFetch(
-                    `/api/payment/verify/${reference}`
-                );
+navigate("/dashboard", { replace: true });
 
-            const data =
-                await response.json();
+    } catch (error) {
+      console.log(error);
 
-            if(data.success){
+      toast.error("Verification failed.");
 
-                const user =
-                    JSON.parse(
-                        localStorage.getItem("user")
-                    );
+      navigate("/subscription");
+    }
+  };
 
-                user.plan="premium";
-
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(user)
-                );
-
-                alert(
-                    "Premium Activated 🎉"
-                );
-
-            }
-
-            navigate("/dashboard");
-
-        };
-
-        verify();
-
-    },[]);
-
-    return(
-
-        <div className="flex items-center justify-center h-screen">
-
-            <h1 className="text-2xl font-bold">
-
-                Verifying Payment...
-
-            </h1>
-
-        </div>
-
-    );
-
+  return (
+    <div className="min-h-screen flex justify-center items-center">
+      <h2 className="text-2xl font-bold">
+        Verifying Payment...
+      </h2>
+    </div>
+  );
 }
 
 export default PaymentSuccess;

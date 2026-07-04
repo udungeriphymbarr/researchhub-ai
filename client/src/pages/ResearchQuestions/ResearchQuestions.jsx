@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function ResearchQuestions() {
   const [topic, setTopic] = useState("");
@@ -10,9 +11,7 @@ function ResearchQuestions() {
   const generateQuestions =
     async () => {
       if (!topic.trim()) {
-        alert(
-          "Please enter a research topic"
-        );
+        toast.error("Please enter a research topic");
         return;
       }
 
@@ -64,12 +63,12 @@ function ResearchQuestions() {
             );
           }
         } else {
-          alert(data.message);
+          toast.error(data.message);
         }
       } catch (error) {
         console.error(error);
 
-        alert(
+        toast.error(
           "Failed to generate research questions"
         );
       } finally {

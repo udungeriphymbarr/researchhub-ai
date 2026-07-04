@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API, { authFetch } from "../../api/api";
+import { toast } from "react-toastify";
 
 function AIGeneratorModal({
     type,
@@ -11,6 +12,7 @@ function AIGeneratorModal({
     const [course, setCourse] = useState("");
     const [interest, setInterest] = useState("");
     const [loading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState("");
 
     const titles = {
         topic: "Generate Research Topic",
@@ -36,23 +38,43 @@ if (
     type === "topic" &&
     !interest.trim()
 ) {
-    alert(
+    toast.error(
       type === "topic"
         ? "Please enter an area of interest."
         : "Please enter a research topic."
     );
     return;
-}
-if (type === "topic" && !course.trim()) {
-    alert("Please enter your department/course.");
-    return;
-}
+    }
+    if (type === "topic" && !course.trim()) {
+        toast.error("Please enter your department/course.");
+        return;
+    }
+
+    let interval;
 
         try {
 
             setLoading(true);
 
-const body = {
+    const messages = [
+        "🤖 AI is analyzing your project...",
+        "📚 Reading previous chapters...",
+        "🧠 Understanding your objectives...",
+        "✍️ Writing academic content...",
+        "📖 Checking research consistency...",
+        "✅ Finalizing response..."
+    ];
+
+    let index = 0;
+
+    setLoadingMessage(messages[0]);
+
+    interval = setInterval(() => {
+        index = (index + 1) % messages.length;
+        setLoadingMessage(messages[index]);
+    }, 1800);
+
+    const body = {
     type,
     course,
     prompt:
@@ -63,21 +85,21 @@ const body = {
     projectId: project?._id,
 };
 
-            const response = await authFetch(
-                `${endpoints[type]}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+    const response = await authFetch(
+        `${endpoints[type]}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                     body: JSON.stringify(body),
                 }
             );
 
-            const data = await response.json();
+    const data = await response.json();
 
-if (!data.success) {
-    alert(data.message);
+    if (!data.success) {
+    toast.error(data.message);
 
     if (
         data.message.includes(
@@ -118,7 +140,7 @@ const saveResponse = await authFetch("/api/generations", {
 const saveData = await saveResponse.json();
 
 if (!saveData.success) {
-    alert(saveData.message);
+    toast.error(saveData.message);
     return;
 }
 
@@ -134,22 +156,21 @@ if (user) {
     );
 }
 
-    alert("Generated Successfully ✅");
+    toast.success("Generated Successfully ✅");
     onGenerate();
     onClose();
     } catch (error) {
 
             console.log(error);
 
-            alert("Something went wrong.");
+            toast.error("Something went wrong.");
 
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
+    } finally {
+        clearInterval(interval);
+        setLoading(false);
+        setLoadingMessage("");
+    }
+ };
 
     return (
 
@@ -214,41 +235,53 @@ if (user) {
     </>
 )}
 
-                <div className="flex justify-end gap-3 mt-8">
+{loading && (
+    <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5 flex items-center gap-4">
 
-                    <button
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
 
-                        onClick={onClose}
+        <div>
+            <p className="font-semibold text-blue-700">
+                ResearchHub AI
+            </p>
 
-                        className="bg-gray-400 text-white px-5 py-2 rounded-lg"
+            <p className="text-gray-600">
+                {loadingMessage}
+            </p>
+        </div>
 
-                    >
+    </div>
+)}
 
-                        Cancel
+    <div className="flex justify-end gap-3 mt-8">
+        
+        <button
+            onClick={onClose}
+            className="bg-gray-400 text-white px-5 py-2 rounded-lg"
+            >
+                Cancel
+        </button>
 
-                    </button>
-
-                    <button
-
-                        onClick={handleGenerate}
-
-                        disabled={loading}
-
-                        className="bg-blue-600 text-white px-6 py-2 rounded-lg"
-
-                    >
-
-                        {loading
-                            ? "Generating..."
-                            : "Generate"}
-
-                    </button>
-
-                </div>
+<button
+    onClick={handleGenerate}
+    disabled={loading}
+    className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 disabled:opacity-70"
+>
+    {loading ? (
+        <>
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            {loadingMessage}
+        </>
+    ) : (
+        "Generate"
+    )}
+</button>
 
             </div>
 
         </div>
+
+    </div>
 
     );
 

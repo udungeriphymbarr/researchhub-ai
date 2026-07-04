@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function ProblemStatement() {
   const [topic, setTopic] = useState("");
@@ -9,9 +10,7 @@ function ProblemStatement() {
    const generateProblemStatement =
     async () => {
       if (!topic.trim()) {
-        alert(
-          "Please enter a research topic"
-        );
+        toast.error("Please enter a research topic");
         return;
       }
 
@@ -40,8 +39,7 @@ function ProblemStatement() {
         setContent(data.content);
       }
     } catch (error) {
-      console.error(error);
-      alert("Failed to generate problem statement");
+      toast.error("Failed to generate problem statement");
     } finally {
       setLoading(false);
     }
@@ -49,7 +47,7 @@ function ProblemStatement() {
 
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    alert("Copied successfully!");
+    toast.success("Copied successfully!");
   };
 
   const saveToHistory = async () => {
@@ -76,9 +74,9 @@ body: JSON.stringify({
         }
       );
 
-      alert("Saved successfully!");
+      toast.success("Problem statement saved successfully!");
     } catch (error) {
-      console.error(error);
+      toast.error("Failed to save problem statement");
     }
   };
 

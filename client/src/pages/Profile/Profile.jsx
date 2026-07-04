@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function Profile() {
   const user = JSON.parse(
@@ -52,11 +53,12 @@ function Profile() {
         })
       );
 
-      alert("Profile Updated Successfully");
+      toast.success("Profile Updated Successfully");
     }
 
   } catch (error) {
     console.error(error);
+    toast.error("Failed to update profile.");
   }
 };
 

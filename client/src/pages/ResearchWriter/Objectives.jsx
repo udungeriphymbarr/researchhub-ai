@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function Objectives() {
   const [topic, setTopic] = useState("");
@@ -9,9 +10,7 @@ function Objectives() {
   const generateObjectives =
     async () => {
       if (!topic.trim()) {
-        alert(
-          "Please enter a research topic"
-        );
+        toast.error("Please enter a research topic");
         return;
       }
 
@@ -41,7 +40,7 @@ function Objectives() {
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to generate objectives");
+      toast.error("Failed to generate objectives");
     } finally {
       setLoading(false);
     }
@@ -49,7 +48,7 @@ function Objectives() {
 
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    alert("Copied successfully!");
+    toast.success("Copied successfully!");
   };
 
   const saveToHistory = async () => {
@@ -76,10 +75,10 @@ body: JSON.stringify({
         }
       );
 
-      alert("Objectives saved successfully!");
+      toast.success("Objectives saved successfully!");
     } catch (error) {
       console.error(error);
-      alert("Failed to save objectives");
+      toast.error("Failed to save objectives");
     }
   };
 

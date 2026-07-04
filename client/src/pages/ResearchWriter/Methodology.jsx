@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function Methodology() {
   const [topic, setTopic] = useState("");
@@ -9,9 +10,7 @@ function Methodology() {
   const generateMethodology =
     async () => {
       if (!topic.trim()) {
-        alert(
-          "Please enter a research topic"
-        );
+        toast.error("Please enter a research topic");
         return;
       }
 
@@ -41,7 +40,7 @@ function Methodology() {
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to generate methodology");
+      toast.error("Failed to generate methodology");
     } finally {
       setLoading(false);
     }
@@ -49,7 +48,7 @@ function Methodology() {
 
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    alert("Copied successfully!");
+    toast.success("Copied successfully!");
   };
 
   const saveToHistory = async () => {
@@ -76,10 +75,10 @@ body: JSON.stringify({
         }
       );
 
-      alert("Methodology saved successfully!");
+      toast.success("Methodology saved successfully!");
     } catch (error) {
       console.error(error);
-      alert("Failed to save methodology");
+      toast.error("Failed to save methodology");
     }
   };
 

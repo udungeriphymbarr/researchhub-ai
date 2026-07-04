@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API, { authFetch } from "../../api/api";
+import { toast } from "react-toastify";
 
 function History() {
   const [generations, setGenerations] = useState([]);
@@ -24,28 +25,29 @@ const response = await authFetch(
     }
   };
 
-  const deleteGeneration = async (id) => {
-    try {
-      const response = await authFetch(
-        `/api/generations/${id}`,
-        {
-          method: "DELETE",
-        }
+const deleteGeneration = async (id) => {
+  try {
+    const response = await authFetch(`/api/generations/${id}`, {
+      method: "DELETE",
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setGenerations((prev) =>
+        prev.filter((item) => item._id !== id)
       );
-
-      const data = await response.json();
-
-      if (data.success) {
-        fetchGenerations();
-      }
-    } catch (error) {
-      console.error(error);
+      toast.success("Generation deleted successfully!");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to delete generation.");
+  }
+};
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    alert("Copied successfully!");
+    toast.success("Copied successfully!");
   };
 
   return (

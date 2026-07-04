@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ProjectSelector from "../../components/ProjectSelector";
 import API from "../../api/api";
+import { toast } from "react-toastify";
 
 function TopicGenerator() {
   const [course, setCourse] = useState("");
@@ -13,12 +14,12 @@ function TopicGenerator() {
 
   const generateTopics = async () => {
     if (!projectId) {
-      alert("Please select a project first.");
+      toast.error("Please select a project first.");
       return;
     }
 
     if (!course.trim() || !interest.trim()) {
-      alert("Please complete all fields.");
+      toast.error("Please complete all fields.");
       return;
     }
 
@@ -44,7 +45,7 @@ function TopicGenerator() {
       const data = await response.json();
 
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message);
         return;
       }
 
@@ -78,9 +79,7 @@ function TopicGenerator() {
       }
     } catch (error) {
       console.error(error);
-      alert(
-        "Failed to generate research topics."
-      );
+      toast.error("Failed to generate research topics.");
     } finally {
       setLoading(false);
     }

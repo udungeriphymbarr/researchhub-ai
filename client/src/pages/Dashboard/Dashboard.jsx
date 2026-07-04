@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API, { authFetch } from "../../api/api";
+import UserCard from "./UserCard";
 
 function Dashboard() {
 const navigate = useNavigate();
+const [loading, setLoading] = useState(true);
 
 const [stats, setStats] = useState({
 topics: 0,
@@ -21,46 +23,54 @@ fetchStats();
 }, []);
 
 const fetchStats = async () => {
-try {
-const user = JSON.parse(
-localStorage.getItem("user")
-);
+  try {
+    setLoading(true);
 
-  const response = await authFetch(
-    `/api/generations?userId=${user.id}`
-  );
+    // Fetch generations
+    const generationResponse = await authFetch("/api/generations");
+    const generationData = await generationResponse.json();
 
-  const data = await response.json();
+    // Fetch projects
+    const projectResponse = await authFetch("/api/projects");
+    const projectData = await projectResponse.json();
 
-  if (data.success) {
-    const topics =
-      data.generations.filter(
-        (item) => item.type === "topic"
-      ).length;
+    if (generationData.success && projectData.success) {
+      const generations = generationData.generations;
+      const projects = projectData.projects;
 
-    const questions =
-      data.generations.filter(
-        (item) =>
-          item.type === "question"
-      ).length;
+      setStats({
+        topics: projects.filter(
+          (p) => p.selectedTopic
+        ).length,
 
-    const outlines =
-      data.generations.filter(
-        (item) =>
-          item.type === "outline"
-      ).length;
+        questions: generations.filter(
+          (g) => g.type === "question"
+        ).length,
 
-    setStats({
-      topics,
-      questions,
-      outlines,
-      projects: 0,
-    });
+        outlines: generations.filter(
+          (g) => g.type === "outline"
+        ).length,
+
+        literature: generations.filter(
+          (g) => g.type === "literature"
+        ).length,
+
+        methodology: generations.filter(
+          (g) => g.type === "methodology"
+        ).length,
+
+        abstracts: generations.filter(
+          (g) => g.type === "abstract"
+        ).length,
+
+        projects: projects.length,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
   }
-} catch (error) {
-  console.error(error);
-}
-
 };
 
 const handleLogout = () => {
@@ -76,7 +86,33 @@ const handleLogout = () => {
   navigate("/login");
 };
 
-return ( <div className="min-h-screen bg-gray-100 p-8">
+if (loading) {
+  return (
+    <div className="min-h-screen p-8 bg-gray-100">
+
+      <div className="animate-pulse">
+
+        <div className="h-32 rounded-3xl bg-gray-300 mb-8"></div>
+
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+
+          {[1,2,3,4,5].map((item) => (
+            <div
+              key={item}
+              className="h-32 rounded-2xl bg-gray-300"
+            />
+          ))}
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+return ( 
+<div className="min-h-screen bg-gray-100 p-8">
 
   {/* Welcome */}
 
@@ -91,6 +127,12 @@ return ( <div className="min-h-screen bg-gray-100 p-8">
 
         <p className="mt-2 opacity-90">
           {user?.name}
+
+{user.plan === "premium" && (
+    <span className="ml-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full">
+        PREMIUM
+    </span>
+)}
         </p>
 
         <p className="text-sm opacity-80">
@@ -128,49 +170,52 @@ return ( <div className="min-h-screen bg-gray-100 p-8">
 
   {/* Stats */}
 
-  <div className="grid md:grid-cols-4 gap-6 mb-8">
+ <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
 
-    <div className="bg-white p-6 rounded-2xl shadow">
-      <h3 className="text-gray-500">
-        Topics
-      </h3>
+  <UserCard />
 
-      <p className="text-3xl font-bold text-blue-600 mt-2">
-        {stats.topics}
-      </p>
-    </div>
+  <div className="bg-white rounded-xl shadow p-6">
+    <h3 className="text-gray-500 mb-2">
+      Topics
+    </h3>
 
-    <div className="bg-white p-6 rounded-2xl shadow">
-      <h3 className="text-gray-500">
-        Questions
-      </h3>
-
-      <p className="text-3xl font-bold text-green-600 mt-2">
-        {stats.questions}
-      </p>
-    </div>
-
-    <div className="bg-white p-6 rounded-2xl shadow">
-      <h3 className="text-gray-500">
-        Outlines
-      </h3>
-
-      <p className="text-3xl font-bold text-purple-600 mt-2">
-        {stats.outlines}
-      </p>
-    </div>
-
-    <div className="bg-white p-6 rounded-2xl shadow">
-      <h3 className="text-gray-500">
-        Projects
-      </h3>
-
-      <p className="text-3xl font-bold text-orange-600 mt-2">
-        {stats.projects}
-      </p>
-    </div>
-
+    <p className="text-4xl font-bold text-blue-600">
+      {stats.topics}
+    </p>
   </div>
+
+  <div className="bg-white rounded-xl shadow p-6">
+    <h3 className="text-gray-500 mb-2">
+      Questions
+    </h3>
+
+    <p className="text-4xl font-bold text-green-600">
+      {stats.questions}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-xl shadow p-6">
+    <h3 className="text-gray-500 mb-2">
+      Outlines
+    </h3>
+
+    <p className="text-4xl font-bold text-purple-600">
+      {stats.outlines}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-xl shadow p-6">
+    <h3 className="text-gray-500 mb-2">
+      Projects
+    </h3>
+
+    <p className="text-4xl font-bold text-orange-500">
+      {stats.projects}
+    </p>
+  </div>
+
+</div>
+
 
   {/* Quick Actions */}
 
