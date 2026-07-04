@@ -72,8 +72,8 @@ if (!generation) {
 
 if (
     generation.userId.toString() !==
-    req.user._id
-){
+    req.user.id
+) {
     return res.status(403).json({
         success:false,
         message:"Unauthorized",
