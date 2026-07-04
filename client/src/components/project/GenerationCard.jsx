@@ -23,8 +23,16 @@ function GenerationCard({ generation, onDelete }) {
   };
 
   const selectTopic = async (topic) => {
-    const confirmSelect = window.confirm(
-      "Use this as the official research topic for this project?"
+    const confirmSelect = await toast.promise(
+      new Promise((resolve) => {
+        const result = window.confirm("Use this as the official research topic for this project?");
+        resolve(result);
+      }),
+      {
+        pending: "Confirming topic selection...",
+        success: "Topic selected successfully!",
+        error: "Failed to select topic.",
+      }
     );
 
     if (!confirmSelect) return;
