@@ -40,20 +40,24 @@ const registerUser = async (req, res) => {
       verificationToken,
     });
 
-    // Send verification email
-try {
-    await sendVerificationEmail(
-        user.email,
-        verificationToken
-    );
-} catch (emailError) {
-    console.log("Email Error:", emailError);
-}
-
+  
+// Respond immediately
 res.status(201).json({
     success: true,
     message:
         "Registration successful. Please check your email to verify your account.",
+});
+
+// Send verification email in the background
+sendVerificationEmail(
+    user.email,
+    verificationToken
+)
+.then(() => {
+    console.log("Verification email sent.");
+})
+.catch((err) => {
+    console.log("Email Error:", err);
 });
 
   } catch (error) {
