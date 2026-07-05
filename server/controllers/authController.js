@@ -8,6 +8,7 @@ const { sendEmail,
 
 const registerUser = async (req, res) => {
   try {
+    console.log("Registration started");
     const { name, email, password } = req.body;
 
     // Check if user already exists
@@ -309,4 +310,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  sendVerificationEmail,
 };

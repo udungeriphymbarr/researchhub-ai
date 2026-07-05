@@ -23,49 +23,38 @@ const sendEmail = async (
 };
 
 // Verification Email
-const sendVerificationEmail = async (
-  email,
-  token
-) => {
-  const verificationLink =
+const sendVerificationEmail = async (email, token) => {
+  try {
+    console.log("Sending verification email to:", email);
+    const verificationLink = 
     `${process.env.CLIENT_URL}/verify-email/${token}`;
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Verify your ResearchHub account",
-    html: `
-      <div style="font-family:Arial,sans-serif;padding:20px">
 
-        <h2>Welcome to ResearchHub 🎉</h2>
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Verify your ResearchHub account",
+      html: `
+        <h2>Welcome to ResearchHub</h2>
 
-        <p>
-          Click the button below to verify your account.
-        </p>
+        <p>Please verify your email.</p>
 
-        <a
-          href="${verificationLink}"
-          style="
-            background:#2563eb;
-            color:white;
-            padding:12px 20px;
-            text-decoration:none;
-            border-radius:8px;
-            display:inline-block;
-            margin-top:20px;
-          "
-        >
+        <a href="${verificationLink}">
           Verify Email
         </a>
+      `,
+    });
 
-        <p style="margin-top:30px">
-          If you didn't create this account,
-          ignore this email.
-        </p>
+    console.log("Email sent successfully");
+    console.log(info);
 
-      </div>
-    `,
-  });
+  } catch (err) {
+
+    console.log("EMAIL ERROR");
+    console.log(err);
+
+    throw err;
+  }
 };
 
 module.exports = {

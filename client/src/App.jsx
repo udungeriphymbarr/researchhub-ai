@@ -27,6 +27,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/Footer";
 import GuestRoute from "./components/auth/GuestRoute";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Subscription from "./pages/Subscription/Subscription";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
