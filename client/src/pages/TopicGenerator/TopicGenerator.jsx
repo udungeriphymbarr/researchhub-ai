@@ -26,7 +26,7 @@ function TopicGenerator() {
     try {
       setLoading(true);
 
-      const response = await fetch(
+      const response = await authFetch(
         `/api/ai/generate`,
         {
           method: "POST",
@@ -59,7 +59,7 @@ function TopicGenerator() {
       );
 
       if (user) {
-        await fetch(
+        await authFetch(
           `/api/generations`,
           {
             method: "POST",

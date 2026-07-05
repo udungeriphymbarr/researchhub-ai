@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../../api/api";
+import {authFetch} from "../../api/api";
 import { toast } from "react-toastify";
 
 function Abstract() {
@@ -18,8 +18,8 @@ function Abstract() {
         setLoading(true);
 
         const response =
-          await fetch(
-            `${API}/api/ai/generate`,
+          await authFetch(
+            `/api/ai/generate`,
             {
               method: "POST",
               headers: {
@@ -42,8 +42,8 @@ function Abstract() {
           localStorage.getItem("user")
         );
 
-        await fetch(
-          `${API}/api/generations`,
+        await authFetch(
+          `/api/generations`,
           {
             method: "POST",
             headers: {

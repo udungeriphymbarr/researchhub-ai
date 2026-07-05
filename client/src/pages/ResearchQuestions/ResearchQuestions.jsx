@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../../api/api";
+import {authFetch} from "../../api/api";
 import { toast } from "react-toastify";
 
 function ResearchQuestions() {

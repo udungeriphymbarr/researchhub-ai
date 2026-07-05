@@ -1,7 +1,45 @@
+import { useEffect, useState } from "react";
+import { authFetch } from "../../api/api";
+
 function UserCard() {
-  const user = JSON.parse(
-    localStorage.getItem("user")
-  );
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const localUser = JSON.parse(
+        localStorage.getItem("user")
+      );
+
+      if (!localUser) return;
+
+      const response = await authFetch(
+        `/api/users/profile`
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setUser(data.user);
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(data.user)
+        );
+      }
+    } catch (error) {
+      console.log(error);
+
+      const localUser = JSON.parse(
+        localStorage.getItem("user")
+      );
+
+      setUser(localUser);
+    }
+  };
 
   if (!user) return null;
 
@@ -31,21 +69,33 @@ function UserCard() {
           </span>
         </div>
 
-        <div className="flex justify-between">
-          <span>AI Used</span>
+        {user.plan === "premium" ? (
+          <div className="flex justify-between">
+            <span>AI Credits</span>
 
-          <span className="font-bold">
-            {usageCount}
-          </span>
-        </div>
+            <span className="font-bold text-green-600">
+              Unlimited ♾️
+            </span>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-between">
+              <span>AI Used</span>
 
-        <div className="flex justify-between">
-          <span>Remaining</span>
+              <span className="font-bold">
+                {usageCount}
+              </span>
+            </div>
 
-          <span className="font-bold">
-            {remaining}
-          </span>
-        </div>
+            <div className="flex justify-between">
+              <span>Remaining</span>
+
+              <span className="font-bold">
+                {remaining}
+              </span>
+            </div>
+          </>
+        )}
 
       </div>
 
