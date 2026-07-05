@@ -6,7 +6,6 @@ const {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  sendVerificationEmail,
 } = require(
   "../controllers/authController"
 );
@@ -21,6 +20,5 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 router.get("/verify-email/:token", verifyEmail);
-router.post("/send-verification-email", sendVerificationEmail);
 
 module.exports = router;

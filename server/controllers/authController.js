@@ -310,5 +310,4 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  sendVerificationEmail,
 };
