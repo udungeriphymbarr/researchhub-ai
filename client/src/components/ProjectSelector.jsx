@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../api/api";
+import { authFetch } from "../api/api";
 
 function ProjectSelector({
   projectId,
@@ -19,8 +19,8 @@ function ProjectSelector({
 
       if (!user) return;
 
-      const response = await fetch(
-        `${API}/api/projects?userId=${user.id}`
+      const response = await authFetch(
+        `/api/projects?userId=${user.id}`
       );
 
       const data = await response.json();

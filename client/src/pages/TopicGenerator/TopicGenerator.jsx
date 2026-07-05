@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ProjectSelector from "../../components/ProjectSelector";
-import API from "../../api/api";
+import { authFetch } from "../../api/api";
 import { toast } from "react-toastify";
 
 function TopicGenerator() {
@@ -27,7 +27,7 @@ function TopicGenerator() {
       setLoading(true);
 
       const response = await fetch(
-        `${API}/api/ai/generate`,
+        `/api/ai/generate`,
         {
           method: "POST",
           headers: {
@@ -60,7 +60,7 @@ function TopicGenerator() {
 
       if (user) {
         await fetch(
-          `${API}/api/generations`,
+          `/api/generations`,
           {
             method: "POST",
             headers: {
