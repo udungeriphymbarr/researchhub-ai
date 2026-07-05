@@ -214,6 +214,12 @@ function App() {
           path="/reset-password/:token"
           element={<ResetPassword />}
         />
+
+        <Route
+          path="/verify-email/:token"
+          element={<VerifyEmail />}
+        />
+
       </Routes>
 
       <Footer />

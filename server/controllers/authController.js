@@ -99,6 +99,14 @@ const loginUser = async (req, res) => {
       });
     }
 
+    if (!user.isVerified) {
+  return res.status(403).json({
+    success: false,
+    message:
+      "Please verify your email before logging in.",
+  });
+}
+
     // Create token
     const token = jwt.sign(
       {
