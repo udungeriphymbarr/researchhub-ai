@@ -8,6 +8,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Mail Server Ready");
+  }
+});
+
 // Generic Email
 const sendEmail = async (
   email,
