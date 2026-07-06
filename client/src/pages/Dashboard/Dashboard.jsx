@@ -155,12 +155,23 @@ return (
           Profile
         </Link>
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 px-5 py-2 rounded-lg"
-        >
-          Logout
-        </button>
+{
+  user.plan === "premium" ? (
+    <button
+      disabled
+      className="bg-green-600 text-white px-5 py-2 rounded-lg cursor-default"
+    >
+      👑 Premium Active
+    </button>
+  ) : (
+    <Link
+      to="/pricing"
+      className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-5 py-2 rounded-lg font-semibold shadow transition"
+    >
+      👑 Upgrade to Premium
+    </Link>
+  )
+}
 
       </div>
 

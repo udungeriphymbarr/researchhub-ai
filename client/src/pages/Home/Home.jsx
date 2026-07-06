@@ -407,7 +407,7 @@ if (token) {
         </h3>
 
         <p className="text-5xl font-bold my-6">
-          Soon
+          ₦5,000
         </p>
 
         <ul className="space-y-3">
