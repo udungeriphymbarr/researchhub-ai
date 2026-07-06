@@ -17,7 +17,7 @@ const sendEmail = async (
   html
 ) => {
   await transporter.sendMail({
-    from: `"ResearchHub AI" <${process.env.EMAIL_USER}>`,
+    from: `"ResearchHub AI" <researchhubai.ng@gmail.com>`,
     to: email,
     subject,
     html,
@@ -31,9 +31,9 @@ const sendVerificationEmail = async (email, token) => {
     const verificationLink = 
     `${process.env.CLIENT_URL}/verify-email/${token}`;
 
-
+    console.log("Reached sendMail");
     const info = await transporter.sendMail({
-      from: `"ResearchHub AI" <${process.env.EMAIL_USER}>`,
+      from: `"ResearchHub AI" <researchhubai.ng@gmail.com>`,
       to: email,
       subject: "Verify your ResearchHub account",
       html: `
@@ -47,7 +47,7 @@ const sendVerificationEmail = async (email, token) => {
       `,
     });
 
-    console.log("Email sent successfully");
+    console.log("Finished sendMail");
     console.log(info);
 
   } catch (err) {
