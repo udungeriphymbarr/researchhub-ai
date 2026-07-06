@@ -22,11 +22,14 @@ function Profile() {
     });
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
   try {
+
     const user = JSON.parse(
       localStorage.getItem("user")
     );
+
+    const token = localStorage.getItem("token");
 
     const response = await fetch(
       `${API}/api/users/profile`,
@@ -34,31 +37,41 @@ function Profile() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          userId: user.id,
-          ...formData,
-        }),
+body: JSON.stringify({
+  userId: user._id,
+  ...formData,
+}),
       }
     );
 
     const data = await response.json();
 
-    if (data.success) {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...user,
-          ...formData,
-        })
-      );
-
-      toast.success("Profile Updated Successfully");
+    if (!response.ok) {
+      toast.error(data.message);
+      return;
     }
 
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
+    );
+
+    window.dispatchEvent(new Event("storage"));
+
+    toast.success(
+      "Profile Updated Successfully"
+    );
+
   } catch (error) {
+
     console.error(error);
-    toast.error("Failed to update profile.");
+
+    toast.error(
+      "Failed to update profile."
+    );
+
   }
 };
 
