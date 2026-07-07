@@ -5,7 +5,7 @@ const initializePayment = async (req, res) => {
 
         const { email } = req.user;
 
-        const amount = 5000 * 100;
+        const amount = 3000 * 100;
 
         const response = await axios.post(
 
