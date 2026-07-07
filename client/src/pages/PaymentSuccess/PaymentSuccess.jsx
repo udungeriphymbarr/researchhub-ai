@@ -26,8 +26,12 @@ function PaymentSuccess() {
       );
 
       if (!response) return;
+      console.log(response.status);
+console.log(response.statusText);
 
       const data = await response.json();
+
+      console.log(data);
 
       if (!data.success) {
         toast.error(data.message);
@@ -48,12 +52,14 @@ toast.success("🎉 Premium activated!");
 navigate("/dashboard", { replace: true });
 
     } catch (error) {
-      console.log(error);
+  console.error(error);
 
-      toast.error("Verification failed.");
+  if (error.response) {
+    console.log(await error.response.json());
+  }
 
-      navigate("/subscription");
-    }
+  toast.error("Verification failed.");
+}
   };
 
   return (
