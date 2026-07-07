@@ -53,90 +53,88 @@ const initializePayment = async (req, res) => {
 const User = require("../models/User");
 
 const verifyPayment = async (req, res) => {
+  try {
+    console.log("====== VERIFY PAYMENT START ======");
 
-    try {
+    const { reference } = req.params;
 
-        const { reference } = req.params;
+    console.log("Reference:", reference);
 
-        const response = await axios.get(
+    const response = await axios.get(
+      `https://api.paystack.co/transaction/verify/${reference}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        },
+      }
+    );
 
-            `https://api.paystack.co/transaction/verify/${reference}`,
+    console.log("Paystack Response:");
+    console.log(response.data);
 
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-                },
-            }
+    const payment = response.data.data;
 
-        );
+    console.log("Status:", payment.status);
+    console.log("Customer:", payment.customer.email);
 
-        const payment = response.data.data;
+    const user = await User.findOne({
+      email: payment.customer.email,
+    });
 
-        if (payment.status !== "success") {
+    console.log("User:", user);
 
-            return res.status(400).json({
-                success:false,
-                message:"Payment failed.",
-            });
+    if (!user) {
+      console.log("USER NOT FOUND");
 
-        }
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
 
-        const user = await User.findOne({
-            email: payment.customer.email,
-        });
+    user.plan = "premium";
+    user.subscriptionStatus = "active";
+    user.paymentReference = reference;
+    user.subscriptionExpires = new Date(
+      Date.now() + 30 * 24 * 60 * 60 * 1000
+    );
+    user.usageCount = 0;
 
-        if (!user) {
+    await user.save();
 
-            return res.status(404).json({
-                success:false,
-                message:"User not found.",
-            });
+    console.log("USER UPDATED");
 
-        }
-
-        user.plan = "premium";
-
-        user.subscriptionStatus = "active";
-
-        user.paymentReference = reference;
-
-        user.subscriptionExpires = new Date(
-            Date.now() +
-            30 * 24 * 60 * 60 * 1000
-        );
-
-        user.usageCount = 0;
-
-        await user.save();
-
-res.json({
-    success: true,
-    message: "Subscription activated.",
-    user: {
+    res.json({
+      success: true,
+      message: "Subscription activated.",
+      user: {
         id: user._id,
         name: user.name,
         email: user.email,
         plan: user.plan,
         subscriptionStatus: user.subscriptionStatus,
         usageCount: user.usageCount,
-    },
-});
+      },
+    });
 
-    }
+  } catch (error) {
 
-catch (error) {
-    console.log("VERIFY ERROR");
+    console.log("========== VERIFY ERROR ==========");
+
     console.log(error.response?.status);
+
     console.log(error.response?.data);
+
     console.log(error.message);
 
-    res.status(500).json({
-        success: false,
-        message: error.response?.data || error.message,
-    });
-}
+    console.log("===============================");
 
+    res.status(500).json({
+      success: false,
+      message: "Verification failed",
+    });
+
+  }
 };
 
 module.exports = {
