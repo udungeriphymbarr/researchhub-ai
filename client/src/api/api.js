@@ -17,9 +17,16 @@ export const authFetch = async (url, options = {}) => {
     },
   });
 
-if (response.status === 401) {
-  console.log("401 Unauthorized");
-}
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    toast.error("Your session has expired. Please login again.");
+
+    window.location.href = "/login";
+
+    return;
+  }
 
   return response;
 };
