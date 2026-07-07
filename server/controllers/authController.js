@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      isVerified: false,
+      isVerified: true,
       verificationToken,
     });
 
