@@ -17,7 +17,6 @@ router.post(
 
 router.get(
     "/verify/:reference",
-    protect,
     verifyPayment
 );
 

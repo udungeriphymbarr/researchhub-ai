@@ -25,6 +25,8 @@ function PaymentSuccess() {
         `/api/payment/verify/${reference}`
       );
 
+      if (!response) return;
+
       const data = await response.json();
 
       if (!data.success) {

@@ -125,16 +125,17 @@ res.json({
 
     }
 
-    catch(error){
+catch (error) {
+    console.log("VERIFY ERROR");
+    console.log(error.response?.status);
+    console.log(error.response?.data);
+    console.log(error.message);
 
-        console.log(error.response?.data);
-
-        res.status(500).json({
-            success:false,
-            message:"Verification failed.",
-        });
-
-    }
+    res.status(500).json({
+        success: false,
+        message: error.response?.data || error.message,
+    });
+}
 
 };
 
