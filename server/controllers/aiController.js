@@ -72,29 +72,37 @@ const generateAI = async (req, res) => {
       // TOPIC
       // ===========================
 
-      case "topic":
+  case "topic":
 
-        aiPrompt = `
-You are an experienced university research supervisor.
+ aiPrompt = `
+You are a highly experienced Professor, Academic Research Supervisor, and University Examiner with over 25 years of experience supervising undergraduate and postgraduate research across multiple disciplines.
 
-Generate exactly TEN unique undergraduate research topics.
+Your task is to generate EXACTLY TEN original, practical, researchable and academically sound undergraduate research topics.
 
 Department:
 ${course}
 
-Area of Interest:
+Research Area:
 ${prompt}
 
 Requirements:
 
-• Undergraduate level
-• Practical
-• Current
-• Specific
-• Researchable
-• No numbering
-• One topic per line
-• No explanations
+• Topics must be suitable for undergraduate final year projects.
+• Topics must reflect current trends and real-world problems.
+• Topics should solve practical societal, industrial or educational challenges.
+• Avoid overly broad topics.
+• Avoid outdated topics.
+• Every topic must be unique.
+• Topics should be specific enough to be completed within one academic session.
+• Make the topics attractive and capable of impressing project supervisors.
+• Use professional academic language.
+
+Output Rules:
+
+• Return ONLY the topics.
+• No numbering.
+• One topic per line.
+• No explanations.
 `;
 
         break;
@@ -106,6 +114,10 @@ Requirements:
       case "question":
 
         aiPrompt = `
+You are a world-class Professor, Senior Academic Researcher
+, University Examiner, Journal Reviewer, and Research Methodologist 
+with over 25 years of experience supervising undergraduate,
+ master's, and PhD research.
 You are writing an undergraduate research project.
 
 Research Topic
@@ -140,12 +152,13 @@ Rules
         break;
 
       // ===========================
-      // OBJECTIVES
+      // DASHBOARD OBJECTIVES
       // ===========================
 
       case "objectives":
 
         aiPrompt = `
+You are a university research supervisor.
 Research Topic
 
 ${selectedTopic}
@@ -170,28 +183,38 @@ Every objective MUST answer at least one research question.
         break;
 
       // ===========================
-      // PROBLEM STATEMENT
+      // DASHBOARD PROBLEM STATEMENT
       // ===========================
 
         case "problem-statement":
 
 aiPrompt = `
-You are an experienced academic researcher.
+You are an experienced Professor of Academic Research and Thesis Writing.
 
-Write a detailed Problem Statement for the following research topic.
+Write a comprehensive undergraduate Problem Statement for the following research topic:
 
-Research Topic:
 ${prompt}
 
 Requirements:
 
-• Undergraduate standard
-• 500-700 words
-• Explain the background
-• State the research problem clearly
-• Identify existing gaps
-• Show why the study is important
-• Formal academic writing
+• 700–1000 words.
+• Begin with a strong academic background to the problem.
+• Explain the current situation using logical reasoning.
+• Identify existing gaps in knowledge, practice or policy.
+• Clearly explain why the problem still exists.
+• Show the consequences if the problem is ignored.
+• Justify why the study is necessary.
+• End with a concise statement of the research problem.
+
+Writing Style:
+
+• Formal academic language.
+• Human-like writing.
+• Logical flow.
+• Well-structured paragraphs.
+• No bullet points.
+• No headings.
+• Avoid repetition.
 `;
 
 break;
@@ -203,6 +226,10 @@ break;
       case "literature":
 
         aiPrompt = `
+You are a world-class Professor, Senior Academic Researcher
+, University Examiner, Journal Reviewer, and Research Methodologist 
+with over 25 years of experience supervising undergraduate,
+ master's, and PhD research.
 Write Chapter Two.
 
 Research Topic
@@ -243,10 +270,10 @@ Requirements
         break;
 
   // ===========================
-  // RESEARCH QUESTION
+  // DASHBOARD RESEARCH QUESTION
   // ===========================
 
-  case "research-question":
+case "research-question":
 
 aiPrompt = `
 Generate five research questions for:
@@ -261,13 +288,37 @@ break;
 case "objective":
 
 aiPrompt = `
-Generate one general objective and five specific objectives for:
+You are a university research supervisor.
+
+Research Topic:
 
 ${prompt}
 
-Ensure every specific objective aligns with the topic.
-`;
+Generate:
 
+• One General Objective.
+• Five Specific Objectives.
+
+Requirements:
+
+• Every objective must directly answer one research question.
+• Objectives must begin with action verbs such as:
+
+Determine
+Examine
+Assess
+Investigate
+Evaluate
+Identify
+Analyze
+Compare
+
+• Objectives must be SMART.
+• Use academic language.
+• Arrange them logically.
+
+Return only the objectives.
+`;
 break;
 
       // ===========================
@@ -277,6 +328,10 @@ break;
       case "methodology":
 
         aiPrompt = `
+You are a world-class Professor, Senior Academic Researcher
+, University Examiner, Journal Reviewer, and Research Methodologist 
+with over 25 years of experience supervising undergraduate,
+ master's, and PhD research.
 Write Chapter Three.
 
 Research Topic
@@ -321,57 +376,91 @@ Everything must align with previous chapters.
         break;
 
   // ===========================
-  // LITERATURE-REVIEW
+  // DASHBOARD LITERATURE-REVIEW
   // ===========================
 
 case "literature-review":
 
 aiPrompt = `
-Write a detailed literature review for:
+You are a Senior University Lecturer and Academic Researcher.
+
+Write Chapter Two (Literature Review) for:
 
 ${prompt}
 
 Include:
 
-• Introduction
-• Conceptual Review
-• Theoretical Review
-• Empirical Review
-• Research Gap
+2.1 Introduction
 
-Approximately 1500–2000 words.
+2.2 Conceptual Review
+
+2.3 Theoretical Review
+
+2.4 Empirical Review
+
+2.5 Knowledge Gap
+
+Requirements:
+
+• 5,000–10,000 words.
+• Professional academic writing.
+• Human-like writing.
+• Logical transitions.
+• Explain concepts thoroughly.
+• Compare previous studies.
+• Highlight similarities and differences.
+• Identify research gaps.
+• Avoid plagiarism.
+• Use proper chapter headings.
 `;
 
 break;
 
 // ===========================
-// SIGNIFICANCE
+// DASHBOARD SIGNIFICANCE
 // ===========================
 
 case "significance":
 
 aiPrompt = `
+You are an Academic Research Expert.
+
 Write the Significance of the Study for:
 
 ${prompt}
 
-Discuss significance to:
+Discuss how the study will benefit:
 
 • Students
 • Researchers
+• Lecturers
+• Policymakers
 • Government
+• Organizations
 • Society
-• Future studies
+• Future Researchers
+
+Requirements:
+
+• 1000–2000 words.
+• Professional academic language.
+• Explain each beneficiary in detail.
+• Avoid repetition.
+• Write naturally.
 `;
 
+break;
+
 //===========================
-// METHODOLOGIES
+// DASHBOARD METHODOLOGIES
 //===========================
 
 case "methodologies":
 
 aiPrompt = `
-Write Chapter Three methodology for:
+You are an experienced Research Methodologist.
+
+Write Chapter Three (Research Methodology) for:
 
 ${prompt}
 
@@ -379,18 +468,37 @@ Include:
 
 Research Design
 
+Study Area
+
 Population
 
-Sample
+Sample Size
 
 Sampling Technique
 
-Instrument
+Research Instrument
 
-Data Collection
+Validity
 
-Data Analysis
+Reliability
+
+Method of Data Collection
+
+Method of Data Analysis
+
+Ethical Considerations
+
+Requirements:
+
+• 5,000–7,500 words.
+• Undergraduate standard.
+• Practical methodology.
+• Academic writing.
+• Logical explanations.
+• Proper headings.
 `;
+
+break;
 
       // ===========================
       // ABSTRACT
@@ -399,7 +507,9 @@ Data Analysis
       case "abstract":
 
         aiPrompt = `
-Write an undergraduate Abstract.
+You are a world-class Professor, Senior Academic Researcher, University Examiner, Journal Reviewer, and Research Methodologist 
+with over 25 years of experience supervising undergraduate, master's, and PhD research.
+        Write an undergraduate Abstract.
 
 Research Topic
 
@@ -443,31 +553,36 @@ Keywords
         break;
 
 //=====================
-//ABSTRACTS
+//DASHBOARD ABSTRACTS
 //=====================  
 
 case "abstracts":
 
 aiPrompt = `
-Write an undergraduate research abstract for:
+You are a Professor of Academic Writing.
+
+Write a complete undergraduate Abstract for:
 
 ${prompt}
 
 Maximum 300 words.
 
-Include:
+The abstract must include:
 
-Background
+• Background
+• Purpose of the Study
+• Research Objectives
+• Methodology
+• Expected Findings
+• Conclusion
+• Keywords
 
-Aim
+Requirements:
 
-Method
-
-Expected Findings
-
-Conclusion
-
-Keywords
+• Professional academic writing.
+• One continuous paragraph.
+• Clear and concise.
+• Suitable for submission to a university.
 `;
 
       default:
