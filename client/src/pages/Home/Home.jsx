@@ -6,6 +6,7 @@ import Pricing from "../../components/landing/Pricing";
 import Testimonials from "../../components/landing/Testimonials";
 import FAQ from "../../components/landing/FAQ";
 import CTA from "../../components/landing/CTA";
+import { Navigate } from "react-router-dom";
 
 function Home() {
   
