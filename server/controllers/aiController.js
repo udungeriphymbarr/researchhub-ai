@@ -182,9 +182,9 @@ Every objective MUST answer at least one research question.
 
         break;
 
-      // ===========================
-      // DASHBOARD PROBLEM STATEMENT
-      // ===========================
+  // ===========================
+  // DASHBOARD PROBLEM STATEMENT
+  // ===========================
 
         case "problem-statement":
 
@@ -442,7 +442,7 @@ Discuss how the study will benefit:
 
 Requirements:
 
-• 1000–2000 words.
+• 2000–4000 words.
 • Professional academic language.
 • Explain each beneficiary in detail.
 • Avoid repetition.
@@ -585,14 +585,14 @@ Requirements:
 • Suitable for submission to a university.
 `;
 
-      default:
+  default:
 
-        return res.status(400).json({
-          success: false,
-          message: "Invalid AI Tool",
-        });
+  return res.status(400).json({
+    success: false,
+    message: "Invalid AI Tool",
+    });
 
-    }
+  }
 
     // ===========================
     // AI RESPONSE
