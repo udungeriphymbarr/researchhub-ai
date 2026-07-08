@@ -27,17 +27,23 @@ function Methodology() {
                   "application/json",
               },
               body: JSON.stringify({
-                type: "methodology",
+                type: "methodologies",
                 prompt: topic,
               }),
             }
           );
 
       const data = await response.json();
-
-      if (data.success) {
+      
+if (data.success) {
+    if (Array.isArray(data.output)) {
+        setContent(data.output.join("\n"));
+    } else {
         setContent(data.output);
-      }
+    }
+} else {
+    toast.error(data.message);
+}
     } catch (error) {
       console.error(error);
       toast.error("Failed to generate methodology");
@@ -68,7 +74,7 @@ function Methodology() {
 body: JSON.stringify({
   userId: user.id,
   projectId: user.projectId,
-  type: "methodology",
+  type: "methodologies",
   input: topic,
   output: [content],
 }),

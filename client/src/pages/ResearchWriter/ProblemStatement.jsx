@@ -35,9 +35,15 @@ function ProblemStatement() {
 
       const data = await response.json();
 
-      if (data.success) {
-        setContent(data.content);
-      }
+if (data.success) {
+    if (Array.isArray(data.output)) {
+        setContent(data.output.join("\n"));
+    } else {
+        setContent(data.output);
+    }
+} else {
+    toast.error(data.message);
+}
     } catch (error) {
       toast.error("Failed to generate problem statement");
     } finally {

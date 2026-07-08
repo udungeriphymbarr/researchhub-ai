@@ -35,9 +35,15 @@ function Objectives() {
 
       const data = await response.json();
 
-      if (data.success) {
+if (data.success) {
+    if (Array.isArray(data.output)) {
+        setContent(data.output.join("\n"));
+    } else {
         setContent(data.output);
-      }
+    }
+} else {
+    toast.error(data.message);
+}
     } catch (error) {
       console.error(error);
       toast.error("Failed to generate objectives");

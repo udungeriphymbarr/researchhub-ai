@@ -143,7 +143,7 @@ Rules
       // OBJECTIVES
       // ===========================
 
-      case "objective":
+      case "objectives":
 
         aiPrompt = `
 Research Topic
@@ -168,6 +168,33 @@ Every objective MUST answer at least one research question.
 `;
 
         break;
+
+      // ===========================
+      // PROBLEM STATEMENT
+      // ===========================
+
+        case "problem-statement":
+
+aiPrompt = `
+You are an experienced academic researcher.
+
+Write a detailed Problem Statement for the following research topic.
+
+Research Topic:
+${prompt}
+
+Requirements:
+
+• Undergraduate standard
+• 500-700 words
+• Explain the background
+• State the research problem clearly
+• Identify existing gaps
+• Show why the study is important
+• Formal academic writing
+`;
+
+break;
 
       // ===========================
       // LITERATURE
@@ -214,6 +241,34 @@ Requirements
 `;
 
         break;
+
+  // ===========================
+  // RESEARCH QUESTION
+  // ===========================
+
+  case "research-question":
+
+aiPrompt = `
+Generate five research questions for:
+
+${prompt}
+
+The questions must be clear, measurable and suitable for undergraduate research.
+`;
+
+break;
+
+case "objective":
+
+aiPrompt = `
+Generate one general objective and five specific objectives for:
+
+${prompt}
+
+Ensure every specific objective aligns with the topic.
+`;
+
+break;
 
       // ===========================
       // METHODOLOGY
@@ -265,6 +320,78 @@ Everything must align with previous chapters.
 
         break;
 
+  // ===========================
+  // LITERATURE-REVIEW
+  // ===========================
+
+case "literature-review":
+
+aiPrompt = `
+Write a detailed literature review for:
+
+${prompt}
+
+Include:
+
+• Introduction
+• Conceptual Review
+• Theoretical Review
+• Empirical Review
+• Research Gap
+
+Approximately 1500–2000 words.
+`;
+
+break;
+
+// ===========================
+// SIGNIFICANCE
+// ===========================
+
+case "significance":
+
+aiPrompt = `
+Write the Significance of the Study for:
+
+${prompt}
+
+Discuss significance to:
+
+• Students
+• Researchers
+• Government
+• Society
+• Future studies
+`;
+
+//===========================
+// METHODOLOGIES
+//===========================
+
+case "methodologies":
+
+aiPrompt = `
+Write Chapter Three methodology for:
+
+${prompt}
+
+Include:
+
+Research Design
+
+Population
+
+Sample
+
+Sampling Technique
+
+Instrument
+
+Data Collection
+
+Data Analysis
+`;
+
       // ===========================
       // ABSTRACT
       // ===========================
@@ -314,6 +441,34 @@ Keywords
 `;
 
         break;
+
+//=====================
+//ABSTRACTS
+//=====================  
+
+case "abstracts":
+
+aiPrompt = `
+Write an undergraduate research abstract for:
+
+${prompt}
+
+Maximum 300 words.
+
+Include:
+
+Background
+
+Aim
+
+Method
+
+Expected Findings
+
+Conclusion
+
+Keywords
+`;
 
       default:
 

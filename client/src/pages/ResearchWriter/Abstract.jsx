@@ -27,7 +27,7 @@ function Abstract() {
                   "application/json",
               },
               body: JSON.stringify({
-                type: "abstract",
+                type: "abstracts",
                 prompt: topic,
               }),
             }
@@ -36,7 +36,11 @@ function Abstract() {
       const data = await response.json();
 
       if (data.success) {
-        setContent(data.output);
+        if (Array.isArray(data.output)) {
+          setContent(data.output.join("\n"));
+        } else {
+          setContent(data.output);
+        }
 
         const user = JSON.parse(
           localStorage.getItem("user")
@@ -52,7 +56,7 @@ function Abstract() {
           body: JSON.stringify({
           userId: user.id,
           projectId: user.projectId,
-          type: "abstract",
+          type: "abstracts",
           input: topic,
           output: data.output,
           }),

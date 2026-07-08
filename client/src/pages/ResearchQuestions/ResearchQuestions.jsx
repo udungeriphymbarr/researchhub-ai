@@ -28,7 +28,7 @@ function ResearchQuestions() {
                   "application/json",
               },
               body: JSON.stringify({
-                type: "question",
+                type: "research-question",
                 prompt: topic,
               }),
             }
