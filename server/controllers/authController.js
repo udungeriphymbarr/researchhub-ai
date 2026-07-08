@@ -62,7 +62,9 @@ sendVerificationEmail(
     console.log("Verification email sent.");
 })
 .catch((err) => {
-    console.log("Email Error:", err);
+    console.log("========== RESEND ERROR ==========");
+    console.log(err);
+    console.log("=================================");
 });
 
   } catch (error) {

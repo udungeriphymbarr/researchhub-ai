@@ -1,19 +1,14 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Generic sender
+// ===============================
+// Generic Email Sender
+// ===============================
+
 const sendEmail = async (options) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
+  await resend.emails.send({
+    from: "ResearchHub AI <onboarding@resend.dev>",
     to: options.email,
     subject: options.subject,
     html: options.message,
@@ -27,36 +22,48 @@ const sendEmail = async (options) => {
 const sendVerificationEmail = async (email, verificationUrl) => {
   await sendEmail({
     email,
-    subject: "Verify your ResearchHub AI account",
+    subject: "Verify your ResearchHub AI Account",
     message: `
-      <h2>Welcome to ResearchHub AI 🚀</h2>
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px">
 
-      <p>Thank you for signing up.</p>
+        <h2 style="color:#2563eb;">
+          Welcome to ResearchHub AI 🚀
+        </h2>
 
-      <p>Please click the button below to verify your email address.</p>
+        <p>
+          Thank you for creating your account.
+        </p>
 
-      <a href="${verificationUrl}"
-      style="
-      display:inline-block;
-      padding:12px 24px;
-      background:#2563eb;
-      color:white;
-      text-decoration:none;
-      border-radius:8px;
-      font-weight:bold;
-      ">
+        <p>
+          Click the button below to verify your email address.
+        </p>
 
-      Verify Email
+        <a href="${verificationUrl}"
+        style="
+        display:inline-block;
+        padding:14px 28px;
+        background:#2563eb;
+        color:#ffffff;
+        text-decoration:none;
+        border-radius:8px;
+        font-weight:bold;
+        ">
 
-      </a>
+        Verify Email
 
-      <p>If you didn't create this account, please ignore this email.</p>
+        </a>
+
+        <p style="margin-top:30px;">
+          If you didn't create this account, you can safely ignore this email.
+        </p>
+
+      </div>
     `,
   });
 };
 
 // ===============================
-// Forgot Password Email
+// Reset Password
 // ===============================
 
 const sendResetPasswordEmail = async (email, resetUrl) => {
@@ -64,14 +71,18 @@ const sendResetPasswordEmail = async (email, resetUrl) => {
     email,
     subject: "Reset Your Password",
     message: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px">
+
       <h2>Password Reset</h2>
 
-      <p>You requested a password reset.</p>
+      <p>
+      Click the button below to reset your password.
+      </p>
 
       <a href="${resetUrl}"
       style="
       display:inline-block;
-      padding:12px 24px;
+      padding:14px 28px;
       background:#2563eb;
       color:white;
       text-decoration:none;
@@ -83,7 +94,11 @@ const sendResetPasswordEmail = async (email, resetUrl) => {
 
       </a>
 
-      <p>If you didn't request this, simply ignore this email.</p>
+      <p style="margin-top:30px;">
+      If you didn't request this, simply ignore this email.
+      </p>
+
+      </div>
     `,
   });
 };
