@@ -4,6 +4,7 @@ const User = require("../models/User");
 const crypto = require("crypto");
 const { sendEmail, 
   sendVerificationEmail,
+  sendResetPasswordEmail
   } = require("../utils/sendEmail");
 
 const registerUser = async (req, res) => {
@@ -37,7 +38,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      isVerified: true,
+      isVerified: false,
       verificationToken,
     });
 
@@ -50,9 +51,12 @@ res.status(201).json({
 });
 
 // Send verification email in the background
+const verificationLink =
+`${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
+
 sendVerificationEmail(
     user.email,
-    verificationToken
+    verificationLink
 )
 .then(() => {
     console.log("Verification email sent.");
@@ -170,25 +174,13 @@ const forgotPassword = async (
 
     await user.save();
 
-    const resetLink =
-      `http://localhost:5173/reset-password/${resetToken}`;
+const resetLink =
+`${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-    await sendEmail(
-      user.email,
-      "Reset Your Password",
-      `
-      <h2>Password Reset</h2>
-
-      <p>
-      Click the button below
-      to reset your password.
-      </p>
-
-      <a href="${resetLink}">
-      Reset Password
-      </a>
-      `
-    );
+await sendResetPasswordEmail(
+    user.email,
+    resetLink
+);
 
     res.json({
       success: true,
