@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      isVerified: false,
+      isVerified: true,
       verificationToken,
     });
 
@@ -51,7 +51,8 @@ res.status(201).json({
 });
 
 // Send verification email in the background
-const verificationLink =
+// Email verification temporarily disabled
+/* const verificationLink =
 `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
 sendVerificationEmail(
@@ -65,7 +66,7 @@ sendVerificationEmail(
     console.log("========== RESEND ERROR ==========");
     console.log(err);
     console.log("=================================");
-});
+}); */
 
   } catch (error) {
 
@@ -105,14 +106,6 @@ const loginUser = async (req, res) => {
         message: "Invalid email or password",
       });
     }
-
-    if (!user.isVerified) {
-  return res.status(403).json({
-    success: false,
-    message:
-      "Please verify your email before logging in.",
-  });
-}
 
     // Create token
     const token = jwt.sign(
