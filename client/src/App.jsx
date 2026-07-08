@@ -24,7 +24,7 @@ import Abstract from "./pages/ResearchWriter/Abstract";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
-import Footer from "./components/Footer";
+import Footer from "./components/landing/Footer";
 import GuestRoute from "./components/auth/GuestRoute";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import VerifyEmail from "./pages/auth/VerifyEmail";

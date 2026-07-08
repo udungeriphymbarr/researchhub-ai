@@ -6,7 +6,6 @@ import Pricing from "../../components/landing/Pricing";
 import Testimonials from "../../components/landing/Testimonials";
 import FAQ from "../../components/landing/FAQ";
 import CTA from "../../components/landing/CTA";
-import Footer from "../../components/landing/Footer";
 
 function Home() {
   
@@ -17,7 +16,8 @@ function Home() {
     }  
 
   return (
-    <>
+
+    <div className="bg-white overflow-hidden">
       <Hero />
       <Features />
       <Workspace />
@@ -26,8 +26,7 @@ function Home() {
       <Testimonials />
       <FAQ />
       <CTA />
-      <Footer />
-    </>
+    </div>
   );
 }
 
