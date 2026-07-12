@@ -6,6 +6,7 @@ import API from "../../api/api";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../firebase/firebase";
 
+
 function Login() {
   const navigate = useNavigate();
 

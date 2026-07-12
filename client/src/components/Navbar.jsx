@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import {Link, useNavigate, useLocation,} from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/firebase";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -23,17 +25,28 @@ useEffect(() => {
   };
 }, [location]);
 
-const handleLogout = () => {
-  if (!window.confirm("Are you sure you want to logout?")) return;
+const handleLogout = async () => {
+  try {
 
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+     if (!window.confirm("Are you sure you want to logout?")) return;
 
-  setUser(null);
+    // Log out of Firebase (Google Sign-In)
+    await signOut(auth);
 
-  navigate("/login");
+    // Remove your app's saved login
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Clear any session storage
+    sessionStorage.clear();
+
+    // Go back to Login page
+    navigate("/login", { replace: true });
+
+  } catch (error) {
+    console.error(error);
+  }
 };
-
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
