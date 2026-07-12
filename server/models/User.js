@@ -29,7 +29,13 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      required: true,
+      default: "",
+    },
+
+    provider: {
+      type: String,
+      enum: ["email", "google"],
+      default: "email",
     },
 
     department: {

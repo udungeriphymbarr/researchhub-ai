@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import API from "../../api/api";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../../firebase/firebase";
 
 function Login() {
   const navigate = useNavigate();
@@ -81,6 +83,68 @@ function Login() {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = async () => {
+  try {
+    // Open Google popup
+    const result = await signInWithPopup(
+      auth,
+      googleProvider
+    );
+
+    // Get Firebase ID Token
+    const idToken = await result.user.getIdToken();
+
+    // Send token to your backend
+    const response = await fetch(
+      `${API}/api/auth/google-login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idToken,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
+
+      await Swal.fire({
+  icon: "success",
+  title: "Welcome!",
+  text: "Signed in with Google successfully 🚀",
+  timer: 1200,
+  showConfirmButton: false,
+});
+
+navigate("/dashboard");
+
+    } else {
+      Swal.fire({
+      icon: "error",
+      title: "Google Login Failed",
+      text: data.message,
+    });
+    }
+
+  } catch (error) {
+    console.log(error);
+Swal.fire({
+  icon: "error",
+  title: "Google Login Failed",
+  text: "Please try again.",
+});
+  }
+};
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
@@ -170,6 +234,20 @@ function Login() {
               ? "Logging in..."
               : "Login"}
           </button>
+
+<button
+  type="button"
+  onClick={handleGoogleLogin}
+  className="w-full mt-4 border border-gray-300 rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+>
+  <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    alt="Google"
+    className="w-5 h-5"
+  />
+
+  Continue with Google
+</button>
 
         </form>
 

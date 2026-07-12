@@ -11,6 +11,7 @@ const userRoutes = require("./routes/userRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const researchRoutes = require("./routes/researchRoutes");
+const googleAuthRoutes = require("./routes/googleAuthRoutes");
 
 const subscriptionRoutes = 
 require("./routes/subscriptionRoutes");
@@ -45,6 +46,8 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/research", researchRoutes);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/payment", paymentRoutes);
+
+app.use("/api/auth", googleAuthRoutes);
 // Test Route
 app.get("/", (req, res) => {
   res.send("ResearchHub AI API Running 🚀");
