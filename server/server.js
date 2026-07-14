@@ -13,6 +13,8 @@ const projectRoutes = require("./routes/projectRoutes");
 const researchRoutes = require("./routes/researchRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 
+const productRoutes = require("./routes/productRoutes");
+
 const subscriptionRoutes = 
 require("./routes/subscriptionRoutes");
 
@@ -46,6 +48,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/research", researchRoutes);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/products", productRoutes);
 
 app.use("/api/auth", googleAuthRoutes);
 // Test Route
