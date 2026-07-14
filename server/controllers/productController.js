@@ -98,7 +98,42 @@ const createProduct = async (req, res) => {
 
 };
 
+// ==========================
+// DELETE PRODUCT
+// ==========================
+
+const deleteProduct = async (req, res) => {
+
+  try {
+
+    await Product.findByIdAndDelete(req.params.id);
+
+    res.json({
+
+      success: true,
+
+      message: "Product deleted successfully."
+
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+
+      success: false,
+
+      message: "Delete failed."
+
+    });
+
+  }
+
+};
+
 module.exports = {
   getProducts,
   createProduct,
+  deleteProduct,
 };

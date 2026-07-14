@@ -4,6 +4,7 @@ const upload = require("../middleware/upload");
 const {
   getProducts,
   createProduct,
+  deleteProduct,
 } = require("../controllers/productController");
 
 const router = express.Router();
@@ -29,5 +30,7 @@ router.post(
   createProduct
 
 );
+
+router.delete("/:id", deleteProduct);
 
 module.exports = router;
