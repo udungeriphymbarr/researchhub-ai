@@ -36,6 +36,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUpload from "./pages/admin/AdminUpload";
 import AdminProducts from "./pages/admin/AdminProducts";
 import EditProduct from "./pages/admin/EditProduct";
+import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 
 function App() {
   return (
@@ -212,7 +213,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-<Route path="/admin" element={<AdminLayout />}>
+<Route
+  path="/admin"
+  element={
+    <AdminProtectedRoute>
+      <AdminLayout />
+    </AdminProtectedRoute>
+  }
+>
 
     <Route index element={<AdminDashboard />} />
 

@@ -23,6 +23,8 @@ function EditProduct() {
 
   }, []);
 
+  const token = localStorage.getItem("token");
+
   const fetchProduct = async () => {
 
     try {
@@ -77,6 +79,7 @@ function EditProduct() {
 
             "Content-Type": "application/json",
 
+            Authorization: `Bearer ${token}`,
           },
 
           body: JSON.stringify({

@@ -11,7 +11,6 @@ function AdminUpload() {
 
   const [cover, setCover] = useState(null);
   const [pdf, setPdf] = useState(null);
-
   const [loading, setLoading] = useState(false);
 
   const handlePublish = async () => {
@@ -30,18 +29,18 @@ function AdminUpload() {
     formData.append("cover", cover);
     formData.append("pdf", pdf);
 
+    const token = localStorage.getItem("token");
     const response = await fetch(
 
       `${API}/api/products`,
 
       {
-
         method: "POST",
-
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
-
       }
-
     );
 
     const data = await response.json();

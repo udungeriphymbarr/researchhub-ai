@@ -18,6 +18,8 @@ function AdminProducts() {
 
   }, []);
 
+  const token = localStorage.getItem("token");
+
   const handleDelete = async (id) => {
 
   const confirmDelete = window.confirm(
@@ -32,6 +34,10 @@ function AdminProducts() {
       `${API}/api/products/${id}`,
       {
         method: "DELETE",
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
