@@ -132,8 +132,55 @@ const deleteProduct = async (req, res) => {
 
 };
 
+// ==========================
+// UPDATE PRODUCT
+// ==========================
+
+const updateProduct = async (req, res) => {
+
+  try {
+
+    const product = await Product.findByIdAndUpdate(
+
+      req.params.id,
+
+      req.body,
+
+      {
+
+        new: true,
+
+      }
+
+    );
+
+    res.json({
+
+      success: true,
+
+      product,
+
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+
+      success: false,
+
+      message: "Update failed",
+
+    });
+
+  }
+
+};
+
 module.exports = {
   getProducts,
   createProduct,
   deleteProduct,
+  updateProduct,
 };
