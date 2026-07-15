@@ -31,6 +31,11 @@ import VerifyEmail from "./pages/auth/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Subscription from "./pages/Subscription/Subscription";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUpload from "./pages/admin/AdminUpload";
+import AdminProducts from "./pages/admin/AdminProducts";
+import EditProduct from "./pages/admin/EditProduct";
 
 function App() {
   return (
@@ -207,6 +212,26 @@ function App() {
             </ProtectedRoute>
           }
         />
+<Route path="/admin" element={<AdminLayout />}>
+
+    <Route index element={<AdminDashboard />} />
+
+    <Route
+        path="products"
+        element={<AdminProducts />}
+    />
+
+    <Route
+        path="upload"
+        element={<AdminUpload />}
+    />
+
+    <Route
+    path="edit/:id"
+    element={<EditProduct />}
+/>
+
+</Route>
 
         <Route
           path="/forgot-password"

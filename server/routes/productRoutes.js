@@ -1,5 +1,7 @@
 const express = require("express");
 
+const adminMiddleware = require("../middleware/adminMiddleware");
+
 const upload = require("../middleware/upload");
 const {
   getProducts,
@@ -28,12 +30,12 @@ router.post(
     },
   ]),
 
-  createProduct
+  adminMiddleware, createProduct
 
 );
 
-router.delete("/:id", deleteProduct);
+router.delete("/:id", adminMiddleware, deleteProduct);
 
-router.put("/:id", updateProduct);
+router.put("/:id", adminMiddleware, updateProduct);
 
 module.exports = router;
