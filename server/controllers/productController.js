@@ -115,10 +115,29 @@ fs.unlinkSync(coverTemp);
 
 const pdfFileName = path.basename(pdfTemp);
 
+const pdfFolder = path.join(
+    __dirname,
+    "..",
+    "uploads",
+    "pdfs"
+);
+
+if (!fs.existsSync(pdfFolder)) {
+
+    fs.mkdirSync(pdfFolder, {
+
+        recursive: true,
+
+    });
+
+}
+
 const pdfDestination = path.join(
-  "uploads",
-  "pdfs",
-  pdfFileName
+
+    pdfFolder,
+
+    pdfFileName
+
 );
 
 const uploadFolder = path.join("uploads", "pdfs");
@@ -134,6 +153,9 @@ if (!fs.existsSync(uploadFolder)) {
 }
 
 fs.renameSync(pdfTemp, pdfDestination);
+console.log("PDF saved to:");
+console.log(pdfDestination);
+console.log("Exists:", fs.existsSync(pdfDestination));
 
     const slug = slugify(title, {
       lower: true,
