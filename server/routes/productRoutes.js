@@ -5,6 +5,7 @@ const adminMiddleware = require("../middleware/adminMiddleware");
 const upload = require("../middleware/upload");
 const {
   getProducts,
+  getProduct,
   createProduct,
   deleteProduct,
   updateProduct,
