@@ -39,6 +39,7 @@ import EditProduct from "./pages/admin/EditProduct";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 import Store from "./pages/store/Store";
 import ProductDetails from "./pages/store/ProductDetails";
+import Library from "./pages/library/Library";
 
 function App() {
   return (
@@ -251,6 +252,15 @@ function App() {
 <Route
   path="/store/:id"
   element={<ProductDetails />}
+/>
+
+<Route
+  path="/library"
+  element={
+    <ProtectedRoute>
+      <Library />
+    </ProtectedRoute>
+  }
 />
 
         <Route
