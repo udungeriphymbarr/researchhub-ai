@@ -36,7 +36,7 @@ function Library() {
 
   };
 
-  
+
 const handleDownload = async (productId) => {
 
   try {
@@ -59,15 +59,29 @@ const handleDownload = async (productId) => {
 
     );
 
-    const data = await response.json();
+    if (!response.ok) {
 
-    if (!data.success) {
-
-      throw new Error(data.message);
+      throw new Error("Download failed.");
 
     }
 
-    window.open(data.downloadUrl, "_blank");
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    link.download = "";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
 
   }
 

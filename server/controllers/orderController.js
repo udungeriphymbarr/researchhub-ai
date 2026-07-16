@@ -1,4 +1,6 @@
 const Order = require("../models/Order");
+const cloudinary = require("../config/cloudinary");
+
 
 const getMyOrders = async (req, res) => {
 
@@ -40,7 +42,6 @@ const getMyOrders = async (req, res) => {
 
 };
 
-const cloudinary = require("../config/cloudinary");
 
 const downloadProduct = async (req, res) => {
 
@@ -85,35 +86,51 @@ const downloadProduct = async (req, res) => {
 
         }
 
-        const downloadUrl = cloudinary.url(
+        // Generate the Cloudinary URL
+        const pdfUrl = cloudinary.url(product.pdfFile, {
 
-            product.pdfFile,
+            resource_type: "raw",
 
-            {
+            secure: true,
 
-                resource_type: "raw",
+        });
 
-                secure: true,
+        // Fetch the PDF from Cloudinary
+        const response = await axios({
 
-                flags: "attachment",
+            url: pdfUrl,
 
-            }
+            method: "GET",
+
+            responseType: "stream",
+
+        });
+
+        // Force download
+        res.setHeader(
+
+            "Content-Disposition",
+
+            `attachment; filename="${product.title}.pdf"`
 
         );
 
-        res.json({
+        res.setHeader(
 
-            success: true,
+            "Content-Type",
 
-            downloadUrl,
+            "application/pdf"
 
-        });
+        );
+
+        // Stream PDF to browser
+        response.data.pipe(res);
 
     }
 
     catch (error) {
 
-        console.log(error);
+        console.log(error.response?.data || error.message);
 
         res.status(500).json({
 
@@ -126,6 +143,7 @@ const downloadProduct = async (req, res) => {
     }
 
 };
+
 
 module.exports = {
 
