@@ -35,6 +35,64 @@ function Library() {
 
   };
 
+  const handleDownload = async (productId) => {
+
+  try {
+
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+
+      `${API}/api/orders/download/${productId}`,
+
+      {
+
+        headers: {
+
+          Authorization: `Bearer ${token}`,
+
+        },
+
+      }
+
+    );
+
+    if (!response.ok) {
+
+      throw new Error("Download failed.");
+
+    }
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    link.download = "";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+
+  }
+
+  catch (error) {
+
+    console.log(error);
+
+    alert("Unable to download.");
+
+  }
+
+};
+
   return (
 
     <div className="min-h-screen bg-gray-100 py-12">
@@ -90,12 +148,9 @@ function Library() {
 
                   </h2>
 
-<a
-  href={order.product.pdfFile}
-  target="_blank"
-  rel="noreferrer"
+<button
+  onClick={() => handleDownload(order.product._id)}
   className="
-  inline-block
   mt-6
   bg-green-600
   hover:bg-green-700
@@ -106,7 +161,7 @@ function Library() {
   "
 >
   Download
-</a>
+</button>
 
                 </div>
 

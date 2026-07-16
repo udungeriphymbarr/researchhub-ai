@@ -2,7 +2,8 @@ const express = require("express");
 
 const adminMiddleware = require("../middleware/adminMiddleware");
 
-const upload = require("../middleware/upload");
+const upload = require("../middleware/uploadProduct");
+
 const {
   getProducts,
   getProduct,

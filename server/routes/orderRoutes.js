@@ -8,6 +8,8 @@ const {
 
     getMyOrders,
 
+    downloadProduct,
+
 } = require("../controllers/orderController");
 
 router.get(
@@ -17,6 +19,16 @@ router.get(
     protect,
 
     getMyOrders
+
+);
+
+router.get(
+
+    "/download/:productId",
+
+    protect,
+
+    downloadProduct
 
 );
 

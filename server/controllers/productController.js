@@ -1,5 +1,8 @@
 const Product = require("../models/Product");
 const slugify = require("slugify");
+const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
+const path = require("path");
 
 // ==========================
 // GET ALL PRODUCTS
@@ -95,9 +98,30 @@ const createProduct = async (req, res) => {
 
     }
 
-    const coverImage = req.files.cover[0].path;
+    const coverTemp = req.files.cover[0].path;
 
-    const pdfFile = req.files.pdf[0].path;
+    const pdfTemp = req.files.pdf[0].path;
+
+    const imageUpload = await cloudinary.uploader.upload(
+  coverTemp,
+  {
+    folder: "researchhub-products",
+  }
+);
+
+const coverImage = imageUpload.secure_url;
+
+fs.unlinkSync(coverTemp);
+
+const pdfFileName = path.basename(pdfTemp);
+
+const pdfDestination = path.join(
+  "uploads",
+  "pdfs",
+  pdfFileName
+);
+
+fs.renameSync(pdfTemp, pdfDestination);
 
     const slug = slugify(title, {
       lower: true,
@@ -111,7 +135,7 @@ const createProduct = async (req, res) => {
       category,
       price,
       coverImage,
-      pdfFile,
+      pdfFile: pdfFileName,
     });
 
     res.status(201).json({
