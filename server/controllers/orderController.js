@@ -4,21 +4,17 @@ const getMyOrders = async (req, res) => {
 
     try {
 
-        const orders = await Order.find({
+const orders = await Order.find({
+    user: req.user.id,
+})
+.populate("product");
 
-            user: req.user.id,
+console.log(JSON.stringify(orders, null, 2));
 
-        })
-        .populate("product")
-        .sort({ createdAt: -1 });
-
-        res.json({
-
-            success: true,
-
-            orders,
-
-        });
+res.json({
+    success: true,
+    orders,
+});
 
     }
 
