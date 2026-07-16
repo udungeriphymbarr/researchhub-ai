@@ -121,6 +121,18 @@ const pdfDestination = path.join(
   pdfFileName
 );
 
+const uploadFolder = path.join("uploads", "pdfs");
+
+if (!fs.existsSync(uploadFolder)) {
+
+    fs.mkdirSync(uploadFolder, {
+
+        recursive: true,
+
+    });
+
+}
+
 fs.renameSync(pdfTemp, pdfDestination);
 
     const slug = slugify(title, {
