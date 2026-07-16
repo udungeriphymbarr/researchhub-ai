@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const slugify = require("slugify");
 
 // ==========================
 // GET ALL PRODUCTS
@@ -98,20 +99,19 @@ const createProduct = async (req, res) => {
 
     const pdfFile = req.files.pdf[0].path;
 
+    const slug = slugify(title, {
+      lower: true,
+      strict: true,
+    });
+
     const product = await Product.create({
-
       title,
-
+      slug,
       description,
-
       category,
-
       price,
-
       coverImage,
-
       pdfFile,
-
     });
 
     res.status(201).json({
