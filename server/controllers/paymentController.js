@@ -15,9 +15,13 @@ const initializePayment = async (req, res) => {
 
             "https://api.paystack.co/transaction/initialize",
 
- {
+{
     email,
     amount,
+
+    metadata: {
+        type: "subscription"
+    },
 
     callback_url:
         "https://researchhub-ai-one.vercel.app/payment-success",
@@ -177,12 +181,10 @@ email:user.email,
 amount:product.price*100,
 
 metadata:{
-
-productId:product._id,
-
-userId:user.id,
-
-},
+    type: "product",
+    productId:product._id,
+    userId:user.id,
+    },
 
 callback_url:
 

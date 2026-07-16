@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../../api/api";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function ProductDetails() {
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
 
@@ -50,6 +53,98 @@ function ProductDetails() {
 
   }
 
+  const handleBuyNow = async () => {
+
+  try {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+
+      Swal.fire({
+
+        icon: "warning",
+
+        title: "Login Required",
+
+        text: "Please login to continue.",
+
+      });
+
+      navigate("/login");
+
+      return;
+
+    }
+
+    const response = await fetch(
+
+      `${API}/api/payment/product/initialize`,
+
+      {
+
+        method: "POST",
+
+        headers: {
+
+          "Content-Type": "application/json",
+
+          Authorization: `Bearer ${token}`,
+
+        },
+
+        body: JSON.stringify({
+
+          productId: product._id,
+
+        }),
+
+      }
+
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      window.location.href = data.authorization_url;
+
+    }
+
+    else {
+
+      Swal.fire({
+
+        icon: "error",
+
+        title: "Payment Error",
+
+        text: data.message,
+
+      });
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.log(error);
+
+    Swal.fire({
+
+      icon: "error",
+
+      title: "Error",
+
+      text: "Unable to initialize payment.",
+
+    });
+
+  }
+
+};
+
   return (
 
     <div className="min-h-screen bg-gray-100 py-14">
@@ -89,13 +184,14 @@ function ProductDetails() {
             </div>
 
             <button
+              onClick={handleBuyNow}
               className="
               mt-10
               bg-blue-600
               hover:bg-blue-700
               text-white
               px-10
-              py-4
+              py-4   
               rounded-xl
               font-semibold
               "
