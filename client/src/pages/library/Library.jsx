@@ -127,7 +127,9 @@ function Library() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            {orders.map((order) => (
+            {orders
+            .filter(order => order.product)
+            .map((order) => (
 
               <div
                 key={order._id}
