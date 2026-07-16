@@ -11,56 +11,80 @@ function PaymentSuccess() {
     verifyPayment();
   }, []);
 
-  const verifyPayment = async () => {
-    try {
-      const reference = searchParams.get("reference");
+const verifyPayment = async () => {
 
-      if (!reference) {
-        toast.error("Invalid payment.");
-        navigate("/subscription");
-        return;
-      }
+  try {
 
-      const response = await authFetch(
-        `/api/payment/verify/${reference}`
-      );
+    const reference = searchParams.get("reference");
 
-      if (!response) return;
-      console.log(response.status);
-console.log(response.statusText);
+    if (!reference) {
 
-      const data = await response.json();
+      toast.error("Invalid payment.");
 
-      console.log(data);
+      navigate("/");
 
-      if (!data.success) {
-        toast.error(data.message);
-        navigate("/subscription");
-        return;
-      }
+      return;
 
-      // Update local user
-const user = data.user;
+    }
 
-localStorage.setItem(
-    "user",
-    JSON.stringify(user)
-);
+    // Try Product Verification First
 
-toast.success("🎉 Premium activated!");
+    let response = await authFetch(
+      `/api/payment/product/verify/${reference}`
+    );
 
-navigate("/dashboard", { replace: true });
+    if (response.ok) {
 
-    } catch (error) {
-  console.error(error);
+      toast.success("🎉 Purchase Successful!");
 
-  if (error.response) {
-    console.log(await error.response.json());
+      navigate("/library", {
+        replace: true,
+      });
+
+      return;
+
+    }
+
+    // Otherwise verify Subscription
+
+    response = await authFetch(
+      `/api/payment/verify/${reference}`
+    );
+
+    const data = await response.json();
+
+    if (!data.success) {
+
+      toast.error(data.message);
+
+      navigate("/subscription");
+
+      return;
+
+    }
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
+    );
+
+    toast.success("🎉 Premium Activated!");
+
+    navigate("/dashboard", {
+      replace: true,
+    });
+
   }
 
-  toast.error("Verification failed.");
-}
-  };
+  catch (error) {
+
+    console.log(error);
+
+    toast.error("Verification failed.");
+
+  }
+
+};
 
   return (
     <div className="min-h-screen flex justify-center items-center">

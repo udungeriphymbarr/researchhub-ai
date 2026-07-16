@@ -14,6 +14,7 @@ const researchRoutes = require("./routes/researchRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 
 const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const subscriptionRoutes = 
 require("./routes/subscriptionRoutes");
@@ -49,6 +50,7 @@ app.use("/api/research", researchRoutes);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.use("/api/auth", googleAuthRoutes);
 // Test Route
