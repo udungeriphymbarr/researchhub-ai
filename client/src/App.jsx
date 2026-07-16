@@ -37,6 +37,8 @@ import AdminUpload from "./pages/admin/AdminUpload";
 import AdminProducts from "./pages/admin/AdminProducts";
 import EditProduct from "./pages/admin/EditProduct";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
+import Store from "./pages/store/Store";
+import ProductDetails from "./pages/store/ProductDetails";
 
 function App() {
   return (
@@ -240,6 +242,16 @@ function App() {
 />
 
 </Route>
+
+<Route
+    path="/store"
+    element={<Store />}
+/>
+
+<Route
+  path="/store/:id"
+  element={<ProductDetails />}
+/>
 
         <Route
           path="/forgot-password"
