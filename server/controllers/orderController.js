@@ -101,6 +101,11 @@ const downloadProduct = async (req, res) => {
 
         );
 
+console.log("Requested Product:", product.title);
+console.log("PDF filename:", product.pdfFile);
+console.log("Looking for:", filePath);
+console.log("Exists:", fs.existsSync(filePath));
+
         if (!fs.existsSync(filePath)) {
 
             return res.status(404).json({

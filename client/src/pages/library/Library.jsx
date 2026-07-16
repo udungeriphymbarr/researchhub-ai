@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API, { authFetch } from "../../api/api";
+import { toast } from "react-toastify";
 
 function Library() {
 
@@ -87,7 +88,7 @@ function Library() {
 
     console.log(error);
 
-    alert("Unable to download.");
+    toast.error("Unable to download.");
 
   }
 
