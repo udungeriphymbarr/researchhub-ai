@@ -40,19 +40,17 @@ const getMyOrders = async (req, res) => {
 
 };
 
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("../config/cloudinary");
 
 const downloadProduct = async (req, res) => {
 
     try {
 
-        const Order = require("../models/Order");
         const Product = require("../models/Product");
 
         const { productId } = req.params;
 
-        // Check purchase
+        // Check if the user purchased the product
         const order = await Order.findOne({
 
             user: req.user.id,
@@ -87,44 +85,29 @@ const downloadProduct = async (req, res) => {
 
         }
 
-        const filePath = path.join(
+        const downloadUrl = cloudinary.url(
 
-            __dirname,
+            product.pdfFile,
 
-            "..",
+            {
 
-            "uploads",
+                resource_type: "raw",
 
-            "pdfs",
+                secure: true,
 
-            product.pdfFile
+                flags: "attachment",
 
-        );
-
-console.log("Requested Product:", product.title);
-console.log("PDF filename:", product.pdfFile);
-console.log("Looking for:", filePath);
-console.log("Exists:", fs.existsSync(filePath));
-
-        if (!fs.existsSync(filePath)) {
-
-            return res.status(404).json({
-
-                success: false,
-
-                message: "PDF not found.",
-
-            });
-
-        }
-
-        res.download(
-
-            filePath,
-
-            `${product.title}.pdf`
+            }
 
         );
+
+        res.json({
+
+            success: true,
+
+            downloadUrl,
+
+        });
 
     }
 

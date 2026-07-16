@@ -36,7 +36,8 @@ function Library() {
 
   };
 
-  const handleDownload = async (productId) => {
+  
+const handleDownload = async (productId) => {
 
   try {
 
@@ -58,29 +59,15 @@ function Library() {
 
     );
 
-    if (!response.ok) {
+    const data = await response.json();
 
-      throw new Error("Download failed.");
+    if (!data.success) {
+
+      throw new Error(data.message);
 
     }
 
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-
-    link.href = url;
-
-    link.download = "";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-    window.URL.revokeObjectURL(url);
+    window.open(data.downloadUrl, "_blank");
 
   }
 
@@ -88,7 +75,7 @@ function Library() {
 
     console.log(error);
 
-    toast.error("Unable to download.");
+    alert("Unable to download.");
 
   }
 

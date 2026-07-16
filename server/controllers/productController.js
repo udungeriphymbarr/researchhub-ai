@@ -113,49 +113,21 @@ const coverImage = imageUpload.secure_url;
 
 fs.unlinkSync(coverTemp);
 
-const pdfFileName = path.basename(pdfTemp);
+const pdfUpload = await cloudinary.uploader.upload(
 
-const pdfFolder = path.join(
-    __dirname,
-    "..",
-    "uploads",
-    "pdfs"
-);
+    pdfTemp,
 
-if (!fs.existsSync(pdfFolder)) {
+    {
 
-    fs.mkdirSync(pdfFolder, {
+        folder: "researchhub-pdfs",
 
-        recursive: true,
+        resource_type: "raw",
 
-    });
-
-}
-
-const pdfDestination = path.join(
-
-    pdfFolder,
-
-    pdfFileName
+    }
 
 );
 
-const uploadFolder = path.join("uploads", "pdfs");
-
-if (!fs.existsSync(uploadFolder)) {
-
-    fs.mkdirSync(uploadFolder, {
-
-        recursive: true,
-
-    });
-
-}
-
-fs.renameSync(pdfTemp, pdfDestination);
-console.log("PDF saved to:");
-console.log(pdfDestination);
-console.log("Exists:", fs.existsSync(pdfDestination));
+fs.unlinkSync(pdfTemp);
 
     const slug = slugify(title, {
       lower: true,
@@ -169,7 +141,7 @@ console.log("Exists:", fs.existsSync(pdfDestination));
       category,
       price,
       coverImage,
-      pdfFile: pdfFileName,
+      pdfFile: pdfUpload.public_id,
     });
 
     res.status(201).json({
