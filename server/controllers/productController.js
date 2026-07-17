@@ -82,12 +82,15 @@ const createProduct = async (req, res) => {
 
   try {
 
-    const {
-      title,
-      description,
-      category,
-      price,
-    } = req.body;
+const {
+  title,
+  description,
+  category,
+  price,
+  language,
+  features,
+  featured,
+} = req.body;
 
     if (!req.files) {
 
@@ -127,6 +130,7 @@ const pdfUpload = await cloudinary.uploader.upload(
 
 );
 
+const fileSize = (pdfUpload.bytes / 1024 / 1024).toFixed(2) + " MB";
 
 fs.unlinkSync(pdfTemp);
 
@@ -135,15 +139,28 @@ fs.unlinkSync(pdfTemp);
       strict: true,
     });
 
-    const product = await Product.create({
-      title,
-      slug,
-      description,
-      category,
-      price,
-      coverImage,
-      pdfFile: pdfUpload.public_id,
-    });
+const product = await Product.create({
+  title,
+  slug,
+  description,
+  category,
+  price,
+  coverImage,
+
+  pdfFile: pdfUpload.public_id,
+
+  fileSize,
+
+  format: "PDF",
+
+  language: language || "English",
+
+  features: features
+    ? JSON.parse(features)
+    : [],
+
+  featured: featured === "true",
+});
 
     res.status(201).json({
 

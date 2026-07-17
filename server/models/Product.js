@@ -39,10 +39,31 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
-    pages: {
-      type: Number,
-      default: 0,
-    },
+   pages: {
+    type: Number,
+    default: null,
+},
+
+format: {
+    type: String,
+    default: "PDF",
+},
+
+language: {
+    type: String,
+    default: "English",
+},
+
+fileSize: {
+    type: String,
+    default: "",
+},
+
+features: {
+    type: [String],
+    default: [],
+},
+
 
     featured: {
       type: Boolean,

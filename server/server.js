@@ -22,6 +22,8 @@ require("./routes/subscriptionRoutes");
 const paymentRoutes =
 require("./routes/paymentRoutes");
 
+const reviewRoutes = require("./routes/reviewRoutes");
+
 const app = express();
 
 // Connect Database
@@ -51,6 +53,7 @@ app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.use("/api/auth", googleAuthRoutes);
 // Test Route
