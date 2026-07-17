@@ -74,6 +74,7 @@ const downloadProduct = async (req, res) => {
         }
 
         const product = await Product.findById(productId);
+        console.log(product.pdfFile);
 
         if (!product) {
 
