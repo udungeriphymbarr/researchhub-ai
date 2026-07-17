@@ -127,8 +127,14 @@ user: {
     name: user.name,
     email: user.email,
     role: user.role,
+
     plan: user.plan,
+
     usageCount: user.usageCount,
+    usageLimit: user.usageLimit,
+
+    subscriptionStatus: user.subscriptionStatus,
+    subscriptionExpires: user.subscriptionExpires,
 },
     });
 
@@ -292,10 +298,41 @@ const verifyEmail = async (req, res) => {
   }
 };
 
+const getMe = async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.user.id).select("-password");
+
+        res.json({
+
+            success: true,
+
+            user,
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+
+            message: "Unable to fetch user.",
+
+        });
+
+    }
+
+};
+
 module.exports = {
   registerUser,
   loginUser,
   forgotPassword,
   resetPassword,
   verifyEmail,
+  getMe,
 };
