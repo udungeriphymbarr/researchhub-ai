@@ -38,61 +38,23 @@ function Library() {
 
 
 const handleDownload = async (productId) => {
-
   try {
-
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(
-
-      `${API}/api/orders/download/${productId}`,
-
-      {
-
-        headers: {
-
-          Authorization: `Bearer ${token}`,
-
-        },
-
-      }
-
+    const response = await authFetch(
+      `/api/orders/download/${productId}`
     );
 
-    if (!response.ok) {
+    const data = await response.json();
 
-      throw new Error("Download failed.");
-
+    if (!data.success) {
+      throw new Error(data.message);
     }
 
-    const blob = await response.blob();
+    window.open(data.downloadUrl, "_blank");
 
-    const url = window.URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-
-    link.href = url;
-
-    link.download = "";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-    window.URL.revokeObjectURL(url);
-
-  }
-
-  catch (error) {
-
+  } catch (error) {
     console.log(error);
-
-    alert("Unable to download.");
-
+    toast.error("Unable to download.");
   }
-
 };
 
   return (

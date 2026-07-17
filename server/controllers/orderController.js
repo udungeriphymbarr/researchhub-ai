@@ -45,105 +45,51 @@ const getMyOrders = async (req, res) => {
 
 
 const downloadProduct = async (req, res) => {
+  try {
+    const Product = require("../models/Product");
 
-    try {
+    const { productId } = req.params;
 
-        const Product = require("../models/Product");
+    const order = await Order.findOne({
+      user: req.user.id,
+      product: productId,
+    });
 
-        const { productId } = req.params;
-
-        // Check if the user purchased the product
-        const order = await Order.findOne({
-
-            user: req.user.id,
-
-            product: productId,
-
-        });
-
-        if (!order) {
-
-            return res.status(403).json({
-
-                success: false,
-
-                message: "You haven't purchased this product.",
-
-            });
-
-        }
-
-        const product = await Product.findById(productId);
-        console.log(product.pdfFile);
-
-        if (!product) {
-
-            return res.status(404).json({
-
-                success: false,
-
-                message: "Product not found.",
-
-            });
-
-        }
-
-        // Generate the Cloudinary URL
-        const pdfUrl = cloudinary.url(product.pdfFile, {
-
-            resource_type: "raw",
-
-            secure: true,
-
-        });
-
-        // Fetch the PDF from Cloudinary
-        const response = await axios({
-
-            url: pdfUrl,
-
-            method: "GET",
-
-            responseType: "stream",
-
-        });
-
-        // Force download
-        res.setHeader(
-
-            "Content-Disposition",
-
-            `attachment; filename="${product.title}.pdf"`
-
-        );
-
-        res.setHeader(
-
-            "Content-Type",
-
-            "application/pdf"
-
-        );
-
-        // Stream PDF to browser
-        response.data.pipe(res);
-
+    if (!order) {
+      return res.status(403).json({
+        success: false,
+        message: "You haven't purchased this product.",
+      });
     }
 
-    catch (error) {
+    const product = await Product.findById(productId);
 
-        console.log(error.response?.data || error.message);
-
-        res.status(500).json({
-
-            success: false,
-
-            message: "Download failed.",
-
-        });
-
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
     }
 
+    const downloadUrl = cloudinary.url(product.pdfFile, {
+      resource_type: "raw",
+      secure: true,
+      flags: "attachment",
+    });
+
+    return res.json({
+      success: true,
+      downloadUrl,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Download failed.",
+    });
+  }
 };
 
 
