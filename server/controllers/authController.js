@@ -298,35 +298,6 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-const getMe = async (req, res) => {
-
-    try {
-
-        const user = await User.findById(req.user.id).select("-password");
-
-        res.json({
-
-            success: true,
-
-            user,
-
-        });
-
-    }
-
-    catch (error) {
-
-        res.status(500).json({
-
-            success: false,
-
-            message: "Unable to fetch user.",
-
-        });
-
-    }
-
-};
 
 module.exports = {
   registerUser,
@@ -334,5 +305,4 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  getMe,
 };
