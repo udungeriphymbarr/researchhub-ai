@@ -127,6 +127,8 @@ const pdfUpload = await cloudinary.uploader.upload(
 
 );
 
+console.log(pdfUpload);
+
 fs.unlinkSync(pdfTemp);
 
     const slug = slugify(title, {
