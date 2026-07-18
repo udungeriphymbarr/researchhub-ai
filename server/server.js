@@ -53,7 +53,7 @@ app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/reviews", reviewRoutes);
+app.use("/api/reviews", require("./routes/reviewRoutes"));
 
 app.use("/api/auth", googleAuthRoutes);
 // Test Route
