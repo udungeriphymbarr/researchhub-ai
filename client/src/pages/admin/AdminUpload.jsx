@@ -1,26 +1,31 @@
-import { useState } from "react";
 import API from "../../api/api";
 import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 
 function AdminUpload() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState("");
   const [pages, setPages] = useState("");
 
-const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState("English");
 
-const [featured, setFeatured] = useState(false);
+  const [featured, setFeatured] = useState(false);
 
-const [features, setFeatures] = useState([]);
+  const [features, setFeatures] = useState([]);
 
-const [featureInput, setFeatureInput] = useState("");
+  const [featureInput, setFeatureInput] = useState("");
 
   const [cover, setCover] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+}, []);
 
   const addFeature = () => {
 
@@ -45,6 +50,30 @@ const removeFeature = (index) => {
   try {
 
     setLoading(true);
+
+    if(!cover){
+
+return Swal.fire({
+
+icon:"warning",
+
+title:"Cover Required"
+
+});
+
+}
+
+if(!pdf){
+
+return Swal.fire({
+
+icon:"warning",
+
+title:"PDF Required"
+
+});
+
+}
 
     const formData = new FormData();
 
@@ -88,13 +117,22 @@ const removeFeature = (index) => {
 
       });
 
-      setTitle("");
-      setDescription("");
-      setCategory("");
-      setPrice("");
+setTitle("");
+setDescription("");
+setCategory("");
+setPrice("");
 
-      setCover(null);
-      setPdf(null);
+setLanguage("English");
+
+setFeatured(false);
+
+setFeatures([]);
+
+setFeatureInput("");
+
+setCover(null);
+
+setPdf(null);
 
     } else {
 
@@ -129,6 +167,30 @@ const removeFeature = (index) => {
     setLoading(false);
 
   }
+
+};
+
+const fetchCategories = async () => {
+
+    try {
+
+        const response = await fetch(
+            `${API}/api/categories`
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            setCategories(data.categories);
+
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
 
 };
 
@@ -169,25 +231,18 @@ const removeFeature = (index) => {
               Select Category
             </option>
 
-            <option>
-              Research Guide
-            </option>
+            {categories.map((cat) => (
 
-            <option>
-              Project Template
-            </option>
+    <option
+        key={cat._id}
+        value={cat.name}
+    >
 
-            <option>
-              Seminar
-            </option>
+        {cat.name}
 
-            <option>
-              Proposal
-            </option>
+    </option>
 
-            <option>
-              Statistics
-            </option>
+))}
 
           </select>
 
@@ -355,6 +410,23 @@ className="text-red-500"
               onChange={(e)=>setCover(e.target.files[0])}
               className="mt-2"
             />
+
+            {
+cover && (
+
+<img
+src={URL.createObjectURL(cover)}
+alt="preview"
+className="
+mt-4
+w-40
+rounded-lg
+shadow
+"
+/>
+
+)
+}
 
           </div>
 
