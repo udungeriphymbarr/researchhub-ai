@@ -24,6 +24,8 @@ require("./routes/paymentRoutes");
 
 const reviewRoutes = require("./routes/reviewRoutes");
 
+const adminRoutes = require("./routes/adminRoutes");
+
 const app = express();
 
 // Connect Database
@@ -54,6 +56,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", require("./routes/reviewRoutes"));
+app.use("/api/admin", adminRoutes);
 
 app.use("/api/auth", googleAuthRoutes);
 // Test Route
