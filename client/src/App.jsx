@@ -42,6 +42,7 @@ import ProductDetails from "./pages/store/ProductDetails";
 import Library from "./pages/library/Library";
 import Users from "./pages/admin/Users";
 import Orders from "./pages/admin/Orders";
+import Categories from "./pages/admin/Categories";
 
 function App() {
   return (
@@ -252,6 +253,11 @@ element={<EditProduct />}
     <Route
     path="orders"
     element={<Orders />}
+/>
+
+<Route
+    path="categories"
+    element={<Categories />}
 />
 
 </Route>

@@ -25,6 +25,7 @@ require("./routes/paymentRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 
 const adminRoutes = require("./routes/adminRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", require("./routes/reviewRoutes"));
 app.use("/api/admin", adminRoutes);
+app.use("/api/categories",categoryRoutes);
 
 app.use("/api/auth", googleAuthRoutes);
 // Test Route
