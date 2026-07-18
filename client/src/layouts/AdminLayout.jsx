@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import Sidebar from "../components/admin/Sidebar";
-import Topbar from "../components/admin/Topbar";
+import Sidebar from "../components/admin/AdminSidebar";
 
 function AdminLayout() {
   return (
@@ -11,7 +10,6 @@ function AdminLayout() {
 
       <div className="flex-1 flex flex-col">
 
-        <Topbar />
 
         <main className="flex-1 p-8 overflow-y-auto">
 

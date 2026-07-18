@@ -1,4 +1,4 @@
-function Topbar() {
+function AdminTopbar() {
   return (
     <header className="bg-white shadow-sm border-b">
 
@@ -44,4 +44,4 @@ function Topbar() {
   );
 }
 
-export default Topbar;
+export default AdminTopbar;

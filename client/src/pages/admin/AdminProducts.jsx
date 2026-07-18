@@ -1,235 +1,234 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import API from "../../api/api";
-import Swal from "sweetalert2";
+import { authFetch } from "../../api/api";
 
 function AdminProducts() {
 
-  const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState("");
 
-  const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
-  const navigate = useNavigate();
+    const fetchProducts = async () => {
 
-  useEffect(() => {
+        try {
 
-    fetchProducts();
+            const response = await authFetch(
+                "/api/products/admin/all"
+            );
 
-  }, []);
+            const data = await response.json();
 
-  const token = localStorage.getItem("token");
+            if (data.success) {
+                setProducts(data.products);
+            }
 
-  const handleDelete = async (id) => {
+        } catch (error) {
+            console.log(error);
+        }
 
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this product?"
-  );
+    };
 
-  if (!confirmDelete) return;
+    const filteredProducts = products.filter((product) =>
 
-  try {
+    product.title
+        .toLowerCase()
+        .includes(search.toLowerCase())
 
-    const response = await fetch(
-      `${API}/api/products/${id}`,
-      {
-        method: "DELETE",
-
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.success) {
-
-      Swal.fire("Product deleted successfully!");
-
-      fetchProducts();
-
-    } else {
-
-      Swal.fire(data.message);
-
-    }
-
-  } catch (error) {
-
-    console.log(error);
-
-    Swal.fire("Something went wrong.");
-
-  }
-
-};
-
-  const fetchProducts = async () => {
-
-    try {
-
-      const response = await fetch(
-
-        `${API}/api/products`
-
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-
-        setProducts(data.products);
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    } finally {
-
-      setLoading(false);
-
-    }
-
-  };
-
-  if (loading) {
+);
 
     return (
 
-      <div className="p-10">
+        <div>
 
-        Loading Products...
+<div className="flex justify-between items-center mb-8">
 
-      </div>
+    <h1 className="text-3xl font-bold">
 
-    );
+        Products
 
-  }
+    </h1>
 
-  return (
-
-    <div className="min-h-screen bg-gray-100 p-8">
-
-      <h1 className="text-3xl font-bold mb-8">
-
-        All Products
-
-      </h1>
-
-      {
-
-        products.length === 0 ?
-
-        (
-
-          <p>No products uploaded.</p>
-
-        )
-
-        :
-
-        (
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            {
-
-              products.map((product)=>(
-
-                <div
-
-                  key={product._id}
-
-                  className="bg-white rounded-xl shadow-lg overflow-hidden"
-
-                >
-
-                  <img
-
-                    src={product.coverImage}
-
-                    alt={product.title}
-
-                    className="w-full h-64 object-cover"
-
-                  />
-
-                  <div className="p-5">
-
-                    <h2 className="text-xl font-bold">
-
-                      {product.title}
-
-                    </h2>
-
-                    <p className="text-gray-500 mt-2">
-
-                      {product.category}
-
-                    </p>
-
-                    <p className="text-blue-600 font-bold mt-3">
-
-                      ₦{product.price}
-
-                    </p>
-
-                    <div className="flex justify-between mt-5 text-sm text-gray-500">
-
-                      <span>
-
-                        Sales: {product.sales}
-
-                      </span>
-
-                      <span>
-
-                        Downloads: {product.downloads}
-
-                      </span>
-                      
-
-                    </div>
-<div className="flex gap-3 mt-5">
-
-  <button
-    onClick={() =>
-      navigate(`/admin/edit/${product._id}`)
-    }
-    className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
-  >
-    Edit
-  </button>
-
-  <button
-    onClick={() => handleDelete(product._id)}
-    className="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition"
-  >
-    Delete
-  </button>
+    <input
+        type="text"
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="
+        border
+        rounded-xl
+        px-4
+        py-3
+        w-80
+        focus:outline-none
+        focus:ring-2
+        focus:ring-blue-500
+        "
+    />
 
 </div>
+            <div className="bg-white rounded-2xl shadow overflow-hidden">
 
-                  </div>
+                <table className="w-full">
 
-                </div>
+                    <thead className="bg-gray-100">
 
-              ))
+                        <tr>
 
-            }
+                            <th className="p-4 text-left">
+                                Cover
+                            </th>
 
-          </div>
+                            <th className="p-4 text-left">
+                                Title
+                            </th>
 
-        )
+                            <th className="p-4 text-left">
+                                Category
+                            </th>
 
-      }
+                            <th className="p-4 text-left">
+                                Price
+                            </th>
 
-    </div>
+                            <th className="p-4 text-left">
+                                Sales
+                            </th>
 
-  );
+                            <th className="p-4 text-left">
+                                Downloads
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {
+
+                            filteredProducts.map(product => (
+
+                                <tr
+                                    key={product._id}
+                                    className="border-t"
+                                >
+
+                                    <td className="p-4">
+
+                                        <img
+                                            src={product.coverImage}
+                                            alt={product.title}
+                                            className="w-14 h-20 rounded-lg object-cover"
+                                        />
+
+                                    </td>
+
+                                    <td className="p-4 font-semibold">
+
+                                        {product.title}
+
+                                    </td>
+
+<td className="p-4">
+
+<span
+className="
+bg-purple-100
+text-purple-700
+px-3
+py-1
+rounded-full
+text-sm
+"
+>
+
+{product.category}
+
+</span>
+
+</td>
+
+                                    <td className="p-4">
+
+                                        ₦{product.price.toLocaleString()}
+
+                                    </td>
+
+<td className="p-4">
+
+<span
+className="
+bg-green-100
+text-green-700
+px-3
+py-1
+rounded-full
+font-semibold
+"
+>
+
+{product.sales}
+
+</span>
+
+</td>
+
+<td className="p-4">
+
+<span
+className="
+bg-blue-100
+text-blue-700
+px-3
+py-1
+rounded-full
+font-semibold
+"
+>
+
+{product.downloads}
+
+</span>
+
+</td>
+
+                                    <td className="p-4 space-x-2">
+
+                                        <button className="bg-blue-600 text-white px-3 py-2 rounded">
+
+                                            Edit
+
+                                        </button>
+
+                                        <button className="bg-red-600 text-white px-3 py-2 rounded">
+
+                                            Delete
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    );
 
 }
 

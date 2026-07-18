@@ -3,6 +3,9 @@ const express = require("express");
 const adminMiddleware = require("../middleware/adminMiddleware");
 
 const upload = require("../middleware/uploadProduct");
+const protect = require("../middleware/authMiddleware");
+const adminOnly = require("../middleware/adminMiddleware");
+
 
 const {
   getProducts,
@@ -10,11 +13,19 @@ const {
   createProduct,
   deleteProduct,
   updateProduct,
+  getAdminProducts,
 } = require("../controllers/productController");
 
 const router = express.Router();
 
 // GET ALL PRODUCTS
+router.get(
+    "/admin/all",
+    protect,
+    adminOnly,
+    getAdminProducts
+);
+
 router.get("/", getProducts);
 
 router.get("/:id", getProduct);

@@ -8,10 +8,37 @@ function AdminUpload() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [pages, setPages] = useState("");
+
+const [language, setLanguage] = useState("English");
+
+const [featured, setFeatured] = useState(false);
+
+const [features, setFeatures] = useState([]);
+
+const [featureInput, setFeatureInput] = useState("");
 
   const [cover, setCover] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const addFeature = () => {
+
+    if (!featureInput.trim()) return;
+
+    setFeatures([...features, featureInput]);
+
+    setFeatureInput("");
+
+};
+
+const removeFeature = (index) => {
+
+    setFeatures(
+        features.filter((_, i) => i !== index)
+    );
+
+};
 
   const handlePublish = async () => {
 
@@ -25,6 +52,10 @@ function AdminUpload() {
     formData.append("description", description);
     formData.append("category", category);
     formData.append("price", price);
+
+    formData.append("language", language);
+    formData.append("featured", featured);
+    formData.append("features", JSON.stringify(features));
 
     formData.append("cover", cover);
     formData.append("pdf", pdf);
@@ -167,6 +198,150 @@ function AdminUpload() {
             onChange={(e)=>setPrice(e.target.value)}
             className="w-full border rounded-lg p-4"
           />
+
+<div>
+
+<label className="block mb-2 font-medium">
+
+Language
+
+</label>
+
+<select
+
+value={language}
+
+onChange={(e)=>setLanguage(e.target.value)}
+
+className="w-full border rounded-lg p-3"
+
+>
+
+<option>English</option>
+
+<option>French</option>
+
+<option>Spanish</option>
+
+<option>Arabic</option>
+
+</select>
+
+</div>
+
+<div className="flex items-center gap-3">
+
+<input
+
+type="checkbox"
+
+checked={featured}
+
+onChange={(e)=>setFeatured(e.target.checked)}
+
+/>
+
+<label>
+
+Featured Product
+
+</label>
+
+</div>
+
+<div>
+
+<label className="block mb-2 font-medium">
+
+Features
+
+</label>
+
+<div className="flex gap-2">
+
+<input
+
+type="text"
+
+value={featureInput}
+
+onChange={(e)=>setFeatureInput(e.target.value)}
+
+placeholder="Instant Download"
+
+className="flex-1 border rounded-lg p-3"
+
+/>
+
+<button
+
+type="button"
+
+onClick={addFeature}
+
+className="
+bg-blue-600
+text-white
+px-5
+rounded-lg
+"
+
+>
+
+Add
+
+</button>
+
+</div>
+
+<div className="mt-4 flex flex-wrap gap-2">
+
+{
+
+features.map((feature,index)=>(
+
+<div
+
+key={index}
+
+className="
+bg-blue-100
+text-blue-700
+px-3
+py-2
+rounded-full
+flex
+items-center
+gap-2
+"
+
+>
+
+{feature}
+
+<button
+
+type="button"
+
+onClick={()=>removeFeature(index)}
+
+className="text-red-500"
+
+>
+
+✕
+
+</button>
+
+</div>
+
+))
+
+}
+
+</div>
+
+</div>
 
           <div>
 
