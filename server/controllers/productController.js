@@ -228,43 +228,57 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
 
-  try {
+    try {
 
-    const product = await Product.findByIdAndUpdate(
+        const product = await Product.findById(req.params.id);
 
-      req.params.id,
+        if (!product) {
 
-      req.body,
+            return res.status(404).json({
 
-      {
+                success: false,
+                message: "Product not found.",
 
-        new: true,
+            });
 
-      }
+        }
 
-    );
+        const {
+            title,
+            description,
+            category,
+            price,
+            featured,
+        } = req.body;
 
-    res.json({
+        product.title = title;
+        product.description = description;
+        product.category = category;
+        product.price = price;
+        product.featured = featured;
 
-      success: true,
+        await product.save();
 
-      product,
+        res.json({
 
-    });
+            success: true,
+            message: "Product updated successfully.",
+            product,
 
-  } catch (error) {
+        });
 
-    console.log(error);
+    } catch (error) {
 
-    res.status(500).json({
+        console.log(error);
 
-      success: false,
+        res.status(500).json({
 
-      message: "Update failed",
+            success: false,
+            message: "Unable to update product.",
 
-    });
+        });
 
-  }
+    }
 
 };
 

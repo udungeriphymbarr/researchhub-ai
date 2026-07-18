@@ -1,169 +1,162 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
-
-import API from "../../api/api";
 import Swal from "sweetalert2";
+import { authFetch } from "../../api/api";
 
 function EditProduct() {
 
-  const { id } = useParams();
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-  const navigate = useNavigate();
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [category, setCategory] = useState("");
+    const [price, setPrice] = useState("");
+    const [featured, setFeatured] = useState(false);
 
-  const [title, setTitle] = useState("");
+    useEffect(() => {
 
-  const [description, setDescription] = useState("");
+        fetchProduct();
 
-  const [price, setPrice] = useState("");
+    }, []);
 
-  useEffect(() => {
+    const fetchProduct = async () => {
 
-    fetchProduct();
+        const response = await authFetch(
+            `/api/products/${id}`
+        );
 
-  }, []);
+        const data = await response.json();
 
-  const token = localStorage.getItem("token");
+        if (data.success) {
 
-  const fetchProduct = async () => {
+            const product = data.product;
 
-    try {
-
-      const response = await fetch(
-
-        `${API}/api/products`
-
-      );
-
-      const data = await response.json();
-
-      const product = data.products.find(
-
-        (p) => p._id === id
-
-      );
-
-      if (product) {
-
-        setTitle(product.title);
-
-        setDescription(product.description);
-
-        setPrice(product.price);
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-  const handleUpdate = async (e) => {
-
-    e.preventDefault();
-
-    try {
-
-      const response = await fetch(
-
-        `${API}/api/products/${id}`,
-
-        {
-
-          method: "PUT",
-
-          headers: {
-
-            "Content-Type": "application/json",
-
-            Authorization: `Bearer ${token}`,
-          },
-
-          body: JSON.stringify({
-
-            title,
-
-            description,
-
-            price,
-
-          }),
+            setTitle(product.title);
+            setDescription(product.description);
+            setCategory(product.category);
+            setPrice(product.price);
+            setFeatured(product.featured);
 
         }
 
-      );
+    };
 
-      const data = await response.json();
+    const handleSubmit = async (e) => {
 
-      if (data.success) {
+        e.preventDefault();
 
-        Swal.fire("Product updated successfully.");
+        const response = await authFetch(
 
-        navigate("/admin/products");
+            `/api/products/${id}`,
 
-      }
+            {
 
-    } catch (error) {
+                method: "PUT",
 
-      console.log(error);
+                headers: {
 
-    }
+                    "Content-Type": "application/json",
 
-  };
+                },
 
-  return (
+                body: JSON.stringify({
 
-    <div className="min-h-screen bg-gray-100 p-8">
+                    title,
+                    description,
+                    category,
+                    price,
+                    featured,
 
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+                }),
 
-        <h1 className="text-3xl font-bold mb-8">
+            }
 
-          Edit Product
+        );
 
-        </h1>
+        const data = await response.json();
 
-        <form
-          onSubmit={handleUpdate}
-          className="space-y-5"
-        >
+        if (data.success) {
 
-          <input
-            value={title}
-            onChange={(e)=>setTitle(e.target.value)}
-            className="w-full border p-4 rounded-lg"
-          />
+            Swal.fire({
 
-          <textarea
-            rows={6}
-            value={description}
-            onChange={(e)=>setDescription(e.target.value)}
-            className="w-full border p-4 rounded-lg"
-          />
+                icon: "success",
+                title: "Updated Successfully"
 
-          <input
-            type="number"
-            value={price}
-            onChange={(e)=>setPrice(e.target.value)}
-            className="w-full border p-4 rounded-lg"
-          />
+            });
 
-          <button
-            className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700"
-          >
-            Update Product
-          </button>
+            navigate("/admin/products");
 
-        </form>
+        }
 
-      </div>
+    };
 
-    </div>
+    return (
+        <div>
 
-  );
+        {/* Form goes here */}
+<form
+onSubmit={handleSubmit}
+className="space-y-6"
+>
+
+<input
+value={title}
+onChange={(e)=>setTitle(e.target.value)}
+placeholder="Title"
+className="w-full border rounded-xl p-4"
+/>
+
+<textarea
+rows="6"
+value={description}
+onChange={(e)=>setDescription(e.target.value)}
+className="w-full border rounded-xl p-4"
+/>
+
+<input
+value={category}
+onChange={(e)=>setCategory(e.target.value)}
+className="w-full border rounded-xl p-4"
+/>
+
+<input
+type="number"
+value={price}
+onChange={(e)=>setPrice(e.target.value)}
+className="w-full border rounded-xl p-4"
+/>
+
+<label className="flex items-center gap-3">
+
+<input
+type="checkbox"
+checked={featured}
+onChange={(e)=>setFeatured(e.target.checked)}
+/>
+
+Featured Product
+
+</label>
+
+<button
+className="
+bg-blue-600
+text-white
+px-6
+py-3
+rounded-xl
+"
+>
+
+Save Changes
+
+</button>
+
+</form>
+
+        </div>
+    );
 
 }
 

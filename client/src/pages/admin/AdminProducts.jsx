@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../../api/api";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 function AdminProducts() {
 
@@ -37,6 +39,68 @@ function AdminProducts() {
         .includes(search.toLowerCase())
 
 );
+
+const handleDelete = async (id) => {
+
+    const result = await Swal.fire({
+
+        title: "Delete Product?",
+
+        text: "This action cannot be undone.",
+
+        icon: "warning",
+
+        showCancelButton: true,
+
+        confirmButtonColor: "#dc2626",
+
+        confirmButtonText: "Delete",
+
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+
+        const response = await authFetch(
+
+            `/api/products/${id}`,
+
+            {
+
+                method: "DELETE",
+
+            }
+
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            Swal.fire(
+
+                "Deleted!",
+
+                "Product removed successfully.",
+
+                "success"
+
+            );
+
+            setProducts((prev) =>
+                prev.filter((item) => item._id !== id)
+            );
+
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+};
 
     return (
 
@@ -200,17 +264,38 @@ font-semibold
 
                                     <td className="p-4 space-x-2">
 
-                                        <button className="bg-blue-600 text-white px-3 py-2 rounded">
+<Link
+to={`/admin/products/edit/${product._id}`}
+className="
+bg-blue-600
+hover:bg-blue-700
+text-white
+px-4
+py-2
+rounded-lg
+"
+>
 
-                                            Edit
+Edit
 
-                                        </button>
+</Link>
 
-                                        <button className="bg-red-600 text-white px-3 py-2 rounded">
+<button
+onClick={() => handleDelete(product._id)}
+className="
+bg-red-600
+hover:bg-red-700
+text-white
+px-4
+py-2
+rounded-lg
+transition
+"
+>
 
-                                            Delete
+Delete
 
-                                        </button>
+</button>
 
                                     </td>
 

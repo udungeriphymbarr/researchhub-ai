@@ -237,9 +237,9 @@ function App() {
         element={<AdminUpload />}
     />
 
-    <Route
-    path="edit/:id"
-    element={<EditProduct />}
+<Route
+path="/admin/products/edit/:id"
+element={<EditProduct />}
 />
 
 </Route>
