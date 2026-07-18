@@ -147,37 +147,8 @@ function Users() {
                             <th className="p-4 text-left">Role</th>
 
                             <th className="p-4 text-left">Usage</th>
-
-                            <th className="p-4 text-left">
-<select
-value={user.role}
-onChange={(e)=>
-
-updateRole(
-user._id,
-e.target.value
-)
-
-}
-
-className="border rounded-lg p-2"
-
->
-
-<option value="user">
-
-User
-
-</option>
-
-<option value="admin">
-
-Admin
-
-</option>
-
-</select>
-</th>
+s
+                            <th className="p-4 text-left">Actions</th>
 
                         </tr>
 
@@ -218,11 +189,18 @@ Admin
 
                                 </td>
 
-                                <td className="p-4">
-
-                                    Actions
-
-                                </td>
+<td className="p-4">
+    <select
+        value={user.role}
+        onChange={(e) =>
+            updateRole(user._id, e.target.value)
+        }
+        className="border rounded-lg p-2"
+    >
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+    </select>
+</td>
 
                             </tr>
 

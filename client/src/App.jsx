@@ -40,6 +40,8 @@ import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 import Store from "./pages/store/Store";
 import ProductDetails from "./pages/store/ProductDetails";
 import Library from "./pages/library/Library";
+import Users from "./pages/admin/Users";
+import Orders from "./pages/admin/Orders";
 
 function App() {
   return (
@@ -238,8 +240,18 @@ function App() {
     />
 
 <Route
-path="/admin/products/edit/:id"
+path="products/edit/:id"
 element={<EditProduct />}
+/>
+
+    <Route
+        path="users"
+        element={<Users />}
+    />
+
+    <Route
+    path="orders"
+    element={<Orders />}
 />
 
 </Route>

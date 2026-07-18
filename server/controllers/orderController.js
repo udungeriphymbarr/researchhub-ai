@@ -92,6 +92,31 @@ const downloadProduct = async (req, res) => {
   }
 };
 
+const getAllOrders = async (req, res) => {
+  try {
+
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .populate("product", "title")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      orders,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch orders.",
+    });
+
+  }
+};
+
 
 module.exports = {
 
@@ -99,4 +124,5 @@ module.exports = {
 
     downloadProduct,
 
+    getAllOrders,
 };

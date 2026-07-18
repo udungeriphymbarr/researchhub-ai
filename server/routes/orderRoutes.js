@@ -3,12 +3,15 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware");
 
 const {
 
     getMyOrders,
 
     downloadProduct,
+
+    getAllOrders,
 
 } = require("../controllers/orderController");
 
@@ -30,6 +33,13 @@ router.get(
 
     downloadProduct
 
+);
+
+router.get(
+    "/all",
+    protect,
+    admin,
+    getAllOrders
 );
 
 module.exports = router;
