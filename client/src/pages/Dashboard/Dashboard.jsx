@@ -747,6 +747,44 @@ return (
 
     </Link>
 
+        {/* Projects */}
+
+    <Link
+      to="/projects"
+      className="
+      bg-gradient-to-br
+      from-orange-500
+      to-red-600
+      text-white
+      rounded-2xl
+      p-6
+      shadow-lg
+      hover:scale-105
+      transition
+      "
+    >
+
+      <div className="text-5xl mb-5">
+
+        📂
+
+      </div>
+
+      <h3 className="text-xl font-bold">
+
+        Projects
+
+      </h3>
+
+      <p className="mt-2 text-white/90">
+
+        Organize and continue
+        your research projects.
+
+      </p>
+
+    </Link>
+
   </div>
 
 </div>
