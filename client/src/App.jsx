@@ -43,6 +43,7 @@ import Library from "./pages/library/Library";
 import Users from "./pages/admin/Users";
 import Orders from "./pages/admin/Orders";
 import Categories from "./pages/admin/Categories";
+import Settings from "./pages/admin/Settings";
 
 function App() {
   return (
@@ -258,6 +259,11 @@ element={<EditProduct />}
 <Route
     path="categories"
     element={<Categories />}
+/>
+
+<Route
+    path="settings"
+    element={<Settings />}
 />
 
 </Route>
