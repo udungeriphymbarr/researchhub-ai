@@ -106,7 +106,7 @@ const handleDelete = async (id) => {
 
         <div>
 
-<div className="flex justify-between items-center mb-8">
+<div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
 
     <h1 className="text-3xl font-bold">
 
@@ -124,7 +124,7 @@ const handleDelete = async (id) => {
         rounded-xl
         px-4
         py-3
-        w-80
+        w-full md:w-80
         focus:outline-none
         focus:ring-2
         focus:ring-blue-500
@@ -132,7 +132,7 @@ const handleDelete = async (id) => {
     />
 
 </div>
-            <div className="bg-white rounded-2xl shadow overflow-hidden">
+            <div className="bg-white rounded-2xl hidden lg:block shadow overflow-hidden">
 
                 <table className="w-full">
 
@@ -310,6 +310,62 @@ Delete
                 </table>
 
             </div>
+
+            <div className="lg:hidden space-y-4">
+
+{filteredProducts.map(product => (
+
+<div
+key={product._id}
+className="bg-white rounded-xl shadow p-5"
+>
+
+<img
+src={product.coverImage}
+className="h-40 w-full object-cover rounded-lg"
+/>
+
+<h2 className="font-bold mt-4">
+
+{product.title}
+
+</h2>
+
+<p className="text-blue-600 font-semibold">
+
+₦{product.price}
+
+</p>
+
+<p className="text-gray-500">
+
+{product.category}
+
+</p>
+
+<div className="flex gap-3 mt-4">
+
+<Link
+    to={`/admin/products/edit/${product._id}`}
+    className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+>
+    Edit
+</Link>
+
+<button
+    onClick={() => handleDelete(product._id)}
+    className="bg-red-600 text-white px-4 py-2 rounded-lg"
+>
+    Delete
+</button>
+
+</div>
+
+</div>
+
+))}
+
+</div>
 
         </div>
 

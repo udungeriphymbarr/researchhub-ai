@@ -130,7 +130,7 @@ function Users() {
 
             />
 
-            <div className="bg-white rounded-2xl shadow overflow-hidden">
+            <div className="bg-white rounded-2xl hidden lg:block shadow overflow-hidden">
 
                 <table className="w-full">
 
@@ -212,6 +212,67 @@ s
 
             </div>
 
+<div className="lg:hidden space-y-4">
+
+    {filteredUsers.map((user) => (
+
+        <div
+            key={user._id}
+            className="bg-white rounded-xl shadow p-5"
+        >
+
+            <h2 className="font-bold text-lg">
+                {user.name}
+            </h2>
+
+            <p className="text-gray-500">
+                {user.email}
+            </p>
+
+            <div className="mt-4 space-y-2">
+
+                <p>
+                    <strong>Plan:</strong> {user.plan}
+                </p>
+
+                <p>
+                    <strong>Usage:</strong> {user.usageCount}
+                </p>
+
+                <div className="flex items-center gap-2">
+
+                    <strong>Role:</strong>
+
+                    <select
+                        value={user.role}
+                        onChange={(e)=>
+                            updateRole(
+                                user._id,
+                                e.target.value
+                            )
+                        }
+                        className="border rounded-lg p-2"
+                    >
+
+                        <option value="user">
+                            User
+                        </option>
+
+                        <option value="admin">
+                            Admin
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    ))}
+
+</div>
         </div>
 
     );

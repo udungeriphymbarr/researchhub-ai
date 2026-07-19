@@ -128,40 +128,6 @@ console.log(err);
 
 };
 
-const saveSettings = async () => {
-    try {
-        setSaving(true);
-
-        const response = await authFetch(
-            "/api/settings",
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(settings),
-            }
-        );
-
-        const data = await response.json();
-
-        if (data.success) {
-            Swal.fire({
-                icon: "success",
-                title: "Settings Updated"
-            });
-
-            fetchSettings();
-        }
-
-    } catch (err) {
-        console.log(err);
-
-    } finally {
-        setSaving(false);
-    }
-};
-
 return (
 
 <div className="max-w-5xl mx-auto space-y-8">

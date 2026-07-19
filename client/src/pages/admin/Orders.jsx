@@ -65,7 +65,7 @@ function Orders() {
                 className="w-full border rounded-xl p-4"
             />
 
-            <div className="bg-white rounded-2xl shadow overflow-x-auto">
+            <div className="hidden lg:block bg-white rounded-2xl shadow overflow-hidden">
 
                 <table className="w-full">
 
@@ -139,6 +139,87 @@ function Orders() {
                 </table>
 
             </div>
+
+            <div className="lg:hidden space-y-4">
+
+{orders.map((order)=>(
+
+<div
+key={order._id}
+className="bg-white rounded-2xl shadow p-5"
+>
+
+<h2 className="font-bold text-lg">
+
+{order.productTitle}
+
+</h2>
+
+<p className="text-gray-500">
+
+Purchased by
+
+<strong>
+
+{" "}
+
+{order.user?.name}
+
+</strong>
+
+</p>
+
+<div className="mt-4 space-y-2">
+
+<p>
+
+<strong>Amount:</strong>
+
+₦{order.amount.toLocaleString()}
+
+</p>
+
+<p>
+
+<strong>Status:</strong>
+
+<span
+className={`
+ml-2
+px-3
+py-1
+rounded-full
+text-xs
+font-semibold
+${
+order.status==="paid"
+? "bg-green-100 text-green-700"
+: "bg-yellow-100 text-yellow-700"
+}
+`}
+>
+
+{order.status}
+
+</span>
+
+</p>
+
+<p>
+
+<strong>Date:</strong>
+
+{new Date(order.createdAt).toLocaleDateString()}
+
+</p>
+
+</div>
+
+</div>
+
+))}
+
+</div>
 
         </div>
 

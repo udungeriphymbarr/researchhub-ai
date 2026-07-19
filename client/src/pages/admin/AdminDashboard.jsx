@@ -61,9 +61,9 @@ function AdminDashboard() {
     if (loading) {
 
         return (
-            <div className="p-10">
-                Loading Dashboard...
-            </div>
+<div className="flex justify-center items-center h-[60vh]">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+</div>
         );
 
     }
@@ -76,7 +76,7 @@ function AdminDashboard() {
 
             {/* Statistics */}
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 
 <StatCard
   title="Users"
@@ -124,7 +124,7 @@ function AdminDashboard() {
 
             {/* Recent Activity */}
 
-            <div className="grid xl:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
 
                 {/* Recent Users */}
 
