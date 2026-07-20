@@ -3,9 +3,7 @@ import API from "../../api/api";
 import { toast } from "react-toastify";
 
 function Profile() {
-  const user = JSON.parse(
-    localStorage.getItem("user")
-  );
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -22,69 +20,49 @@ function Profile() {
     });
   };
 
-const handleSubmit = async () => {
-  try {
+  const handleSubmit = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
 
-    const user = JSON.parse(
-      localStorage.getItem("user")
-    );
+      const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(
-      `${API}/api/users/profile`,
-      {
+      const response = await fetch(`${API}/api/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-body: JSON.stringify({
-  userId: user._id,
-  ...formData,
-}),
+        body: JSON.stringify({
+          userId: user._id,
+          ...formData,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.message);
+        return;
       }
-    );
 
-    const data = await response.json();
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-    if (!response.ok) {
-      toast.error(data.message);
-      return;
+      window.dispatchEvent(new Event("storage"));
+
+      toast.success("Profile Updated Successfully");
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Failed to update profile.");
     }
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(data.user)
-    );
-
-    window.dispatchEvent(new Event("storage"));
-
-    toast.success(
-      "Profile Updated Successfully"
-    );
-
-  } catch (error) {
-
-    console.error(error);
-
-    toast.error(
-      "Failed to update profile."
-    );
-
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="bg-white p-6 rounded-xl shadow max-w-2xl mx-auto">
-
-        <h1 className="text-3xl font-bold mb-6">
-          My Profile
-        </h1>
+        <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
         <div className="space-y-4">
-
           <input
             type="text"
             name="name"
@@ -132,10 +110,9 @@ body: JSON.stringify({
           <button
             onClick={handleSubmit}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-         >
+          >
             Update Profile
           </button>
-
         </div>
       </div>
     </div>

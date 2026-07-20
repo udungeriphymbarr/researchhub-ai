@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {Link, useNavigate, useLocation,} from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
@@ -10,47 +10,44 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
-useEffect(() => {
-  const getUser = () => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(savedUser);
+  useEffect(() => {
+    const getUser = () => {
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      setUser(savedUser);
+    };
+
+    getUser();
+
+    window.addEventListener("storage", getUser);
+
+    return () => {
+      window.removeEventListener("storage", getUser);
+    };
+  }, [location]);
+
+  const handleLogout = async () => {
+    try {
+      if (!window.confirm("Are you sure you want to logout?")) return;
+
+      // Log out of Firebase (Google Sign-In)
+      await signOut(auth);
+
+      // Remove your app's saved login
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      // Clear any session storage
+      sessionStorage.clear();
+
+      // Go back to Login page
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  getUser();
-
-  window.addEventListener("storage", getUser);
-
-  return () => {
-    window.removeEventListener("storage", getUser);
-  };
-}, [location]);
-
-const handleLogout = async () => {
-  try {
-
-     if (!window.confirm("Are you sure you want to logout?")) return;
-
-    // Log out of Firebase (Google Sign-In)
-    await signOut(auth);
-
-    // Remove your app's saved login
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
-    // Clear any session storage
-    sessionStorage.clear();
-
-    // Go back to Login page
-    navigate("/login", { replace: true });
-
-  } catch (error) {
-    console.error(error);
-  }
-};
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-
         {/* Logo */}
         <Link
           to={user ? "/dashboard" : "/"}
@@ -61,34 +58,21 @@ const handleLogout = async () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-
           {!user ? (
             <>
-              <Link
-                to="/"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/" className="text-gray-700 hover:text-blue-600">
                 Home
               </Link>
 
-              <a
-                href="#features"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <a href="#features" className="text-gray-700 hover:text-blue-600">
                 Features
               </a>
 
-              <a
-                href="#pricing"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <a href="#pricing" className="text-gray-700 hover:text-blue-600">
                 Pricing
               </a>
 
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/login" className="text-gray-700 hover:text-blue-600">
                 Login
               </Link>
 
@@ -115,10 +99,7 @@ const handleLogout = async () => {
                 Projects
               </Link>
 
-              <Link
-                to="/profile"
-                className="text-gray-700 hover:text-blue-600"
-              >
+              <Link to="/profile" className="text-gray-700 hover:text-blue-600">
                 Profile
               </Link>
 
@@ -151,34 +132,21 @@ const handleLogout = async () => {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t px-4 py-4 flex flex-col gap-4">
-
           {!user ? (
             <>
-              <Link
-                to="/"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
 
-              <a
-                href="#features"
-                onClick={() => setMenuOpen(false)}
-              >
+              <a href="#features" onClick={() => setMenuOpen(false)}>
                 Features
               </a>
 
-              <a
-                href="#pricing"
-                onClick={() => setMenuOpen(false)}
-              >
+              <a href="#pricing" onClick={() => setMenuOpen(false)}>
                 Pricing
               </a>
 
-              <Link
-                to="/login"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/login" onClick={() => setMenuOpen(false)}>
                 Login
               </Link>
 
@@ -192,31 +160,19 @@ const handleLogout = async () => {
             </>
           ) : (
             <>
-              <Link
-                to="/dashboard"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
                 Dashboard
               </Link>
 
-              <Link
-                to="/projects"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/projects" onClick={() => setMenuOpen(false)}>
                 Projects
               </Link>
 
-              <Link
-                to="/profile"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/profile" onClick={() => setMenuOpen(false)}>
                 Profile
               </Link>
 
-              <Link
-                to="/subscription"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/subscription" onClick={() => setMenuOpen(false)}>
                 Subscription
               </Link>
 

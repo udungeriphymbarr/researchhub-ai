@@ -11,86 +11,65 @@ function PaymentSuccess() {
     verifyPayment();
   }, []);
 
-const verifyPayment = async () => {
+  const verifyPayment = async () => {
+    try {
+      const reference = searchParams.get("reference");
 
-  try {
+      if (!reference) {
+        toast.error("Invalid payment.");
 
-    const reference = searchParams.get("reference");
+        navigate("/");
 
-    if (!reference) {
+        return;
+      }
 
-      toast.error("Invalid payment.");
+      // Try Product Verification First
 
-      navigate("/");
+      let response = await authFetch(
+        `/api/payment/product/verify/${reference}`,
+      );
 
-      return;
+      if (response.ok) {
+        toast.success("🎉 Purchase Successful!");
 
-    }
+        navigate("/library", {
+          replace: true,
+        });
 
-    // Try Product Verification First
+        return;
+      }
 
-    let response = await authFetch(
-      `/api/payment/product/verify/${reference}`
-    );
+      // Otherwise verify Subscription
 
-    if (response.ok) {
+      response = await authFetch(`/api/payment/verify/${reference}`);
 
-      toast.success("🎉 Purchase Successful!");
+      const data = await response.json();
 
-      navigate("/library", {
+      if (!data.success) {
+        toast.error(data.message);
+
+        navigate("/subscription");
+
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      toast.success("🎉 Premium Activated!");
+
+      navigate("/dashboard", {
         replace: true,
       });
+    } catch (error) {
+      console.log(error);
 
-      return;
-
+      toast.error("Verification failed.");
     }
-
-    // Otherwise verify Subscription
-
-    response = await authFetch(
-      `/api/payment/verify/${reference}`
-    );
-
-    const data = await response.json();
-
-    if (!data.success) {
-
-      toast.error(data.message);
-
-      navigate("/subscription");
-
-      return;
-
-    }
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(data.user)
-    );
-
-    toast.success("🎉 Premium Activated!");
-
-    navigate("/dashboard", {
-      replace: true,
-    });
-
-  }
-
-  catch (error) {
-
-    console.log(error);
-
-    toast.error("Verification failed.");
-
-  }
-
-};
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <h2 className="text-2xl font-bold">
-        Verifying Payment...
-      </h2>
+      <h2 className="text-2xl font-bold">Verifying Payment...</h2>
     </div>
   );
 }

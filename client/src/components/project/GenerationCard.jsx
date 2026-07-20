@@ -25,14 +25,16 @@ function GenerationCard({ generation, onDelete }) {
   const selectTopic = async (topic) => {
     const confirmSelect = await toast.promise(
       new Promise((resolve) => {
-        const result = window.confirm("Use this as the official research topic for this project?");
+        const result = window.confirm(
+          "Use this as the official research topic for this project?",
+        );
         resolve(result);
       }),
       {
         pending: "Confirming topic selection...",
         success: "Topic selected successfully!",
         error: "Failed to select topic.",
-      }
+      },
     );
 
     if (!confirmSelect) return;
@@ -50,7 +52,7 @@ function GenerationCard({ generation, onDelete }) {
           body: JSON.stringify({
             topic,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -70,7 +72,7 @@ function GenerationCard({ generation, onDelete }) {
 
   const deleteGeneration = async () => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this generation?"
+      "Are you sure you want to delete this generation?",
     );
 
     if (!confirmDelete) return;
@@ -78,12 +80,9 @@ function GenerationCard({ generation, onDelete }) {
     try {
       setDeleting(true);
 
-      const response = await authFetch(
-        `/api/generations/${generation._id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await authFetch(`/api/generations/${generation._id}`, {
+        method: "DELETE",
+      });
 
       const data = await response.json();
 
@@ -103,61 +102,46 @@ function GenerationCard({ generation, onDelete }) {
   };
 
   const supervisorAction = async (action) => {
-
     try {
+      setAiLoading(true);
 
-        setAiLoading(true);
+      const response = await authFetch(`/api/ai/supervisor`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action,
 
-        const response = await authFetch(
-            `/api/ai/supervisor`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+          projectId: generation.projectId,
 
-                    action,
+          content: Array.isArray(generation.output)
+            ? generation.output.join("\n")
+            : generation.output,
+        }),
+      });
 
-                    projectId: generation.projectId,
+      const data = await response.json();
 
-                    content: Array.isArray(generation.output)
-                        ? generation.output.join("\n")
-                        : generation.output,
+      if (!data.success) {
+        alert(data.message);
 
-                }),
-            }
-        );
+        return;
+      }
 
-        const data = await response.json();
+      setModalTitle(action.toUpperCase());
 
-        if (!data.success) {
+      setModalContent(data.output);
 
-            alert(data.message);
-
-            return;
-
-        }
-
-        setModalTitle(action.toUpperCase());
-
-        setModalContent(data.output);
-
-        setModalOpen(true);
-
+      setModalOpen(true);
     } catch (error) {
+      console.log(error);
 
-        console.log(error);
-
-        alert("AI Supervisor failed.");
-
+      alert("AI Supervisor failed.");
     } finally {
-
-        setAiLoading(false);
-
+      setAiLoading(false);
     }
-
-};
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow p-6 border">
@@ -175,9 +159,7 @@ function GenerationCard({ generation, onDelete }) {
       {/* Prompt */}
       <h3 className="font-bold mb-2">Prompt</h3>
 
-      <div className="bg-gray-100 rounded-lg p-4 mb-5">
-        {generation.input}
-      </div>
+      <div className="bg-gray-100 rounded-lg p-4 mb-5">{generation.input}</div>
 
       {/* AI Result */}
       <h3 className="font-bold mb-3">AI Result</h3>
@@ -187,10 +169,7 @@ function GenerationCard({ generation, onDelete }) {
           ? generation.output
           : [generation.output]
         ).map((line, index) => (
-          <div
-            key={index}
-            className="border rounded-lg p-4"
-          >
+          <div key={index} className="border rounded-lg p-4">
             <p>{line}</p>
 
             {generation.type === "topic" && (
@@ -199,9 +178,7 @@ function GenerationCard({ generation, onDelete }) {
                 disabled={selecting}
                 className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-green-300"
               >
-                {selecting
-                  ? "Selecting..."
-                  : "✅ Select Topic"}
+                {selecting ? "Selecting..." : "✅ Select Topic"}
               </button>
             )}
           </div>
@@ -209,37 +186,29 @@ function GenerationCard({ generation, onDelete }) {
       </div>
 
       {/* Actions */}
-<div className="flex flex-wrap gap-3 mt-6">
+      <div className="flex flex-wrap gap-3 mt-6">
+        <button
+          onClick={copyResult}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          📋 Copy
+        </button>
 
-<button
-onClick={copyResult}
-className="bg-blue-600 text-white px-4 py-2 rounded-lg"
->
-📋 Copy
-</button>
-
-<button
-onClick={deleteGeneration}
-disabled={deleting}
-className="bg-red-600 text-white px-4 py-2 rounded-lg"
->
-🗑 Delete
-</button>
-
-</div>
-{modalOpen && (
-
-<SupervisorModal
-
-title={modalTitle}
-
-content={modalContent}
-
-onClose={() => setModalOpen(false)}
-
-/>
-
-)}
+        <button
+          onClick={deleteGeneration}
+          disabled={deleting}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg"
+        >
+          🗑 Delete
+        </button>
+      </div>
+      {modalOpen && (
+        <SupervisorModal
+          title={modalTitle}
+          content={modalContent}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

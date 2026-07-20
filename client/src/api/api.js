@@ -1,8 +1,7 @@
 import { toast } from "react-toastify";
 
 const API =
-  import.meta.env.VITE_API_URL ||
-  "https://researchhub-api-k9pv.onrender.com";
+  import.meta.env.VITE_API_URL || "https://researchhub-api-k9pv.onrender.com";
 
 export default API;
 

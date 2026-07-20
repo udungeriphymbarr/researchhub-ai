@@ -18,16 +18,13 @@ function ForgotPassword() {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        `${API}/api/auth/forgot-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await fetch(`${API}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
       const data = await response.json();
 
@@ -57,9 +54,7 @@ function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center px-4">
-
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-
         <h1 className="text-3xl font-bold text-center text-blue-600">
           Forgot Password
         </h1>
@@ -69,14 +64,11 @@ function ForgotPassword() {
         </p>
 
         <div className="mt-6">
-
           <input
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border rounded-lg px-4 py-3"
           />
 
@@ -85,15 +77,10 @@ function ForgotPassword() {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg mt-4"
           >
-            {loading
-              ? "Sending..."
-              : "Send Reset Link"}
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

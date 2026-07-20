@@ -26,21 +26,17 @@ function TopicGenerator() {
     try {
       setLoading(true);
 
-      const response = await authFetch(
-        `/api/ai/generate`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            type: "topic",
-            course,
-            prompt: interest,
-          }),
-        }
-      );
+      const response = await authFetch(`/api/ai/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "topic",
+          course,
+          prompt: interest,
+        }),
+      });
 
       const data = await response.json();
 
@@ -50,32 +46,24 @@ function TopicGenerator() {
       }
 
       setTopics(data.output);
-      setIsFallback(
-        data.aiFallback || false
-      );
+      setIsFallback(data.aiFallback || false);
 
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
+      const user = JSON.parse(localStorage.getItem("user"));
 
       if (user) {
-        await authFetch(
-          `/api/generations`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            body: JSON.stringify({
-              userId: user.id,
-              projectId,
-              type: "topic",
-              input: interest,
-              output: data.output,
-            }),
-          }
-        );
+        await authFetch(`/api/generations`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            projectId,
+            type: "topic",
+            input: interest,
+            output: data.output,
+          }),
+        });
       }
     } catch (error) {
       console.error(error);
@@ -87,28 +75,18 @@ function TopicGenerator() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-
       <div className="max-w-3xl mx-auto">
-
-        <h1 className="text-3xl font-bold">
-          AI Research Topic Generator
-        </h1>
+        <h1 className="text-3xl font-bold">AI Research Topic Generator</h1>
 
         <p className="text-gray-500 mt-2 mb-8">
-          Generate unique AI-powered
-          research topics and save them
-          directly into your project.
+          Generate unique AI-powered research topics and save them directly into
+          your project.
         </p>
 
         <div className="bg-white rounded-2xl shadow p-6">
-
-          <ProjectSelector
-            projectId={projectId}
-            setProjectId={setProjectId}
-          />
+          <ProjectSelector projectId={projectId} setProjectId={setProjectId} />
 
           <div className="mb-5">
-
             <label className="block font-medium mb-2">
               Course / Department
             </label>
@@ -116,31 +94,22 @@ function TopicGenerator() {
             <input
               type="text"
               value={course}
-              onChange={(e) =>
-                setCourse(e.target.value)
-              }
+              onChange={(e) => setCourse(e.target.value)}
               placeholder="e.g. Biochemistry"
               className="w-full border rounded-lg px-4 py-3"
             />
-
           </div>
 
           <div className="mb-6">
-
-            <label className="block font-medium mb-2">
-              Area of Interest
-            </label>
+            <label className="block font-medium mb-2">Area of Interest</label>
 
             <input
               type="text"
               value={interest}
-              onChange={(e) =>
-                setInterest(e.target.value)
-              }
+              onChange={(e) => setInterest(e.target.value)}
               placeholder="e.g. Food Safety"
               className="w-full border rounded-lg px-4 py-3"
             />
-
           </div>
 
           <button
@@ -148,52 +117,34 @@ function TopicGenerator() {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
           >
-            {loading
-              ? "Generating Topics..."
-              : "Generate Research Topics"}
+            {loading ? "Generating Topics..." : "Generate Research Topics"}
           </button>
 
           {isFallback && (
             <div className="mt-6 bg-yellow-100 border border-yellow-300 rounded-lg p-4 text-yellow-700">
-              AI is temporarily unavailable.
-              Smart fallback suggestions are
+              AI is temporarily unavailable. Smart fallback suggestions are
               being displayed.
             </div>
           )}
 
           {topics.length > 0 && (
-
             <div className="mt-8">
-
-              <h2 className="text-xl font-semibold mb-4">
-                Generated Topics
-              </h2>
+              <h2 className="text-xl font-semibold mb-4">Generated Topics</h2>
 
               <div className="space-y-3">
-
-                {topics.map(
-                  (topic, index) => (
-
-                    <div
-                      key={index}
-                      className="bg-gray-50 border rounded-lg p-4 hover:border-blue-500 transition"
-                    >
-                      {topic}
-                    </div>
-
-                  )
-                )}
-
+                {topics.map((topic, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-50 border rounded-lg p-4 hover:border-blue-500 transition"
+                  >
+                    {topic}
+                  </div>
+                ))}
               </div>
-
             </div>
-
           )}
-
         </div>
-
       </div>
-
     </div>
   );
 }

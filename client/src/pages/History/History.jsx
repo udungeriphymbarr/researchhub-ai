@@ -11,9 +11,7 @@ function History() {
 
   const fetchGenerations = async () => {
     try {
-const response = await authFetch(
-"/api/generations"
-);
+      const response = await authFetch("/api/generations");
 
       const data = await response.json();
 
@@ -25,25 +23,23 @@ const response = await authFetch(
     }
   };
 
-const deleteGeneration = async (id) => {
-  try {
-    const response = await authFetch(`/api/generations/${id}`, {
-      method: "DELETE",
-    });
+  const deleteGeneration = async (id) => {
+    try {
+      const response = await authFetch(`/api/generations/${id}`, {
+        method: "DELETE",
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (data.success) {
-      setGenerations((prev) =>
-        prev.filter((item) => item._id !== id)
-      );
-      toast.success("Generation deleted successfully!");
+      if (data.success) {
+        setGenerations((prev) => prev.filter((item) => item._id !== id));
+        toast.success("Generation deleted successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete generation.");
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to delete generation.");
-  }
-};
+  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -52,20 +48,14 @@ const deleteGeneration = async (id) => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-2">
-        Research History
-      </h1>
+      <h1 className="text-3xl font-bold mb-2">Research History</h1>
 
-      <p className="text-gray-500 mb-8">
-        View all your previous generations.
-      </p>
+      <p className="text-gray-500 mb-8">View all your previous generations.</p>
 
       {/* Empty State */}
       {generations.length === 0 && (
         <div className="bg-white p-8 rounded-xl shadow text-center">
-          <h2 className="text-xl font-semibold mb-2">
-            No Research Yet
-          </h2>
+          <h2 className="text-xl font-semibold mb-2">No Research Yet</h2>
 
           <p className="text-gray-500">
             Generate your first topic, question, or outline.
@@ -75,21 +65,14 @@ const deleteGeneration = async (id) => {
 
       <div className="space-y-4">
         {generations.map((item) => (
-          <div
-            key={item._id}
-            className="bg-white p-5 rounded-xl shadow"
-          >
+          <div key={item._id} className="bg-white p-5 rounded-xl shadow">
             {/* Header */}
             <div className="flex justify-between items-start mb-4">
               <div>
-                <p className="font-semibold text-lg">
-                  {item.input}
-                </p>
+                <p className="font-semibold text-lg">{item.input}</p>
 
                 <p className="text-sm text-gray-500">
-                  {new Date(
-                    item.createdAt
-                  ).toLocaleString()}
+                  {new Date(item.createdAt).toLocaleString()}
                 </p>
               </div>
 
@@ -100,17 +83,13 @@ const deleteGeneration = async (id) => {
 
             {/* Output */}
             <ul className="space-y-2">
-{(Array.isArray(item.output)
-  ? item.output
-  : [item.output]
-).map((result, index) => (
-  <div
-    key={index}
-    className="border rounded-lg p-3 mb-2"
-  >
-    {result}
-  </div>
-))}
+              {(Array.isArray(item.output) ? item.output : [item.output]).map(
+                (result, index) => (
+                  <div key={index} className="border rounded-lg p-3 mb-2">
+                    {result}
+                  </div>
+                ),
+              )}
             </ul>
 
             {/* Actions */}
@@ -119,8 +98,8 @@ const deleteGeneration = async (id) => {
                 onClick={() =>
                   copyToClipboard(
                     Array.isArray(item.output)
-                    ? item.output.join("\n")
-                    : item.output
+                      ? item.output.join("\n")
+                      : item.output,
                   )
                 }
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
@@ -129,9 +108,7 @@ const deleteGeneration = async (id) => {
               </button>
 
               <button
-                onClick={() =>
-                  deleteGeneration(item._id)
-                }
+                onClick={() => deleteGeneration(item._id)}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
               >
                 Delete

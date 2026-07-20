@@ -1,10 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  FaClock,
-  FaBrain,
-  FaShieldAlt,
-  FaBolt,
-} from "react-icons/fa";
+import { FaClock, FaBrain, FaShieldAlt, FaBolt } from "react-icons/fa";
 
 const reasons = [
   {
@@ -36,93 +31,59 @@ const reasons = [
 function WhyResearchHub() {
   return (
     <section className="py-28 bg-white">
-
       <div className="max-w-7xl mx-auto px-6">
-
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: .7 }}
+          transition={{ duration: 0.7 }}
           className="text-center mb-20"
         >
-
           <span className="uppercase tracking-widest text-blue-600 font-bold">
-
             WHY RESEARCHHUB AI
-
           </span>
 
           <h2 className="mt-4 text-5xl font-black text-gray-900">
-
             Research Doesn't Have
             <br />
             To Be Difficult
-
           </h2>
 
           <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
-
-            We built ResearchHub AI to remove the frustration,
-            confusion and wasted time that many students experience during research.
-
+            We built ResearchHub AI to remove the frustration, confusion and
+            wasted time that many students experience during research.
           </p>
-
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-10">
-
           {reasons.map((item, index) => (
-
             <motion.div
-
               key={index}
-
               initial={{ opacity: 0, y: 40 }}
-
               whileInView={{ opacity: 1, y: 0 }}
-
               viewport={{ once: true }}
-
               transition={{
-                duration: .6,
-                delay: index * .15,
+                duration: 0.6,
+                delay: index * 0.15,
               }}
-
               whileHover={{
                 scale: 1.03,
               }}
-
               className="rounded-3xl border p-10 hover:shadow-2xl transition"
-
             >
-
-              <div className={`w-20 h-20 rounded-3xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white text-3xl`}>
-
+              <div
+                className={`w-20 h-20 rounded-3xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white text-3xl`}
+              >
                 {item.icon}
-
               </div>
 
-              <h3 className="mt-8 text-3xl font-bold">
+              <h3 className="mt-8 text-3xl font-bold">{item.title}</h3>
 
-                {item.title}
-
-              </h3>
-
-              <p className="mt-5 text-gray-600 leading-8">
-
-                {item.text}
-
-              </p>
-
+              <p className="mt-5 text-gray-600 leading-8">{item.text}</p>
             </motion.div>
-
           ))}
-
         </div>
-
       </div>
-
     </section>
   );
 }

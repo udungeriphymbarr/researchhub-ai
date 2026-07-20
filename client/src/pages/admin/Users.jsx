@@ -3,280 +3,161 @@ import { authFetch } from "../../api/api";
 import Swal from "sweetalert2";
 
 function Users() {
+  const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
 
-    const [users, setUsers] = useState([]);
-    const [search, setSearch] = useState("");
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-    useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const response = await authFetch("/api/users/all");
 
-        fetchUsers();
+      const data = await response.json();
 
-    }, []);
+      if (data.success) {
+        setUsers(data.users);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const fetchUsers = async () => {
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()),
+  );
 
-        try {
-
-            const response = await authFetch(
-                "/api/users/all"
-            );
-
-            const data = await response.json();
-
-            if (data.success) {
-
-                setUsers(data.users);
-
-            }
-
-        } catch (error) {
-
-            console.log(error);
-
-        }
-
-    };
-
-    const filteredUsers = users.filter((user) =>
-
-        user.name
-            .toLowerCase()
-            .includes(search.toLowerCase())
-
-        ||
-
-        user.email
-            .toLowerCase()
-            .includes(search.toLowerCase())
-
-    );
-
-    const updateRole = async (id, role) => {
-
+  const updateRole = async (id, role) => {
     const response = await authFetch(
+      `/api/users/role/${id}`,
 
-        `/api/users/role/${id}`,
+      {
+        method: "PUT",
 
-        {
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-            method:"PUT",
-
-            headers:{
-
-                "Content-Type":"application/json"
-
-            },
-
-            body:JSON.stringify({
-
-                role
-
-            })
-
-        }
-
+        body: JSON.stringify({
+          role,
+        }),
+      },
     );
 
     const data = await response.json();
 
-    if(data.success){
+    if (data.success) {
+      Swal.fire({
+        icon: "success",
 
-        Swal.fire({
+        title: "Role Updated",
+      });
 
-            icon:"success",
-
-            title:"Role Updated"
-
-        });
-
-        fetchUsers();
-
+      fetchUsers();
     }
+  };
 
-};
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Users</h1>
 
-    return (
+        <p className="text-gray-500 mt-2">Manage registered users.</p>
+      </div>
 
-        <div className="space-y-8">
-
-            <div>
-
-                <h1 className="text-3xl font-bold">
-                    Users
-                </h1>
-
-                <p className="text-gray-500 mt-2">
-                    Manage registered users.
-                </p>
-
-            </div>
-
-            <input
-
-                type="text"
-
-                placeholder="Search users..."
-
-                value={search}
-
-                onChange={(e)=>setSearch(e.target.value)}
-
-                className="
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="
                 w-full
                 border
                 rounded-xl
                 p-4
                 "
+      />
 
-            />
+      <div className="bg-white rounded-2xl hidden lg:block shadow overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-4 text-left">Name</th>
+              <th className="p-4 text-left">Email</th>
+              <th className="p-4 text-left">Plan</th>
+              <th className="p-4 text-left">Role</th>
+              <th className="p-4 text-left">Usage</th>s
+              <th className="p-4 text-left">Actions</th>
+            </tr>
+          </thead>
 
-            <div className="bg-white rounded-2xl hidden lg:block shadow overflow-hidden">
+          <tbody>
+            {filteredUsers.map((user) => (
+              <tr key={user._id} className="border-b">
+                <td className="p-4">{user.name}</td>
 
-                <table className="w-full">
+                <td className="p-4">{user.email}</td>
 
-                    <thead className="bg-gray-100">
+                <td className="p-4">{user.plan}</td>
 
-                        <tr>
+                <td className="p-4">{user.role}</td>
 
-                            <th className="p-4 text-left">Name</th>
+                <td className="p-4">{user.usageCount}</td>
 
-                            <th className="p-4 text-left">Email</th>
+                <td className="p-4">
+                  <select
+                    value={user.role}
+                    onChange={(e) => updateRole(user._id, e.target.value)}
+                    className="border rounded-lg p-2"
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-                            <th className="p-4 text-left">Plan</th>
+      <div className="lg:hidden space-y-4">
+        {filteredUsers.map((user) => (
+          <div key={user._id} className="bg-white rounded-xl shadow p-5">
+            <h2 className="font-bold text-lg">{user.name}</h2>
 
-                            <th className="p-4 text-left">Role</th>
-
-                            <th className="p-4 text-left">Usage</th>
-s
-                            <th className="p-4 text-left">Actions</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {filteredUsers.map((user)=>(
-
-                            <tr
-                            key={user._id}
-                            className="border-b"
-                            >
-
-                                <td className="p-4">
-                                    {user.name}
-                                </td>
-
-                                <td className="p-4">
-                                    {user.email}
-                                </td>
-
-                                <td className="p-4">
-
-                                    {user.plan}
-
-                                </td>
-
-                                <td className="p-4">
-
-                                    {user.role}
-
-                                </td>
-
-                                <td className="p-4">
-
-                                    {user.usageCount}
-
-                                </td>
-
-<td className="p-4">
-    <select
-        value={user.role}
-        onChange={(e) =>
-            updateRole(user._id, e.target.value)
-        }
-        className="border rounded-lg p-2"
-    >
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-    </select>
-</td>
-
-                            </tr>
-
-                        ))}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-<div className="lg:hidden space-y-4">
-
-    {filteredUsers.map((user) => (
-
-        <div
-            key={user._id}
-            className="bg-white rounded-xl shadow p-5"
-        >
-
-            <h2 className="font-bold text-lg">
-                {user.name}
-            </h2>
-
-            <p className="text-gray-500">
-                {user.email}
-            </p>
+            <p className="text-gray-500">{user.email}</p>
 
             <div className="mt-4 space-y-2">
+              <p>
+                <strong>Plan:</strong> {user.plan}
+              </p>
 
-                <p>
-                    <strong>Plan:</strong> {user.plan}
-                </p>
+              <p>
+                <strong>Usage:</strong> {user.usageCount}
+              </p>
 
-                <p>
-                    <strong>Usage:</strong> {user.usageCount}
-                </p>
+              <div className="flex items-center gap-2">
+                <strong>Role:</strong>
 
-                <div className="flex items-center gap-2">
+                <select
+                  value={user.role}
+                  onChange={(e) => updateRole(user._id, e.target.value)}
+                  className="border rounded-lg p-2"
+                >
+                  <option value="user">User</option>
 
-                    <strong>Role:</strong>
-
-                    <select
-                        value={user.role}
-                        onChange={(e)=>
-                            updateRole(
-                                user._id,
-                                e.target.value
-                            )
-                        }
-                        className="border rounded-lg p-2"
-                    >
-
-                        <option value="user">
-                            User
-                        </option>
-
-                        <option value="admin">
-                            Admin
-                        </option>
-
-                    </select>
-
-                </div>
-
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
             </div>
-
-        </div>
-
-    ))}
-
-</div>
-        </div>
-
-    );
-
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default Users;

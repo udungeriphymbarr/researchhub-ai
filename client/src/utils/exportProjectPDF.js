@@ -12,11 +12,7 @@ const exportProjectPDF = (project, generations) => {
 
   doc.setFontSize(12);
 
-  doc.text(
-    project.description || "",
-    20,
-    y
-  );
+  doc.text(project.description || "", 20, y);
 
   y += 20;
 
@@ -28,11 +24,7 @@ const exportProjectPDF = (project, generations) => {
 
     doc.setFontSize(16);
 
-    doc.text(
-      item.type.toUpperCase(),
-      20,
-      y
-    );
+    doc.text(item.type.toUpperCase(), 20, y);
 
     y += 10;
 
@@ -42,19 +34,14 @@ const exportProjectPDF = (project, generations) => {
       ? item.output.join("\n")
       : item.output;
 
-    const lines = doc.splitTextToSize(
-      content,
-      170
-    );
+    const lines = doc.splitTextToSize(content, 170);
 
     doc.text(lines, 20, y);
 
     y += lines.length * 6 + 15;
   });
 
-  doc.save(
-    `${project.title}.pdf`
-  );
+  doc.save(`${project.title}.pdf`);
 };
 
 export default exportProjectPDF;

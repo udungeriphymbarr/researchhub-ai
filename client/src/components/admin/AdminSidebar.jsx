@@ -50,7 +50,7 @@ function Sidebar({ closeSidebar }) {
 
   return (
     <aside
-className="
+      className="
 w-64
 h-screen
 overflow-y-auto
@@ -58,11 +58,9 @@ bg-slate-900
 text-white
 shadow-xl
 "
->
+    >
       <div className="p-6 border-b border-slate-700">
-        <h1 className="text-2xl font-bold">
-          ResearchHub AI
-        </h1>
+        <h1 className="text-2xl font-bold">ResearchHub AI</h1>
       </div>
 
       <nav className="flex-1 overflow-y-auto p-4 space-y-2">
@@ -71,7 +69,7 @@ shadow-xl
 
           return (
             <NavLink
-            onClick={closeSidebar}
+              onClick={closeSidebar}
               key={menu.path}
               to={menu.path}
               end={menu.path === "/admin"}

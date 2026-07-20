@@ -20,40 +20,35 @@ const features = [
   {
     icon: <FaQuestionCircle />,
     title: "Research Questions",
-    description:
-      "Create intelligent research questions in seconds with AI.",
+    description: "Create intelligent research questions in seconds with AI.",
     color: "text-indigo-600",
     bg: "bg-indigo-50",
   },
   {
     icon: <FaBook />,
     title: "Chapter Outline",
-    description:
-      "Generate complete Chapter 1–5 outlines for your research.",
+    description: "Generate complete Chapter 1–5 outlines for your research.",
     color: "text-cyan-600",
     bg: "bg-cyan-50",
   },
   {
     icon: <FaFolderOpen />,
     title: "Project Manager",
-    description:
-      "Organize all your research projects in one secure workspace.",
+    description: "Organize all your research projects in one secure workspace.",
     color: "text-green-600",
     bg: "bg-green-50",
   },
   {
     icon: <FaHistory />,
     title: "Generation History",
-    description:
-      "Never lose your AI work. Every generation is safely stored.",
+    description: "Never lose your AI work. Every generation is safely stored.",
     color: "text-orange-600",
     bg: "bg-orange-50",
   },
   {
     icon: <FaRocket />,
     title: "Premium AI",
-    description:
-      "Unlock unlimited AI generations with ResearchHub Premium.",
+    description: "Unlock unlimited AI generations with ResearchHub Premium.",
     color: "text-purple-600",
     bg: "bg-purple-50",
   },
@@ -61,17 +56,13 @@ const features = [
 
 function Features() {
   return (
-    <section
-      id="features"
-      className="py-24 bg-white"
-    >
+    <section id="features" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: .6 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
           <span className="text-blue-600 font-semibold uppercase tracking-widest">
@@ -83,23 +74,21 @@ function Features() {
           </h2>
 
           <p className="mt-6 text-gray-600 text-lg max-w-3xl mx-auto">
-            Powerful AI tools built specifically for students,
-            researchers, lecturers and academic professionals.
+            Powerful AI tools built specifically for students, researchers,
+            lecturers and academic professionals.
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
           {features.map((feature, index) => (
-
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{
-                duration: .5,
-                delay: index * .1,
+                duration: 0.5,
+                delay: index * 0.1,
               }}
               whileHover={{
                 y: -10,
@@ -107,7 +96,6 @@ function Features() {
               }}
               className="rounded-3xl border bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300"
             >
-
               <div
                 className={`${feature.bg} w-16 h-16 rounded-2xl flex items-center justify-center text-3xl ${feature.color}`}
               >
@@ -121,13 +109,9 @@ function Features() {
               <p className="mt-4 text-gray-600 leading-8">
                 {feature.description}
               </p>
-
             </motion.div>
-
           ))}
-
         </div>
-
       </div>
     </section>
   );

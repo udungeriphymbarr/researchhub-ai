@@ -2,189 +2,122 @@ import { useEffect, useState } from "react";
 import { authFetch } from "../../api/api";
 
 function Orders() {
+  const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState("");
 
-    const [orders, setOrders] = useState([]);
-    const [search, setSearch] = useState("");
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
-    useEffect(() => {
-        fetchOrders();
-    }, []);
+  const fetchOrders = async () => {
+    try {
+      const response = await authFetch("/api/orders/all");
+      const data = await response.json();
 
-    const fetchOrders = async () => {
+      if (data.success) {
+        setOrders(data.orders);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-        try {
-
-            const response = await authFetch("/api/orders/all");
-            const data = await response.json();
-
-            if (data.success) {
-                setOrders(data.orders);
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
-
-    };
-
-    const filteredOrders = orders.filter((order) => {
-
-        const buyer = order.user?.name || "";
-        const email = order.user?.email || "";
-        const product = order.productTitle || "";
-
-        return (
-            buyer.toLowerCase().includes(search.toLowerCase()) ||
-            email.toLowerCase().includes(search.toLowerCase()) ||
-            product.toLowerCase().includes(search.toLowerCase())
-        );
-
-    });
+  const filteredOrders = orders.filter((order) => {
+    const buyer = order.user?.name || "";
+    const email = order.user?.email || "";
+    const product = order.productTitle || "";
 
     return (
+      buyer.toLowerCase().includes(search.toLowerCase()) ||
+      email.toLowerCase().includes(search.toLowerCase()) ||
+      product.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
-        <div className="space-y-8">
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Orders</h1>
 
-            <div>
+        <p className="text-gray-500 mt-2">
+          All purchases made on ResearchHub AI.
+        </p>
+      </div>
 
-                <h1 className="text-3xl font-bold">
-                    Orders
-                </h1>
+      <input
+        type="text"
+        placeholder="Search buyer, email or product..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full border rounded-xl p-4"
+      />
 
-                <p className="text-gray-500 mt-2">
-                    All purchases made on ResearchHub AI.
-                </p>
+      <div className="hidden lg:block bg-white rounded-2xl shadow overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-4 text-left">Buyer</th>
 
-            </div>
+              <th className="p-4 text-left">Email</th>
 
-            <input
-                type="text"
-                placeholder="Search buyer, email or product..."
-                value={search}
-                onChange={(e)=>setSearch(e.target.value)}
-                className="w-full border rounded-xl p-4"
-            />
+              <th className="p-4 text-left">Product</th>
 
-            <div className="hidden lg:block bg-white rounded-2xl shadow overflow-hidden">
+              <th className="p-4 text-left">Amount</th>
 
-                <table className="w-full">
+              <th className="p-4 text-left">Status</th>
 
-                    <thead className="bg-gray-100">
+              <th className="p-4 text-left">Purchased</th>
+            </tr>
+          </thead>
 
-                        <tr>
+          <tbody>
+            {filteredOrders.map((order) => (
+              <tr key={order._id} className="border-b hover:bg-gray-50">
+                <td className="p-4">{order.user?.name}</td>
 
-                            <th className="p-4 text-left">Buyer</th>
+                <td className="p-4">{order.user?.email}</td>
 
-                            <th className="p-4 text-left">Email</th>
+                <td className="p-4">{order.productTitle}</td>
 
-                            <th className="p-4 text-left">Product</th>
+                <td className="p-4 font-semibold text-blue-600">
+                  ₦{order.amount}
+                </td>
 
-                            <th className="p-4 text-left">Amount</th>
+                <td className="p-4">
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    {order.status}
+                  </span>
+                </td>
 
-                            <th className="p-4 text-left">Status</th>
+                <td className="p-4">
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-                            <th className="p-4 text-left">Purchased</th>
+      <div className="lg:hidden space-y-4">
+        {orders.map((order) => (
+          <div key={order._id} className="bg-white rounded-2xl shadow p-5">
+            <h2 className="font-bold text-lg">{order.productTitle}</h2>
 
-                        </tr>
+            <p className="text-gray-500">
+              Purchased by
+              <strong> {order.user?.name}</strong>
+            </p>
 
-                    </thead>
+            <div className="mt-4 space-y-2">
+              <p>
+                <strong>Amount:</strong>₦{order.amount.toLocaleString()}
+              </p>
 
-                    <tbody>
+              <p>
+                <strong>Status:</strong>
 
-                        {filteredOrders.map((order)=>(
-
-                            <tr
-                                key={order._id}
-                                className="border-b hover:bg-gray-50"
-                            >
-
-                                <td className="p-4">
-                                    {order.user?.name}
-                                </td>
-
-                                <td className="p-4">
-                                    {order.user?.email}
-                                </td>
-
-                                <td className="p-4">
-                                    {order.productTitle}
-                                </td>
-
-                                <td className="p-4 font-semibold text-blue-600">
-                                    ₦{order.amount}
-                                </td>
-
-                                <td className="p-4">
-
-                                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-
-                                        {order.status}
-
-                                    </span>
-
-                                </td>
-
-                                <td className="p-4">
-
-                                    {new Date(order.createdAt).toLocaleDateString()}
-
-                                </td>
-
-                            </tr>
-
-                        ))}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div className="lg:hidden space-y-4">
-
-{orders.map((order)=>(
-
-<div
-key={order._id}
-className="bg-white rounded-2xl shadow p-5"
->
-
-<h2 className="font-bold text-lg">
-
-{order.productTitle}
-
-</h2>
-
-<p className="text-gray-500">
-
-Purchased by
-
-<strong>
-
-{" "}
-
-{order.user?.name}
-
-</strong>
-
-</p>
-
-<div className="mt-4 space-y-2">
-
-<p>
-
-<strong>Amount:</strong>
-
-₦{order.amount.toLocaleString()}
-
-</p>
-
-<p>
-
-<strong>Status:</strong>
-
-<span
-className={`
+                <span
+                  className={`
 ml-2
 px-3
 py-1
@@ -192,39 +125,27 @@ rounded-full
 text-xs
 font-semibold
 ${
-order.status==="paid"
-? "bg-green-100 text-green-700"
-: "bg-yellow-100 text-yellow-700"
+  order.status === "paid"
+    ? "bg-green-100 text-green-700"
+    : "bg-yellow-100 text-yellow-700"
 }
 `}
->
+                >
+                  {order.status}
+                </span>
+              </p>
 
-{order.status}
+              <p>
+                <strong>Date:</strong>
 
-</span>
-
-</p>
-
-<p>
-
-<strong>Date:</strong>
-
-{new Date(order.createdAt).toLocaleDateString()}
-
-</p>
-
-</div>
-
-</div>
-
-))}
-
-</div>
-
-        </div>
-
-    );
-
+                {new Date(order.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default Orders;

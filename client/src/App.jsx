@@ -48,7 +48,7 @@ import Settings from "./pages/admin/Settings";
 function App() {
   return (
     <>
-    <ScrollToTop />
+      <ScrollToTop />
       <Navbar />
 
       <Routes>
@@ -56,25 +56,23 @@ function App() {
 
         <Route path="/" element={<Home />} />
 
-        
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
 
-<Route
-  path="/login"
-  element={
-    <GuestRoute>
-      <Login />
-    </GuestRoute>
-  }
-/>
-
-<Route
-  path="/signup"
-  element={
-    <GuestRoute>
-      <Signup />
-    </GuestRoute>
-  }
-/>
+        <Route
+          path="/signup"
+          element={
+            <GuestRoute>
+              <Signup />
+            </GuestRoute>
+          }
+        />
 
         {/* Protected Routes */}
 
@@ -88,21 +86,15 @@ function App() {
         />
 
         <Route
+          path="/subscription"
+          element={
+            <ProtectedRoute>
+              <Subscription />
+            </ProtectedRoute>
+          }
+        />
 
-    path="/subscription"
-
-    element={
-        <ProtectedRoute>
-            <Subscription />
-        </ProtectedRoute>
-    }
-
-/>
-
-<Route
-    path="/payment-success"
-    element={<PaymentSuccess/>}
-/>
+        <Route path="/payment-success" element={<PaymentSuccess />} />
 
         <Route
           path="/topic-generator"
@@ -220,102 +212,63 @@ function App() {
             </ProtectedRoute>
           }
         />
-<Route
-  path="/admin"
-  element={
-    <AdminProtectedRoute>
-      <AdminLayout />
-    </AdminProtectedRoute>
-  }
->
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout />
+            </AdminProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
 
-    <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProducts />} />
 
-    <Route
-        path="products"
-        element={<AdminProducts />}
-    />
+          <Route path="upload" element={<AdminUpload />} />
 
-    <Route
-        path="upload"
-        element={<AdminUpload />}
-    />
+          <Route path="products/edit/:id" element={<EditProduct />} />
 
-<Route
-path="products/edit/:id"
-element={<EditProduct />}
-/>
+          <Route path="users" element={<Users />} />
 
-    <Route
-        path="users"
-        element={<Users />}
-    />
+          <Route path="orders" element={<Orders />} />
 
-    <Route
-    path="orders"
-    element={<Orders />}
-/>
+          <Route path="categories" element={<Categories />} />
 
-<Route
-    path="categories"
-    element={<Categories />}
-/>
+          <Route path="settings" element={<Settings />} />
+        </Route>
 
-<Route
-    path="settings"
-    element={<Settings />}
-/>
+        <Route path="/store" element={<Store />} />
 
-</Route>
-
-<Route
-    path="/store"
-    element={<Store />}
-/>
-
-<Route
-  path="/store/:id"
-  element={<ProductDetails />}
-/>
-
-<Route
-  path="/library"
-  element={
-    <ProtectedRoute>
-      <Library />
-    </ProtectedRoute>
-  }
-/>
+        <Route path="/store/:id" element={<ProductDetails />} />
 
         <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
+          path="/library"
+          element={
+            <ProtectedRoute>
+              <Library />
+            </ProtectedRoute>
+          }
         />
 
-        <Route 
-          path="/reset-password/:token"
-          element={<ResetPassword />}
-        />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        <Route
-          path="/verify-email/:token"
-          element={<VerifyEmail />}
-        />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
       </Routes>
 
       <Footer />
 
       <ToastContainer
-  position="top-right"
-  autoClose={3000}
-  hideProgressBar={false}
-  newestOnTop
-  closeOnClick
-  pauseOnHover
-  draggable
-  theme="colored"
-/>
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </>
   );
 }

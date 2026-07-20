@@ -6,18 +6,15 @@ import API from "../../api/api";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../firebase/firebase";
 
-
 function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,40 +22,28 @@ function Login() {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        `${API}/api/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+      const response = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem(
-          "token",
-          data.token
-        );
+        localStorage.setItem("token", data.token);
 
-        localStorage.setItem(
-          "user",
-          JSON.stringify(data.user)
-        );
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         await Swal.fire({
           icon: "success",
           title: "Login Successful",
-          text:
-            "Welcome back to ResearchHub AI 🚀",
+          text: "Welcome back to ResearchHub AI 🚀",
           timer: 1200,
           showConfirmButton: false,
         });
@@ -77,8 +62,7 @@ function Login() {
       Swal.fire({
         icon: "error",
         title: "Oops!",
-        text:
-          "Something went wrong.",
+        text: "Something went wrong.",
       });
     } finally {
       setLoading(false);
@@ -86,20 +70,15 @@ function Login() {
   };
 
   const handleGoogleLogin = async () => {
-  try {
-    // Open Google popup
-    const result = await signInWithPopup(
-      auth,
-      googleProvider
-    );
+    try {
+      // Open Google popup
+      const result = await signInWithPopup(auth, googleProvider);
 
-    // Get Firebase ID Token
-    const idToken = await result.user.getIdToken();
+      // Get Firebase ID Token
+      const idToken = await result.user.getIdToken();
 
-    // Send token to your backend
-    const response = await fetch(
-      `${API}/api/auth/google-login`,
-      {
+      // Send token to your backend
+      const response = await fetch(`${API}/api/auth/google-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,177 +86,123 @@ function Login() {
         body: JSON.stringify({
           idToken,
         }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        await Swal.fire({
+          icon: "success",
+          title: "Welcome!",
+          text: "Signed in with Google successfully 🚀",
+          timer: 1200,
+          showConfirmButton: false,
+        });
+
+        navigate("/dashboard");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Google Login Failed",
+          text: data.message,
+        });
       }
-    );
-
-    const data = await response.json();
-
-    if (data.success) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
-
-      await Swal.fire({
-  icon: "success",
-  title: "Welcome!",
-  text: "Signed in with Google successfully 🚀",
-  timer: 1200,
-  showConfirmButton: false,
-});
-
-navigate("/dashboard");
-
-    } else {
+    } catch (error) {
+      console.log(error);
       Swal.fire({
-      icon: "error",
-      title: "Google Login Failed",
-      text: data.message,
-    });
+        icon: "error",
+        title: "Google Login Failed",
+        text: "Please try again.",
+      });
     }
-
-  } catch (error) {
-    console.log(error);
-Swal.fire({
-  icon: "error",
-  title: "Google Login Failed",
-  text: "Please try again.",
-});
-  }
-};
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
-
         <h1 className="text-3xl font-bold text-center text-blue-600">
           ResearchHub AI
         </h1>
 
-        <p className="text-center text-gray-500 mt-2">
-          Welcome Back 👋
-        </p>
+        <p className="text-center text-gray-500 mt-2">Welcome Back 👋</p>
 
-        <form
-          onSubmit={handleLogin}
-          className="mt-6 space-y-5"
-        >
-
+        <form onSubmit={handleLogin} className="mt-6 space-y-5">
           <div>
-
-            <label className="block mb-2 font-medium">
-              Email
-            </label>
+            <label className="block mb-2 font-medium">Email</label>
 
             <input
               type="email"
               required
               value={email}
-              onChange={(e)=>
-                setEmail(e.target.value)
-              }
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
-
           </div>
 
           <div>
-
-            <label className="block mb-2 font-medium">
-              Password
-            </label>
+            <label className="block mb-2 font-medium">Password</label>
 
             <div className="relative">
-
               <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
-                onChange={(e)=>
-                  setPassword(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 className="w-full border rounded-lg px-4 py-3 pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
               />
 
               <button
                 type="button"
-                onClick={()=>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
+                onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-4 text-gray-500"
               >
-                {showPassword
-                  ? <FaEyeSlash/>
-                  : <FaEye/>}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-
             </div>
-
           </div>
 
           <button
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition"
           >
-            {loading
-              ? "Logging in..."
-              : "Login"}
+            {loading ? "Logging in..." : "Login"}
           </button>
 
-<button
-  type="button"
-  onClick={handleGoogleLogin}
-  className="w-full mt-4 border border-gray-300 rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-50 transition"
->
-  <img
-    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-    alt="Google"
-    className="w-5 h-5"
-  />
-
-  Continue with Google
-</button>
-
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full mt-4 border border-gray-300 rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+          >
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            Continue with Google
+          </button>
         </form>
 
         <div className="text-right mt-3">
-
           <Link
             to="/forgot-password"
             className="text-blue-600 text-sm hover:underline"
           >
             Forgot Password?
           </Link>
-
         </div>
 
         <p className="text-center mt-6">
-
           Don't have an account?
-
-          <Link
-            to="/signup"
-            className="text-blue-600 font-semibold ml-2"
-          >
+          <Link to="/signup" className="text-blue-600 font-semibold ml-2">
             Sign Up
           </Link>
-
         </p>
-
       </div>
-
     </div>
   );
 }

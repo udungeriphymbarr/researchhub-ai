@@ -3,287 +3,222 @@ import { authFetch } from "../../api/api";
 import Swal from "sweetalert2";
 
 function Settings() {
-const [saving, setSaving] = useState(false);
-const [settings, setSettings] = useState({
+  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState({
+    siteName: "",
 
-siteName:"",
+    heroTitle: "",
 
-heroTitle:"",
+    heroSubtitle: "",
 
-heroSubtitle:"",
+    footerText: "",
 
-footerText:"",
+    contactEmail: "",
 
-contactEmail:"",
+    supportEmail: "",
 
-supportEmail:"",
+    phone: "",
 
-phone:"",
+    currency: "",
 
-currency:"",
+    currencySymbol: "",
 
-currencySymbol:"",
+    productsPerPage: 12,
 
-productsPerPage:12,
+    featuredProductsCount: 6,
 
-featuredProductsCount:6,
+    maintenanceMode: false,
+  });
 
-maintenanceMode:false,
-
-});
-
-useEffect(()=>{
-
-fetchSettings();
-
-},[]);
-
-const fetchSettings = async()=>{
-
-try{
-
-const response = await authFetch("/api/settings");
-
-const data = await response.json();
-
-if(data.success){
-
-setSettings(data.settings);
-
-}
-
-}catch(err){
-
-console.log(err);
-
-}
-
-};
-
-const handleChange=(e)=>{
-
-const {name,value,type,checked}=e.target;
-
-setSettings({
-
-...settings,
-
-[name]:
-
-type==="checkbox"
-
-? checked
-
-: value,
-
-});
-
-};
-
-const saveSettings = async()=>{
-
-try{
-
-const response=await authFetch(
-
-"/api/settings",
-
-{
-
-method:"PUT",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify(settings),
-
-}
-
-);
-
-const data=await response.json();
-
-if(data.success){
-
-    Swal.fire({
-
-        icon:"success",
-
-        title:"Settings Updated"
-
-    });
-
+  useEffect(() => {
     fetchSettings();
+  }, []);
 
-}
+  const fetchSettings = async () => {
+    try {
+      const response = await authFetch("/api/settings");
 
-}catch(err){
+      const data = await response.json();
 
-console.log(err);
+      if (data.success) {
+        setSettings(data.settings);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-}
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
 
-};
+    setSettings({
+      ...settings,
 
-return (
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
 
-<div className="max-w-5xl mx-auto space-y-8">
+  const saveSettings = async () => {
+    try {
+      const response = await authFetch(
+        "/api/settings",
 
-<h1 className="text-4xl font-bold">
-Platform Settings
-</h1>
+        {
+          method: "PUT",
 
-<div className="bg-white rounded-2xl shadow p-6 space-y-5">
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-<h2 className="text-2xl font-bold">
-🎨 Branding
-</h2>
+          body: JSON.stringify(settings),
+        },
+      );
 
-<input
-name="siteName"
-value={settings.siteName || ""}
-onChange={handleChange}
-placeholder="Platform Name"
-className="w-full border rounded-lg p-3"
-/>
+      const data = await response.json();
 
-<input
-name="heroTitle"
-value={settings.heroTitle || ""}
-onChange={handleChange}
-placeholder="Hero Title"
-className="w-full border rounded-lg p-3"
-/>
+      if (data.success) {
+        Swal.fire({
+          icon: "success",
 
-<input
-name="heroSubtitle"
-value={settings.heroSubtitle || ""}
-onChange={handleChange}
-placeholder="Hero Subtitle"
-className="w-full border rounded-lg p-3"
-/>
+          title: "Settings Updated",
+        });
 
-<textarea
-name="footerText"
-value={settings.footerText || ""}
-onChange={handleChange}
-placeholder="Footer Text"
-rows="3"
-className="w-full border rounded-lg p-3"
-/>
+        fetchSettings();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-</div>
+  return (
+    <div className="max-w-5xl mx-auto space-y-8">
+      <h1 className="text-4xl font-bold">Platform Settings</h1>
 
-<div className="bg-white rounded-2xl shadow p-6 space-y-5">
+      <div className="bg-white rounded-2xl shadow p-6 space-y-5">
+        <h2 className="text-2xl font-bold">🎨 Branding</h2>
 
-<h2 className="text-2xl font-bold">
-📞 Contact
-</h2>
+        <input
+          name="siteName"
+          value={settings.siteName || ""}
+          onChange={handleChange}
+          placeholder="Platform Name"
+          className="w-full border rounded-lg p-3"
+        />
 
-<input
-name="contactEmail"
-value={settings.contactEmail || ""}
-onChange={handleChange}
-placeholder="Contact Email"
-className="w-full border rounded-lg p-3"
-/>
+        <input
+          name="heroTitle"
+          value={settings.heroTitle || ""}
+          onChange={handleChange}
+          placeholder="Hero Title"
+          className="w-full border rounded-lg p-3"
+        />
 
-<input
-name="supportEmail"
-value={settings.supportEmail || ""}
-onChange={handleChange}
-placeholder="Support Email"
-className="w-full border rounded-lg p-3"
-/>
+        <input
+          name="heroSubtitle"
+          value={settings.heroSubtitle || ""}
+          onChange={handleChange}
+          placeholder="Hero Subtitle"
+          className="w-full border rounded-lg p-3"
+        />
 
-<input
-name="phone"
-value={settings.phone || ""}
-onChange={handleChange}
-placeholder="Phone Number"
-className="w-full border rounded-lg p-3"
-/>
+        <textarea
+          name="footerText"
+          value={settings.footerText || ""}
+          onChange={handleChange}
+          placeholder="Footer Text"
+          rows="3"
+          className="w-full border rounded-lg p-3"
+        />
+      </div>
 
-</div>
+      <div className="bg-white rounded-2xl shadow p-6 space-y-5">
+        <h2 className="text-2xl font-bold">📞 Contact</h2>
 
-<div className="bg-white rounded-2xl shadow p-6 space-y-5">
+        <input
+          name="contactEmail"
+          value={settings.contactEmail || ""}
+          onChange={handleChange}
+          placeholder="Contact Email"
+          className="w-full border rounded-lg p-3"
+        />
 
-<h2 className="text-2xl font-bold">
-🛒 Store
-</h2>
+        <input
+          name="supportEmail"
+          value={settings.supportEmail || ""}
+          onChange={handleChange}
+          placeholder="Support Email"
+          className="w-full border rounded-lg p-3"
+        />
 
-<div className="grid md:grid-cols-2 gap-5">
+        <input
+          name="phone"
+          value={settings.phone || ""}
+          onChange={handleChange}
+          placeholder="Phone Number"
+          className="w-full border rounded-lg p-3"
+        />
+      </div>
 
-<input
-name="currency"
-value={settings.currency || ""}
-onChange={handleChange}
-placeholder="Currency"
-className="border rounded-lg p-3"
-/>
+      <div className="bg-white rounded-2xl shadow p-6 space-y-5">
+        <h2 className="text-2xl font-bold">🛒 Store</h2>
 
-<input
-name="currencySymbol"
-value={settings.currencySymbol || ""}
-onChange={handleChange}
-placeholder="Currency Symbol"
-className="border rounded-lg p-3"
-/>
+        <div className="grid md:grid-cols-2 gap-5">
+          <input
+            name="currency"
+            value={settings.currency || ""}
+            onChange={handleChange}
+            placeholder="Currency"
+            className="border rounded-lg p-3"
+          />
 
-<input
-type="number"
-name="productsPerPage"
-value={settings.productsPerPage || 12}
-onChange={handleChange}
-placeholder="Products Per Page"
-className="border rounded-lg p-3"
-/>
+          <input
+            name="currencySymbol"
+            value={settings.currencySymbol || ""}
+            onChange={handleChange}
+            placeholder="Currency Symbol"
+            className="border rounded-lg p-3"
+          />
 
-<input
-type="number"
-name="featuredProductsCount"
-value={settings.featuredProductsCount || 6}
-onChange={handleChange}
-placeholder="Featured Products"
-className="border rounded-lg p-3"
-/>
+          <input
+            type="number"
+            name="productsPerPage"
+            value={settings.productsPerPage || 12}
+            onChange={handleChange}
+            placeholder="Products Per Page"
+            className="border rounded-lg p-3"
+          />
 
-</div>
+          <input
+            type="number"
+            name="featuredProductsCount"
+            value={settings.featuredProductsCount || 6}
+            onChange={handleChange}
+            placeholder="Featured Products"
+            className="border rounded-lg p-3"
+          />
+        </div>
+      </div>
 
-</div>
+      <div className="bg-white rounded-2xl shadow p-6">
+        <h2 className="text-2xl font-bold mb-5">⚙️ System</h2>
 
-<div className="bg-white rounded-2xl shadow p-6">
+        <label className="flex items-center gap-4">
+          <input
+            type="checkbox"
+            name="maintenanceMode"
+            checked={settings.maintenanceMode || false}
+            onChange={handleChange}
+          />
 
-<h2 className="text-2xl font-bold mb-5">
-⚙️ System
-</h2>
+          <span>Enable Maintenance Mode</span>
+        </label>
+      </div>
 
-<label className="flex items-center gap-4">
-
-<input
-type="checkbox"
-name="maintenanceMode"
-checked={settings.maintenanceMode || false}
-onChange={handleChange}
-/>
-
-<span>
-Enable Maintenance Mode
-</span>
-
-</label>
-
-</div>
-
-<div className="text-right">
-
-<button
-    disabled={saving}
-    onClick={saveSettings}
-    className="
+      <div className="text-right">
+        <button
+          disabled={saving}
+          onClick={saveSettings}
+          className="
     bg-blue-600
     hover:bg-blue-700
     disabled:bg-gray-400
@@ -294,17 +229,12 @@ Enable Maintenance Mode
     rounded-xl
     transition
     "
->
-    {saving ? "Saving..." : "💾 Save Settings"}
-</button>
-
-</div>
-
-</div>
-
-);
-
+        >
+          {saving ? "Saving..." : "💾 Save Settings"}
+        </button>
+      </div>
+    </div>
+  );
 }
-
 
 export default Settings;
