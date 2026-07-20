@@ -1,8 +1,6 @@
 const multer = require("multer");
 
-const { CloudinaryStorage } = require(
-  "multer-storage-cloudinary"
-);
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const cloudinary = require("../config/cloudinary");
 
@@ -12,11 +10,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "researchhub-products",
 
-    allowed_formats: [
-      "jpg",
-      "jpeg",
-      "png",
-    ],
+    allowed_formats: ["jpg", "jpeg", "png"],
   },
 });
 

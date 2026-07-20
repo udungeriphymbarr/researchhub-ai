@@ -10,7 +10,6 @@ const path = require("path");
 
 const getProducts = async (req, res) => {
   try {
-
     const products = await Product.find().sort({
       createdAt: -1,
     });
@@ -19,59 +18,42 @@ const getProducts = async (req, res) => {
       success: true,
       products,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: "Failed to fetch products",
     });
-
   }
 };
 
 const getProduct = async (req, res) => {
-
   try {
-
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-
       return res.status(404).json({
-
         success: false,
 
         message: "Product not found",
-
       });
-
     }
 
     res.json({
-
       success: true,
 
       product,
-
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
-
       success: false,
 
       message: "Server Error",
-
     });
-
   }
-
 };
 
 // ==========================
@@ -79,113 +61,92 @@ const getProduct = async (req, res) => {
 // ==========================
 
 const createProduct = async (req, res) => {
-
   try {
-
-const {
-  title,
-  description,
-  category,
-  price,
-  language,
-  features,
-  featured,
-} = req.body;
+    const {
+      title,
+      description,
+      category,
+      price,
+      language,
+      features,
+      featured,
+    } = req.body;
 
     if (!req.files) {
-
       return res.status(400).json({
         success: false,
         message: "Files missing",
       });
-
     }
 
     const coverTemp = req.files.cover[0].path;
 
     const pdfTemp = req.files.pdf[0].path;
 
-    const imageUpload = await cloudinary.uploader.upload(
-  coverTemp,
-  {
-    folder: "researchhub-products",
-  }
-);
+    const imageUpload = await cloudinary.uploader.upload(coverTemp, {
+      folder: "researchhub-products",
+    });
 
-const coverImage = imageUpload.secure_url;
+    const coverImage = imageUpload.secure_url;
 
-fs.unlinkSync(coverTemp);
+    fs.unlinkSync(coverTemp);
 
-const pdfUpload = await cloudinary.uploader.upload(
+    const pdfUpload = await cloudinary.uploader.upload(
+      pdfTemp,
 
-    pdfTemp,
-
-    {
-
+      {
         folder: "researchhub-pdfs",
 
         resource_type: "raw",
+      },
+    );
 
-    }
+    const fileSize = (pdfUpload.bytes / 1024 / 1024).toFixed(2) + " MB";
 
-);
-
-const fileSize = (pdfUpload.bytes / 1024 / 1024).toFixed(2) + " MB";
-
-fs.unlinkSync(pdfTemp);
+    fs.unlinkSync(pdfTemp);
 
     const slug = slugify(title, {
       lower: true,
       strict: true,
     });
 
-const product = await Product.create({
-  title,
-  slug,
-  description,
-  category,
-  price,
-  coverImage,
+    const product = await Product.create({
+      title,
+      slug,
+      description,
+      category,
+      price,
+      coverImage,
 
-  pdfFile: pdfUpload.public_id,
+      pdfFile: pdfUpload.public_id,
 
-  fileSize,
+      fileSize,
 
-  format: "PDF",
+      format: "PDF",
 
-  language: language || "English",
+      language: language || "English",
 
-  features: features
-    ? JSON.parse(features)
-    : [],
+      features: features ? JSON.parse(features) : [],
 
-  featured: featured === "true",
-});
+      featured: featured === "true",
+    });
 
     res.status(201).json({
-
       success: true,
 
       message: "Product uploaded successfully.",
 
       product,
-
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
-
       success: false,
 
       message: "Upload failed",
-
     });
-
   }
-
 };
 
 // ==========================
@@ -193,33 +154,23 @@ const product = await Product.create({
 // ==========================
 
 const deleteProduct = async (req, res) => {
-
   try {
-
     await Product.findByIdAndDelete(req.params.id);
 
     res.json({
-
       success: true,
 
-      message: "Product deleted successfully."
-
+      message: "Product deleted successfully.",
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
-
       success: false,
 
-      message: "Delete failed."
-
+      message: "Delete failed.",
     });
-
   }
-
 };
 
 // ==========================
@@ -227,81 +178,56 @@ const deleteProduct = async (req, res) => {
 // ==========================
 
 const updateProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
 
-    try {
-
-        const product = await Product.findById(req.params.id);
-
-        if (!product) {
-
-            return res.status(404).json({
-
-                success: false,
-                message: "Product not found.",
-
-            });
-
-        }
-
-        const {
-            title,
-            description,
-            category,
-            price,
-            featured,
-        } = req.body;
-
-        product.title = title;
-        product.description = description;
-        product.category = category;
-        product.price = price;
-        product.featured = featured;
-
-        await product.save();
-
-        res.json({
-
-            success: true,
-            message: "Product updated successfully.",
-            product,
-
-        });
-
-    } catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-
-            success: false,
-            message: "Unable to update product.",
-
-        });
-
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
     }
 
+    const { title, description, category, price, featured } = req.body;
+
+    product.title = title;
+    product.description = description;
+    product.category = category;
+    product.price = price;
+    product.featured = featured;
+
+    await product.save();
+
+    res.json({
+      success: true,
+      message: "Product updated successfully.",
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to update product.",
+    });
+  }
 };
 
 const getAdminProducts = async (req, res) => {
   try {
-
-    const products = await Product.find()
-      .sort({ createdAt: -1 });
+    const products = await Product.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       products,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: "Unable to fetch products.",
     });
-
   }
 };
 

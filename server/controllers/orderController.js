@@ -2,47 +2,31 @@ const Order = require("../models/Order");
 const cloudinary = require("../config/cloudinary");
 const axios = require("axios");
 
-
 const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({
+      user: req.user.id,
+    })
+      .populate("product")
+      .sort({ createdAt: -1 });
 
-    try {
+    const validOrders = orders.filter((order) => order.product);
 
-        const orders = await Order.find({
+    res.json({
+      success: true,
 
-            user: req.user.id,
+      orders: validOrders,
+    });
+  } catch (error) {
+    console.log(error);
 
-        })
-        .populate("product")
-        .sort({ createdAt: -1 });
+    res.status(500).json({
+      success: false,
 
-        const validOrders = orders.filter(order => order.product);
-
-        res.json({
-
-            success: true,
-
-            orders: validOrders,
-
-        });
-
-    }
-
-    catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-
-            success: false,
-
-            message: "Unable to fetch library.",
-
-        });
-
-    }
-
+      message: "Unable to fetch library.",
+    });
+  }
 };
-
 
 const downloadProduct = async (req, res) => {
   try {
@@ -81,7 +65,6 @@ const downloadProduct = async (req, res) => {
       success: true,
       downloadUrl,
     });
-
   } catch (error) {
     console.log(error);
 
@@ -94,7 +77,6 @@ const downloadProduct = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-
     const orders = await Order.find()
       .populate("user", "name email")
       .populate("product", "title")
@@ -104,25 +86,20 @@ const getAllOrders = async (req, res) => {
       success: true,
       orders,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: "Unable to fetch orders.",
     });
-
   }
 };
 
-
 module.exports = {
+  getMyOrders,
 
-    getMyOrders,
+  downloadProduct,
 
-    downloadProduct,
-
-    getAllOrders,
+  getAllOrders,
 };

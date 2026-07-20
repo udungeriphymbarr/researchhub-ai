@@ -2,10 +2,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const crypto = require("crypto");
-const { sendEmail, 
+const {
+  sendEmail,
   sendVerificationEmail,
-  sendResetPasswordEmail
-  } = require("../utils/sendEmail");
+  sendResetPasswordEmail,
+} = require("../utils/sendEmail");
 
 const registerUser = async (req, res) => {
   try {
@@ -24,14 +25,10 @@ const registerUser = async (req, res) => {
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(
-      password,
-      salt
-    );
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Generate verification token
-    const verificationToken =
-      crypto.randomBytes(32).toString("hex");
+    const verificationToken = crypto.randomBytes(32).toString("hex");
 
     // Create user
     const user = await User.create({
@@ -42,17 +39,16 @@ const registerUser = async (req, res) => {
       verificationToken,
     });
 
-  
-// Respond immediately
-res.status(201).json({
-    success: true,
-    message:
+    // Respond immediately
+    res.status(201).json({
+      success: true,
+      message:
         "Registration successful. Please check your email to verify your account.",
-});
+    });
 
-// Send verification email in the background
-// Email verification temporarily disabled
-/* const verificationLink =
+    // Send verification email in the background
+    // Email verification temporarily disabled
+    /* const verificationLink =
 `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
 sendVerificationEmail(
@@ -67,16 +63,13 @@ sendVerificationEmail(
     console.log(err);
     console.log("=================================");
 }); */
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
@@ -95,10 +88,7 @@ const loginUser = async (req, res) => {
     }
 
     // Compare password
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -115,29 +105,28 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     res.status(200).json({
       success: true,
       message: "Login successful",
       token,
-user: {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
 
-    plan: user.plan,
+        plan: user.plan,
 
-    usageCount: user.usageCount,
-    usageLimit: user.usageLimit,
+        usageCount: user.usageCount,
+        usageLimit: user.usageLimit,
 
-    subscriptionStatus: user.subscriptionStatus,
-    subscriptionExpires: user.subscriptionExpires,
-},
+        subscriptionStatus: user.subscriptionStatus,
+        subscriptionExpires: user.subscriptionExpires,
+      },
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -146,16 +135,11 @@ user: {
   }
 };
 
-const forgotPassword = async (
-  req,
-  res
-) => {
+const forgotPassword = async (req, res) => {
   try {
-
     const { email } = req.body;
 
-    const user =
-      await User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -164,100 +148,69 @@ const forgotPassword = async (
       });
     }
 
-    const resetToken =
-      crypto.randomBytes(32)
-      .toString("hex");
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
-    user.resetPasswordToken =
-      resetToken;
+    user.resetPasswordToken = resetToken;
 
-    user.resetPasswordExpires =
-      Date.now() + 3600000;
+    user.resetPasswordExpires = Date.now() + 3600000;
 
     await user.save();
 
-const resetLink =
-`${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-await sendResetPasswordEmail(
-    user.email,
-    resetLink
-);
+    await sendResetPasswordEmail(user.email, resetLink);
 
     res.json({
       success: true,
-      message:
-        "Password reset email sent",
+      message: "Password reset email sent",
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
-const resetPassword = async (
-  req,
-  res
-) => {
+const resetPassword = async (req, res) => {
   try {
+    const { token } = req.params;
 
-    const { token } =
-      req.params;
+    const { password } = req.body;
 
-    const { password } =
-      req.body;
-
-    const user =
-      await User.findOne({
-        resetPasswordToken: token,
-        resetPasswordExpires: {
-          $gt: Date.now(),
-        },
-      });
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: {
+        $gt: Date.now(),
+      },
+    });
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        message:
-          "Invalid or expired token",
+        message: "Invalid or expired token",
       });
     }
 
-    const salt =
-      await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10);
 
-    user.password =
-      await bcrypt.hash(
-        password,
-        salt
-      );
+    user.password = await bcrypt.hash(password, salt);
 
-    user.resetPasswordToken =
-      undefined;
+    user.resetPasswordToken = undefined;
 
-    user.resetPasswordExpires =
-      undefined;
+    user.resetPasswordExpires = undefined;
 
     await user.save();
 
     res.json({
       success: true,
-      message:
-        "Password updated successfully",
+      message: "Password updated successfully",
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
@@ -285,19 +238,15 @@ const verifyEmail = async (req, res) => {
       success: true,
       message: "Email verified successfully.",
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: "Verification failed.",
     });
-
   }
 };
-
 
 module.exports = {
   registerUser,

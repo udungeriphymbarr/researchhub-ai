@@ -14,25 +14,10 @@ const router = express.Router();
 
 router.get("/profile", protect, getProfile);
 router.put("/profile", protect, updateProfile);
-router.get(
-    "/all",
-    protect,
-    adminOnly,
-    getAllUsers
-);
+router.get("/all", protect, adminOnly, getAllUsers);
 
-router.put(
-    "/role/:id",
-    protect,
-    adminOnly,
-    updateUserRole
-);
+router.put("/role/:id", protect, adminOnly, updateUserRole);
 
-router.put(
-    "/plan/:id",
-    protect,
-    adminOnly,
-    updateUserPlan
-);
+router.put("/plan/:id", protect, adminOnly, updateUserPlan);
 
 module.exports = router;

@@ -7,7 +7,7 @@ const {
   getProjectById,
   deleteProject,
   updateProject,
-  selectTopic
+  selectTopic,
 } = require("../controllers/projectController");
 
 const router = express.Router();
@@ -18,6 +18,5 @@ router.get("/:id", protect, getProjectById);
 router.delete("/:id", protect, deleteProject);
 router.put("/:id", protect, updateProject);
 router.put("/:id/topic", protect, selectTopic);
-
 
 module.exports = router;

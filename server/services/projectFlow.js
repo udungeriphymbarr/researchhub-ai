@@ -8,11 +8,7 @@ const hasContent = (value) => {
   return String(value).trim().length > 0;
 };
 
-const validateProjectFlow = (
-  type,
-  memory,
-  selectedTopic
-) => {
+const validateProjectFlow = (type, memory, selectedTopic) => {
   // STEP 1
   if (type !== "topic" && !selectedTopic) {
     return "Please select a research topic first.";

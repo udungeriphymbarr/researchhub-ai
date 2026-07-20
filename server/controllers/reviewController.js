@@ -1,64 +1,46 @@
 const Review = require("../models/Review");
 const Product = require("../models/Product");
 
-
 const createReview = async (req, res) => {
+  try {
+    const { product, rating, comment } = req.body;
 
-    try {
+    // Prevent duplicate reviews
+    const existingReview = await Review.findOne({
+      user: req.user.id,
+      product,
+    });
 
-        const { product, rating, comment } = req.body;
-
-        // Prevent duplicate reviews
-        const existingReview = await Review.findOne({
-            user: req.user.id,
-            product,
-        });
-
-        if (existingReview) {
-
-            return res.status(400).json({
-
-                success: false,
-                message: "You already reviewed this product."
-
-            });
-
-        }
-
-        const review = await Review.create({
-
-            user: req.user.id,
-            product,
-            rating,
-            comment,
-
-        });
-
-        res.status(201).json({
-
-            success: true,
-            review,
-
-        });
-
-    } catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-
-            success:false,
-            message:"Unable to submit review."
-
-        });
-
+    if (existingReview) {
+      return res.status(400).json({
+        success: false,
+        message: "You already reviewed this product.",
+      });
     }
 
+    const review = await Review.create({
+      user: req.user.id,
+      product,
+      rating,
+      comment,
+    });
+
+    res.status(201).json({
+      success: true,
+      review,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to submit review.",
+    });
+  }
 };
 
 const getProductReviews = async (req, res) => {
   try {
-
     const reviews = await Review.find({
       product: req.params.productId,
     })
@@ -69,112 +51,81 @@ const getProductReviews = async (req, res) => {
       success: true,
       reviews,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: "Unable to fetch reviews.",
     });
-
   }
 };
 
 const getMyReview = async (req, res) => {
+  try {
+    const review = await Review.findOne({
+      user: req.user.id,
 
-    try {
+      product: req.params.productId,
+    });
 
-        const review = await Review.findOne({
+    res.json({
+      success: true,
 
-            user: req.user.id,
+      review,
+    });
+  } catch (error) {
+    console.log(error);
 
-            product: req.params.productId,
+    res.status(500).json({
+      success: false,
 
-        });
-
-        res.json({
-
-            success: true,
-
-            review,
-
-        });
-
-    } catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-
-            success: false,
-
-            message: "Unable to fetch review.",
-
-        });
-
-    }
-
+      message: "Unable to fetch review.",
+    });
+  }
 };
 
 const updateReview = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
 
-    try {
+    const review = await Review.findOne({
+      _id: req.params.reviewId,
 
-        const { rating, comment } = req.body;
+      user: req.user.id,
+    });
 
-        const review = await Review.findOne({
+    if (!review) {
+      return res.status(404).json({
+        success: false,
 
-            _id: req.params.reviewId,
-
-            user: req.user.id,
-
-        });
-
-        if (!review) {
-
-            return res.status(404).json({
-
-                success: false,
-
-                message: "Review not found.",
-
-            });
-
-        }
-
-        review.rating = rating;
-
-        review.comment = comment;
-
-        await review.save();
-
-        res.json({
-
-            success: true,
-
-            review,
-
-        });
-
-    } catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-
-            success: false,
-
-            message: "Unable to update review.",
-
-        });
-
+        message: "Review not found.",
+      });
     }
 
+    review.rating = rating;
+
+    review.comment = comment;
+
+    await review.save();
+
+    res.json({
+      success: true,
+
+      review,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+
+      message: "Unable to update review.",
+    });
+  }
 };
 
 module.exports = {
-    createReview,
-    getProductReviews,
-    getMyReview,
-    updateReview,
+  createReview,
+  getProductReviews,
+  getMyReview,
+  updateReview,
 };

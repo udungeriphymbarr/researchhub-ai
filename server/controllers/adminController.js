@@ -4,7 +4,6 @@ const Order = require("../models/Order");
 
 const getDashboardStats = async (req, res) => {
   try {
-
     // ==========================
     // COUNTS
     // ==========================
@@ -39,10 +38,7 @@ const getDashboardStats = async (req, res) => {
       },
     ]);
 
-    const revenue =
-      revenueResult.length > 0
-        ? revenueResult[0].total
-        : 0;
+    const revenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
 
     // ==========================
     // DOWNLOADS
@@ -59,10 +55,7 @@ const getDashboardStats = async (req, res) => {
       },
     ]);
 
-    const downloads =
-      downloadResult.length > 0
-        ? downloadResult[0].total
-        : 0;
+    const downloads = downloadResult.length > 0 ? downloadResult[0].total : 0;
 
     // ==========================
     // RECENT USERS
@@ -98,16 +91,13 @@ const getDashboardStats = async (req, res) => {
       recentUsers,
       recentOrders,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: "Unable to fetch dashboard statistics.",
     });
-
   }
 };
 

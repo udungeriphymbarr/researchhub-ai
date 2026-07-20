@@ -17,7 +17,7 @@ const generateAIContent = async (prompt) => {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   return response.data.choices[0].message.content;
@@ -45,13 +45,8 @@ Requirements:
       success: true,
       content,
     });
-
   } catch (error) {
-    console.log(
-  error.response?.data ||
-  error.message ||
-  error
-);
+    console.log(error.response?.data || error.message || error);
 
     res.json({
       success: false,
@@ -81,13 +76,8 @@ Requirements:
       success: true,
       content,
     });
-
   } catch (error) {
-    console.log(
-  error.response?.data ||
-  error.message ||
-  error
-);;
+    console.log(error.response?.data || error.message || error);
 
     res.json({
       success: false,
@@ -122,13 +112,8 @@ Include:
       success: true,
       content,
     });
-
   } catch (error) {
-    console.log(
-  error.response?.data ||
-  error.message ||
-  error
-);
+    console.log(error.response?.data || error.message || error);
 
     res.json({
       success: false,
@@ -160,13 +145,8 @@ Include:
       success: true,
       content,
     });
-
   } catch (error) {
-    console.log(
-  error.response?.data ||
-  error.message ||
-  error
-);
+    console.log(error.response?.data || error.message || error);
 
     res.json({
       success: false,
@@ -204,13 +184,8 @@ Include:
       success: true,
       content,
     });
-
   } catch (error) {
-    console.log(
-  error.response?.data ||
-  error.message ||
-  error
-);
+    console.log(error.response?.data || error.message || error);
 
     res.json({
       success: false,
@@ -244,13 +219,8 @@ Include:
       success: true,
       content,
     });
-
   } catch (error) {
-    console.log(
-  error.response?.data ||
-  error.message ||
-  error
-);
+    console.log(error.response?.data || error.message || error);
 
     res.json({
       success: false,
@@ -259,8 +229,7 @@ Include:
   }
 };
 
-const generateResearchQuestions =
-async (req, res) => {
+const generateResearchQuestions = async (req, res) => {
   try {
     const { topic } = req.body;
 
@@ -283,21 +252,18 @@ Requirements:
 - Avoid generic templates
 `;
 
-    const content =
-      await generateAIContent(prompt);
+    const content = await generateAIContent(prompt);
 
     res.json({
       success: true,
       content,
     });
-
   } catch (error) {
     console.log(error.message);
 
     res.json({
       success: false,
-      message:
-        "Failed to generate research questions",
+      message: "Failed to generate research questions",
     });
   }
 };

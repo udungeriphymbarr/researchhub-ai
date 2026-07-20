@@ -11,26 +11,12 @@ const {
 
 const router = express.Router();
 
-router.post(
-  "/initialize",
-  protect,
-  initializePayment
-);
+router.post("/initialize", protect, initializePayment);
 
-router.get(
-  "/verify/:reference",
-  verifyPayment
-);
+router.get("/verify/:reference", verifyPayment);
 
-router.post(
-  "/product/initialize",
-  protect,
-  initializeProductPayment
-);
+router.post("/product/initialize", protect, initializeProductPayment);
 
-router.get(
-  "/product/verify/:reference",
-  verifyProductPayment
-);
+router.get("/product/verify/:reference", verifyProductPayment);
 
 module.exports = router;

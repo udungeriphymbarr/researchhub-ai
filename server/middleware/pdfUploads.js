@@ -3,71 +3,45 @@ const multer = require("multer");
 const path = require("path");
 
 const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(
+      null,
 
-    destination(req,file,cb){
+      "uploads/pdfs",
+    );
+  },
 
-        cb(
+  filename(req, file, cb) {
+    const uniqueName =
+      Date.now() +
+      "-" +
+      Math.round(Math.random() * 1e9) +
+      path.extname(file.originalname);
 
-            null,
+    cb(
+      null,
 
-            "uploads/pdfs"
-
-        );
-
-    },
-
-    filename(req,file,cb){
-
-        const uniqueName=
-
-        Date.now()
-
-        + "-"
-
-        + Math.round(Math.random()*1E9)
-
-        + path.extname(file.originalname);
-
-        cb(
-
-            null,
-
-            uniqueName
-
-        );
-
-    },
-
+      uniqueName,
+    );
+  },
 });
 
-const fileFilter=(req,file,cb)=>{
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "application/pdf") {
+    cb(null, true);
+  } else {
+    cb(
+      new Error("Only PDFs allowed."),
 
-    if(file.mimetype==="application/pdf"){
-
-        cb(null,true);
-
-    }
-
-    else{
-
-        cb(
-
-            new Error("Only PDFs allowed."),
-
-            false
-
-        );
-
-    }
-
+      false,
+    );
+  }
 };
 
-const upload=multer({
+const upload = multer({
+  storage,
 
-    storage,
-
-    fileFilter,
-
+  fileFilter,
 });
 
-module.exports=upload;
+module.exports = upload;

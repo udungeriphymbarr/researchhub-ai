@@ -18,17 +18,14 @@ const projectSchema = new mongoose.Schema(
       default: "",
     },
 
-  selectedTopic: {
-  type: String,
-  default: "",
-},
+    selectedTopic: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-module.exports = mongoose.model(
-  "Project",
-  projectSchema
-);
+module.exports = mongoose.model("Project", projectSchema);

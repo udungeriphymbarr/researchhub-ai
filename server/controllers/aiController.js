@@ -6,12 +6,7 @@ const User = require("../models/User");
 
 const generateAI = async (req, res) => {
   try {
-    const {
-      type,
-      course,
-      prompt,
-      projectId,
-    } = req.body;
+    const { type, course, prompt, projectId } = req.body;
 
     let project = null;
 
@@ -19,8 +14,7 @@ const generateAI = async (req, res) => {
       project = await Project.findById(projectId);
     }
 
-    const selectedTopic =
-      project?.selectedTopic || prompt;
+    const selectedTopic = project?.selectedTopic || prompt;
 
     const memory = projectId
       ? await buildProjectMemory(projectId)
@@ -37,11 +31,7 @@ const generateAI = async (req, res) => {
     // FLOW VALIDATION
     // ===========================
 
-    const flowError = validateProjectFlow(
-      type,
-      memory,
-      selectedTopic
-    );
+    const flowError = validateProjectFlow(type, memory, selectedTopic);
 
     if (flowError) {
       return res.status(400).json({
@@ -58,8 +48,7 @@ const generateAI = async (req, res) => {
       if (!course || !prompt) {
         return res.status(400).json({
           success: false,
-          message:
-            "Department and Area of Interest are required.",
+          message: "Department and Area of Interest are required.",
         });
       }
     }
@@ -67,14 +56,12 @@ const generateAI = async (req, res) => {
     let aiPrompt = "";
 
     switch (type) {
-
       // ===========================
       // TOPIC
       // ===========================
 
-  case "topic":
-
- aiPrompt = `
+      case "topic":
+        aiPrompt = `
 You are a highly experienced Professor, Academic Research Supervisor, and University Examiner with over 25 years of experience supervising undergraduate and postgraduate research across multiple disciplines.
 
 Your task is to generate EXACTLY TEN original, practical, researchable and academically sound undergraduate research topics.
@@ -112,7 +99,6 @@ Output Rules:
       // ===========================
 
       case "question":
-
         aiPrompt = `
 You are a world-class Professor, Senior Academic Researcher
 , University Examiner, Journal Reviewer, and Research Methodologist 
@@ -156,7 +142,6 @@ Rules
       // ===========================
 
       case "objectives":
-
         aiPrompt = `
 You are a university research supervisor.
 Research Topic
@@ -182,13 +167,12 @@ Every objective MUST answer at least one research question.
 
         break;
 
-  // ===========================
-  // DASHBOARD PROBLEM STATEMENT
-  // ===========================
+      // ===========================
+      // DASHBOARD PROBLEM STATEMENT
+      // ===========================
 
-        case "problem-statement":
-
-aiPrompt = `
+      case "problem-statement":
+        aiPrompt = `
 You are an experienced Professor of Academic Research and Thesis Writing.
 
 Write a comprehensive undergraduate Problem Statement for the following research topic:
@@ -217,14 +201,13 @@ Writing Style:
 • Avoid repetition.
 `;
 
-break;
+        break;
 
       // ===========================
       // LITERATURE
       // ===========================
 
       case "literature":
-
         aiPrompt = `
 You are a world-class Professor, Senior Academic Researcher
 , University Examiner, Journal Reviewer, and Research Methodologist 
@@ -269,13 +252,12 @@ Requirements
 
         break;
 
-  // ===========================
-  // DASHBOARD RESEARCH QUESTION
-  // ===========================
+      // ===========================
+      // DASHBOARD RESEARCH QUESTION
+      // ===========================
 
-case "research-question":
-
-aiPrompt = `
+      case "research-question":
+        aiPrompt = `
 Generate five research questions for:
 
 ${prompt}
@@ -283,11 +265,10 @@ ${prompt}
 The questions must be clear, measurable and suitable for undergraduate research.
 `;
 
-break;
+        break;
 
-case "objective":
-
-aiPrompt = `
+      case "objective":
+        aiPrompt = `
 You are a university research supervisor.
 
 Research Topic:
@@ -319,14 +300,13 @@ Compare
 
 Return only the objectives.
 `;
-break;
+        break;
 
       // ===========================
       // METHODOLOGY
       // ===========================
 
       case "methodology":
-
         aiPrompt = `
 You are a world-class Professor, Senior Academic Researcher
 , University Examiner, Journal Reviewer, and Research Methodologist 
@@ -375,13 +355,12 @@ Everything must align with previous chapters.
 
         break;
 
-  // ===========================
-  // DASHBOARD LITERATURE-REVIEW
-  // ===========================
+      // ===========================
+      // DASHBOARD LITERATURE-REVIEW
+      // ===========================
 
-case "literature-review":
-
-aiPrompt = `
+      case "literature-review":
+        aiPrompt = `
 You are a Senior University Lecturer and Academic Researcher.
 
 Write Chapter Two (Literature Review) for:
@@ -402,7 +381,7 @@ Include:
 
 Requirements:
 
-• 5,000–10,000 words.
+• 10,000–15,000 words.
 • Professional academic writing.
 • Human-like writing.
 • Logical transitions.
@@ -414,15 +393,14 @@ Requirements:
 • Use proper chapter headings.
 `;
 
-break;
+        break;
 
-// ===========================
-// DASHBOARD SIGNIFICANCE
-// ===========================
+      // ===========================
+      // DASHBOARD SIGNIFICANCE
+      // ===========================
 
-case "significance":
-
-aiPrompt = `
+      case "significance":
+        aiPrompt = `
 You are an Academic Research Expert.
 
 Write the Significance of the Study for:
@@ -449,15 +427,14 @@ Requirements:
 • Write naturally.
 `;
 
-break;
+        break;
 
-//===========================
-// DASHBOARD METHODOLOGIES
-//===========================
+      //===========================
+      // DASHBOARD METHODOLOGIES
+      //===========================
 
-case "methodologies":
-
-aiPrompt = `
+      case "methodologies":
+        aiPrompt = `
 You are an experienced Research Methodologist.
 
 Write Chapter Three (Research Methodology) for:
@@ -498,14 +475,13 @@ Requirements:
 • Proper headings.
 `;
 
-break;
+        break;
 
       // ===========================
       // ABSTRACT
       // ===========================
 
       case "abstract":
-
         aiPrompt = `
 You are a world-class Professor, Senior Academic Researcher, University Examiner, Journal Reviewer, and Research Methodologist 
 with over 25 years of experience supervising undergraduate, master's, and PhD research.
@@ -552,13 +528,12 @@ Keywords
 
         break;
 
-//=====================
-//DASHBOARD ABSTRACTS
-//=====================  
+      //=====================
+      //DASHBOARD ABSTRACTS
+      //=====================
 
-case "abstracts":
-
-aiPrompt = `
+      case "abstracts":
+        aiPrompt = `
 You are a Professor of Academic Writing.
 
 Write a complete undergraduate Abstract for:
@@ -585,66 +560,45 @@ Requirements:
 • Suitable for submission to a university.
 `;
 
-  default:
-
-  return res.status(400).json({
-    success: false,
-    message: "Invalid AI Tool",
-    });
-
-  }
+      default:
+        return res.status(400).json({
+          success: false,
+          message: "Invalid AI Tool",
+        });
+    }
 
     // ===========================
     // AI RESPONSE
     // ===========================
 
-    const response =
-      await generateAIResponse(aiPrompt);
+    const response = await generateAIResponse(aiPrompt);
 
     let output;
 
-    if (
-      type === "topic" ||
-      type === "question" ||
-      type === "objective"
-    ) {
-
-      output = response
-        .split("\n")
-        .filter(
-          (line) => line.trim() !== ""
-        );
-
+    if (type === "topic" || type === "question" || type === "objective") {
+      output = response.split("\n").filter((line) => line.trim() !== "");
     } else {
-
       output = response;
-
     }
 
     // Increase AI usage count
-await User.findByIdAndUpdate(
-  req.user.id,
-  {
-    $inc: {
-      usageCount: 1,
-    },
-  }
-);
+    await User.findByIdAndUpdate(req.user.id, {
+      $inc: {
+        usageCount: 1,
+      },
+    });
 
     return res.status(200).json({
       success: true,
       output,
     });
-
   } catch (error) {
-
     console.error(error);
 
     return res.status(500).json({
       success: false,
       message: "AI Generation Failed",
     });
-
   }
 };
 

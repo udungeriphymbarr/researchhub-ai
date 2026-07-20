@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
+
     price: {
       type: Number,
       required: true,
@@ -39,31 +39,30 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
-   pages: {
-    type: Number,
-    default: null,
-},
+    pages: {
+      type: Number,
+      default: null,
+    },
 
-format: {
-    type: String,
-    default: "PDF",
-},
+    format: {
+      type: String,
+      default: "PDF",
+    },
 
-language: {
-    type: String,
-    default: "English",
-},
+    language: {
+      type: String,
+      default: "English",
+    },
 
-fileSize: {
-    type: String,
-    default: "",
-},
+    fileSize: {
+      type: String,
+      default: "",
+    },
 
-features: {
-    type: [String],
-    default: [],
-},
-
+    features: {
+      type: [String],
+      default: [],
+    },
 
     featured: {
       type: Boolean,
@@ -93,7 +92,7 @@ features: {
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Product", productSchema);

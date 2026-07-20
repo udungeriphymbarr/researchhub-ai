@@ -1,66 +1,61 @@
 const Generation = require("../models/Generation");
 
 const buildProjectMemory = async (projectId) => {
+  const generations = await Generation.find({
+    projectId,
+  }).sort({
+    createdAt: 1,
+  });
 
-    const generations = await Generation.find({
-        projectId,
-    }).sort({
-        createdAt: 1,
-    });
+  const memory = {
+    topic: "",
+    questions: "",
+    objectives: "",
+    literature: "",
+    methodology: "",
+    abstract: "",
+  };
 
-    const memory = {
-        topic: "",
-        questions: "",
-        objectives: "",
-        literature: "",
-        methodology: "",
-        abstract: "",
-    };
+  generations.forEach((item) => {
+    const value = Array.isArray(item.output)
+      ? item.output.join("\n")
+      : item.output;
 
-    generations.forEach((item) => {
+    console.log(item.type);
 
-        const value = Array.isArray(item.output)
-            ? item.output.join("\n")
-            : item.output;
+    switch (item.type) {
+      case "topic":
+        memory.topic += value + "\n\n";
+        break;
 
-            console.log(item.type);
+      case "question":
+        memory.questions += value + "\n\n";
+        break;
 
-        switch (item.type) {
+      case "objective":
+        memory.objectives += value + "\n\n";
+        break;
 
-            case "topic":
-                memory.topic += value + "\n\n";
-                break;
+      case "literature":
+        memory.literature += value + "\n\n";
+        break;
 
-            case "question":
-                memory.questions += value + "\n\n";
-                break;
+      case "methodology":
+        memory.methodology += value + "\n\n";
+        break;
 
-            case "objective":
-                memory.objectives += value + "\n\n";
-                break;
+      case "abstract":
+        memory.abstract += value + "\n\n";
+        break;
 
-            case "literature":
-                memory.literature += value + "\n\n";
-                break;
+      default:
+        break;
+    }
+  });
 
-            case "methodology":
-                memory.methodology += value + "\n\n";
-                break;
+  console.log("AI MEMORY", memory);
 
-            case "abstract":
-                memory.abstract += value + "\n\n";
-                break;
-
-            default:
-                break;
-
-        }
-
-    });
-
-    console.log("AI MEMORY", memory);
-
-    return memory;
+  return memory;
 };
 
 module.exports = buildProjectMemory;

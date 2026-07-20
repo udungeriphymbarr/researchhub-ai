@@ -12,14 +12,11 @@ const getSubscription = async (req, res) => {
       subscriptionStatus: user.subscriptionStatus,
       subscriptionExpires: user.subscriptionExpires,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 

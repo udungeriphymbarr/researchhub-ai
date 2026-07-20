@@ -6,7 +6,6 @@ const upload = require("../middleware/uploadProduct");
 const protect = require("../middleware/authMiddleware");
 const adminOnly = require("../middleware/adminMiddleware");
 
-
 const {
   getProducts,
   getProduct,
@@ -19,19 +18,13 @@ const {
 const router = express.Router();
 
 // GET ALL PRODUCTS
-router.get(
-    "/admin/all",
-    protect,
-    adminOnly,
-    getAdminProducts
-);
+router.get("/admin/all", protect, adminOnly, getAdminProducts);
 
 router.get("/", getProducts);
 
 router.get("/:id", getProduct);
 
 router.post(
-
   "/",
 
   upload.fields([
@@ -45,8 +38,8 @@ router.post(
     },
   ]),
 
-  adminMiddleware, createProduct
-
+  adminMiddleware,
+  createProduct,
 );
 
 router.delete("/:id", adminMiddleware, deleteProduct);

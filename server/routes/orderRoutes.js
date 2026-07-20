@@ -6,40 +6,29 @@ const protect = require("../middleware/authMiddleware");
 const admin = require("../middleware/adminMiddleware");
 
 const {
+  getMyOrders,
 
-    getMyOrders,
+  downloadProduct,
 
-    downloadProduct,
-
-    getAllOrders,
-
+  getAllOrders,
 } = require("../controllers/orderController");
 
 router.get(
+  "/my-orders",
 
-    "/my-orders",
+  protect,
 
-    protect,
-
-    getMyOrders
-
+  getMyOrders,
 );
 
 router.get(
+  "/download/:productId",
 
-    "/download/:productId",
+  protect,
 
-    protect,
-
-    downloadProduct
-
+  downloadProduct,
 );
 
-router.get(
-    "/all",
-    protect,
-    admin,
-    getAllOrders
-);
+router.get("/all", protect, admin, getAllOrders);
 
 module.exports = router;

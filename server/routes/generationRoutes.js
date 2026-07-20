@@ -1,5 +1,5 @@
 const express = require("express");
-const  authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const {
   saveGeneration,
@@ -10,9 +10,9 @@ const {
 
 const router = express.Router();
 
-router.post("/",  authMiddleware, saveGeneration);
+router.post("/", authMiddleware, saveGeneration);
 
-router.get("/",  authMiddleware, getGenerations);
+router.get("/", authMiddleware, getGenerations);
 
 router.get("/project/:projectId", authMiddleware, getProjectGenerations);
 

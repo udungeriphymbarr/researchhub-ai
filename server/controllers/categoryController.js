@@ -1,160 +1,116 @@
 const Category = require("../models/Category");
 const slugify = require("slugify");
 
-const getCategories = async (req,res)=>{
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find().sort({ name: 1 });
 
-    try{
+    res.json({
+      success: true,
+      categories,
+    });
+  } catch (error) {
+    console.log(error);
 
-        const categories = await Category.find().sort({name:1});
-
-        res.json({
-            success:true,
-            categories,
-        });
-
-    }catch(error){
-
-        console.log(error);
-
-        res.status(500).json({
-            success:false,
-            message:"Unable to fetch categories.",
-        });
-
-    }
-
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch categories.",
+    });
+  }
 };
 
-const createCategory = async(req,res)=>{
+const createCategory = async (req, res) => {
+  try {
+    const { name } = req.body;
 
-    try{
+    const exists = await Category.findOne({ name });
 
-        const {name} = req.body;
-
-        const exists = await Category.findOne({name});
-
-        if(exists){
-
-            return res.status(400).json({
-                success:false,
-                message:"Category already exists.",
-            });
-
-        }
-
-        const category = await Category.create({
-
-            name,
-
-            slug:slugify(name,{
-                lower:true,
-                strict:true,
-            }),
-
-        });
-
-        res.status(201).json({
-
-            success:true,
-
-            category,
-
-        });
-
-    }catch(error){
-
-        console.log(error);
-
-        res.status(500).json({
-
-            success:false,
-
-            message:"Unable to create category.",
-
-        });
-
+    if (exists) {
+      return res.status(400).json({
+        success: false,
+        message: "Category already exists.",
+      });
     }
 
+    const category = await Category.create({
+      name,
+
+      slug: slugify(name, {
+        lower: true,
+        strict: true,
+      }),
+    });
+
+    res.status(201).json({
+      success: true,
+
+      category,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+
+      message: "Unable to create category.",
+    });
+  }
 };
 
-const updateCategory = async(req,res)=>{
+const updateCategory = async (req, res) => {
+  try {
+    const { name } = req.body;
 
-    try{
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
 
-        const {name}=req.body;
+      {
+        name,
 
-        const category = await Category.findByIdAndUpdate(
+        slug: slugify(name, {
+          lower: true,
+          strict: true,
+        }),
+      },
 
-            req.params.id,
+      { new: true },
+    );
 
-            {
+    res.json({
+      success: true,
 
-                name,
+      category,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
 
-                slug:slugify(name,{
-                    lower:true,
-                    strict:true,
-                }),
-
-            },
-
-            {new:true}
-
-        );
-
-        res.json({
-
-            success:true,
-
-            category,
-
-        });
-
-    }catch(error){
-
-        res.status(500).json({
-
-            success:false,
-
-            message:"Update failed.",
-
-        });
-
-    }
-
+      message: "Update failed.",
+    });
+  }
 };
 
-const deleteCategory = async(req,res)=>{
+const deleteCategory = async (req, res) => {
+  try {
+    await Category.findByIdAndDelete(req.params.id);
 
-    try{
+    res.json({
+      success: true,
 
-        await Category.findByIdAndDelete(req.params.id);
+      message: "Category deleted.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
 
-        res.json({
-
-            success:true,
-
-            message:"Category deleted.",
-
-        });
-
-    }catch(error){
-
-        res.status(500).json({
-
-            success:false,
-
-            message:"Delete failed.",
-
-        });
-
-    }
-
+      message: "Delete failed.",
+    });
+  }
 };
 
-module.exports={
-    getCategories,
-    createCategory,
-    updateCategory,
-    deleteCategory,
+module.exports = {
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
 };

@@ -20,8 +20,7 @@ const subscriptionMiddleware = async (req, res, next) => {
     const now = new Date();
     const lastReset = new Date(user.usageResetDate);
 
-    const days =
-      (now - lastReset) / (1000 * 60 * 60 * 24);
+    const days = (now - lastReset) / (1000 * 60 * 60 * 24);
 
     if (days >= 30) {
       user.usageCount = 0;
@@ -33,13 +32,11 @@ const subscriptionMiddleware = async (req, res, next) => {
     if (user.usageCount >= user.usageLimit) {
       return res.status(403).json({
         success: false,
-        message:
-          "You have reached your monthly AI limit. Upgrade to Premium.",
+        message: "You have reached your monthly AI limit. Upgrade to Premium.",
       });
     }
 
     next();
-
   } catch (error) {
     console.log(error);
 

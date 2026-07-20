@@ -24,17 +24,14 @@ const generationSchema = new mongoose.Schema(
       required: true,
     },
 
- output: {
-  type: mongoose.Schema.Types.Mixed,
-  required: true,
-},
+    output: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-module.exports = mongoose.model(
-  "Generation",
-  generationSchema
-);
+module.exports = mongoose.model("Generation", generationSchema);

@@ -23,16 +23,16 @@ const googleLogin = async (req, res) => {
 
     // Create if doesn't exist
     if (!user) {
-const crypto = require("crypto");
+      const crypto = require("crypto");
 
-user = await User.create({
-  name: name || "Google User",
-  email,
-  password: crypto.randomBytes(32).toString("hex"),
-  isVerified: true,
-  plan: "free",
-  usageCount: 0,
-});
+      user = await User.create({
+        name: name || "Google User",
+        email,
+        password: crypto.randomBytes(32).toString("hex"),
+        isVerified: true,
+        plan: "free",
+        usageCount: 0,
+      });
     }
 
     // Generate your normal JWT
@@ -43,7 +43,7 @@ user = await User.create({
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     res.json({
@@ -58,15 +58,14 @@ user = await User.create({
         usageCount: user.usageCount,
       },
     });
-
   } catch (error) {
     console.error("Google Login Error:", error);
 
     res.status(500).json({
-    success: false,
-    message: error.message,
-  });
-}
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {

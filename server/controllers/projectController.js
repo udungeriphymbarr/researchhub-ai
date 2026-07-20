@@ -44,8 +44,7 @@ const getProjects = async (req, res) => {
 
 const getProjectById = async (req, res) => {
   try {
-    const project =
-      await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id);
 
     res.status(200).json({
       success: true,
@@ -61,7 +60,6 @@ const getProjectById = async (req, res) => {
 
 const deleteProject = async (req, res) => {
   try {
-
     const project = await Project.findById(req.params.id);
 
     if (!project) {
@@ -84,33 +82,28 @@ const deleteProject = async (req, res) => {
       success: true,
       message: "Project deleted.",
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
 const updateProject = async (req, res) => {
   try {
-    const { title, description } =
-      req.body;
+    const { title, description } = req.body;
 
-    const project =
-      await Project.findByIdAndUpdate(
-        req.params.id,
-        {
-          title,
-          description,
-        },
-        {
-          new: true,
-        }
-      );
+    const project = await Project.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        description,
+      },
+      {
+        new: true,
+      },
+    );
 
     res.status(200).json({
       success: true,
@@ -126,32 +119,27 @@ const updateProject = async (req, res) => {
 
 const selectTopic = async (req, res) => {
   try {
-
     const { topic } = req.body;
 
-    const project =
-      await Project.findByIdAndUpdate(
-        req.params.id,
-        {
-          selectedTopic: topic,
-        },
-        {
-          new: true,
-        }
-      );
+    const project = await Project.findByIdAndUpdate(
+      req.params.id,
+      {
+        selectedTopic: topic,
+      },
+      {
+        new: true,
+      },
+    );
 
     res.status(200).json({
       success: true,
       project,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 

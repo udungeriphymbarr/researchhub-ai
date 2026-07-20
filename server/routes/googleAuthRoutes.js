@@ -1,8 +1,6 @@
 const express = require("express");
 
-const {
-  googleLogin,
-} = require("../controllers/googleAuthController");
+const { googleLogin } = require("../controllers/googleAuthController");
 
 const router = express.Router();
 

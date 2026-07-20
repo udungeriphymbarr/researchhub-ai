@@ -7,35 +7,29 @@ const protect = require("../middleware/authMiddleware");
 const admin = require("../middleware/adminMiddleware");
 
 const {
+  getSettings,
 
-getSettings,
-
-updateSettings,
-
-}=require("../controllers/settingController");
+  updateSettings,
+} = require("../controllers/settingController");
 
 router.get(
+  "/",
 
-"/",
+  protect,
 
-protect,
+  admin,
 
-admin,
-
-getSettings
-
+  getSettings,
 );
 
 router.put(
+  "/",
 
-"/",
+  protect,
 
-protect,
+  admin,
 
-admin,
-
-updateSettings
-
+  updateSettings,
 );
 
 module.exports = router;

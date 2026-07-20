@@ -61,7 +61,6 @@ const userSchema = new mongoose.Schema(
 
     resetPasswordExpires: Date,
 
-
     // ===========================
     // SUBSCRIPTION
     // ===========================
@@ -115,7 +114,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("User", userSchema);
