@@ -7,6 +7,7 @@ import Testimonials from "../../components/landing/Testimonials";
 import FAQ from "../../components/landing/FAQ";
 import CTA from "../../components/landing/CTA";
 import { Navigate } from "react-router-dom";
+import SEO from "../../components/SEO";
 
 function Home() {
   const token = localStorage.getItem("token");
@@ -16,16 +17,24 @@ function Home() {
   }
 
   return (
-    <div className="bg-white overflow-hidden">
-      <Hero />
-      <Features />
-      <Workspace />
-      <WhyResearchHub />
-      <Pricing />
-      <Testimonials />
-      <FAQ />
-      <CTA />
-    </div>
+    <>
+      <SEO
+        title="ResearchHub AI | AI Research Assistant for Students"
+        description="Generate research topics, research questions, chapter outlines and access premium academic resources."
+        keywords="ResearchHub AI, research topics, project topics, AI research assistant, final year project"
+      />
+
+      <div className="bg-white overflow-hidden">
+        <Hero />
+        <Features />
+        <Workspace />
+        <WhyResearchHub />
+        <Pricing />
+        <Testimonials />
+        <FAQ />
+        <CTA />
+      </div>
+    </>
   );
 }
 
