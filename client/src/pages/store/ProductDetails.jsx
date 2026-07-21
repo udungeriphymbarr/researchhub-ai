@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import API from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import SEO from "../../components/SEO";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -208,15 +209,54 @@ function ProductDetails() {
     }
   };
 
+  const copyLink = async () => {
+    const link = window.location.href;
+
+    await navigator.clipboard.writeText(link);
+
+    Swal.fire({
+      icon: "success",
+
+      title: "Link copied!",
+
+      text: "You can now share this book.",
+    });
+  };
+
+  const shareBook = async () => {
+    const link = window.location.href;
+
+    if (navigator.share) {
+      await navigator.share({
+        title: product.title,
+
+        text: product.description,
+
+        url: link,
+      });
+    } else {
+      copyLink();
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 py-14">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-14">
-          <div className="flex justify-center">
-            <img
-              src={product.coverImage}
-              alt={product.title}
-              className="
+    <>
+      <SEO
+        title={`${product.title} | ResearchHub AI`}
+        description={product.description}
+        keywords={`${product.title}, ${product.category}, research guide`}
+        image={product.coverImage}
+        url={`https://researchhubai.vercel.app/store/${product._id}`}
+      />
+
+      <div className="min-h-screen bg-gray-100 py-14">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-14">
+            <div className="flex justify-center">
+              <img
+                src={product.coverImage}
+                alt={product.title}
+                className="
         w-full
         max-w-md
         rounded-3xl
@@ -225,11 +265,11 @@ function ProductDetails() {
         transition-all
         duration-300
         "
-            />
-          </div>
+              />
+            </div>
 
-          <span
-            className="
+            <span
+              className="
 inline-flex
 items-center
 bg-blue-100
@@ -241,132 +281,160 @@ text-sm
 font-semibold
 mb-5
 "
-          >
-            📘 {product.category}
-          </span>
+            >
+              📘 {product.category}
+            </span>
 
-          <div
-            className="
+            <div
+              className="
 flex
 items-center
 gap-2
 mb-6
 "
-          >
-            <span className="text-yellow-500">⭐</span>
+            >
+              <span className="text-yellow-500">⭐</span>
 
-            <p className="text-gray-600">Premium Research Resource</p>
-          </div>
-
-          <div>
-            <h1 className="text-4xl font-bold">{product.title}</h1>
-
-            <p className="text-lg leading-8 text-gray-600 mt-4 ">
-              {product.description}
-            </p>
-
-            <div className="mt-12">
-              <h2 className="text-2xl font-bold mb-6">Reviews</h2>
-
-              {reviews.length === 0 ? (
-                <p className="text-gray-500">No reviews yet.</p>
-              ) : (
-                reviews.map((review) => (
-                  <div key={review._id} className="border-b py-5">
-                    <div className="flex justify-between">
-                      <h3 className="font-semibold">{review.user.name}</h3>
-
-                      <span>⭐ {review.rating}</span>
-                    </div>
-
-                    <p className="text-gray-600 mt-2">{review.comment}</p>
-                  </div>
-                ))
-              )}
+              <p className="text-gray-600">Premium Research Resource</p>
             </div>
 
-            {owned && (
-              <div className="mt-12 bg-white rounded-2xl shadow p-6">
-                <h2 className="text-2xl font-bold mb-5">
-                  {myReview ? "Update Your Review" : "Leave a Review"}
-                </h2>
+            <div>
+              <h1 className="text-4xl font-bold">{product.title}</h1>
 
-                <select
-                  value={rating}
-                  onChange={(e) => setRating(Number(e.target.value))}
-                  className="w-full border rounded-lg p-3 mb-4"
+              <p className="text-lg leading-8 text-gray-600 mt-4 ">
+                {product.description}
+              </p>
+
+              <div className="mt-12">
+                <h2 className="text-2xl font-bold mb-6">Reviews</h2>
+
+                {reviews.length === 0 ? (
+                  <p className="text-gray-500">No reviews yet.</p>
+                ) : (
+                  reviews.map((review) => (
+                    <div key={review._id} className="border-b py-5">
+                      <div className="flex justify-between">
+                        <h3 className="font-semibold">{review.user.name}</h3>
+
+                        <span>⭐ {review.rating}</span>
+                      </div>
+
+                      <p className="text-gray-600 mt-2">{review.comment}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {owned && (
+                <div className="mt-12 bg-white rounded-2xl shadow p-6">
+                  <h2 className="text-2xl font-bold mb-5">
+                    {myReview ? "Update Your Review" : "Leave a Review"}
+                  </h2>
+
+                  <select
+                    value={rating}
+                    onChange={(e) => setRating(Number(e.target.value))}
+                    className="w-full border rounded-lg p-3 mb-4"
+                  >
+                    <option value={5}>⭐⭐⭐⭐⭐ Excellent</option>
+
+                    <option value={4}>⭐⭐⭐⭐ Very Good</option>
+
+                    <option value={3}>⭐⭐⭐ Good</option>
+
+                    <option value={2}>⭐⭐ Fair</option>
+
+                    <option value={1}>⭐ Poor</option>
+                  </select>
+
+                  <textarea
+                    rows="5"
+                    placeholder="Tell others about this resource..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full border rounded-lg p-4"
+                  />
+
+                  <button
+                    onClick={handleReview}
+                    className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+                  >
+                    {myReview ? "Update Review" : "Submit Review"}
+                  </button>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-3 mt-6">
+                <button
+                  onClick={copyLink}
+                  className="
+px-5
+py-3
+rounded-xl
+border
+hover:bg-gray-100
+"
                 >
-                  <option value={5}>⭐⭐⭐⭐⭐ Excellent</option>
-
-                  <option value={4}>⭐⭐⭐⭐ Very Good</option>
-
-                  <option value={3}>⭐⭐⭐ Good</option>
-
-                  <option value={2}>⭐⭐ Fair</option>
-
-                  <option value={1}>⭐ Poor</option>
-                </select>
-
-                <textarea
-                  rows="5"
-                  placeholder="Tell others about this resource..."
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  className="w-full border rounded-lg p-4"
-                />
+                  📋 Copy Link
+                </button>
 
                 <button
-                  onClick={handleReview}
-                  className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+                  onClick={shareBook}
+                  className="
+bg-blue-600
+hover:bg-blue-700
+text-white
+px-5
+py-3
+rounded-xl
+"
                 >
-                  {myReview ? "Update Review" : "Submit Review"}
+                  📤 Share
                 </button>
               </div>
-            )}
 
-            <div className="space-y-3 mt-8">
-              <div className="flex gap-3">
-                <span className="text-green-600">✔</span>
+              <div className="space-y-3 mt-8">
+                <div className="flex gap-3">
+                  <span className="text-green-600">✔</span>
 
-                <span>Instant Digital Download</span>
+                  <span>Instant Digital Download</span>
+                </div>
+
+                <div className="flex gap-3">
+                  <span className="text-green-600">✔</span>
+
+                  <span>Lifetime Access</span>
+                </div>
+
+                <div className="flex gap-3">
+                  <span className="text-green-600">✔</span>
+
+                  <span>Works on Mobile & PC</span>
+                </div>
+
+                <div className="flex gap-3">
+                  <span className="text-green-600">✔</span>
+
+                  <span>Unlimited Downloads</span>
+                </div>
               </div>
 
-              <div className="flex gap-3">
-                <span className="text-green-600">✔</span>
+              <div className="mt-10">
+                <p className="text-gray-500">Price</p>
 
-                <span>Lifetime Access</span>
-              </div>
-
-              <div className="flex gap-3">
-                <span className="text-green-600">✔</span>
-
-                <span>Works on Mobile & PC</span>
-              </div>
-
-              <div className="flex gap-3">
-                <span className="text-green-600">✔</span>
-
-                <span>Unlimited Downloads</span>
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <p className="text-gray-500">Price</p>
-
-              <h2
-                className="
+                <h2
+                  className="
 text-5xl
 font-extrabold
 text-blue-600
 "
-              >
-                ₦{product.price}
-              </h2>
-            </div>
+                >
+                  ₦{product.price}
+                </h2>
+              </div>
 
-            <button
-              onClick={handleBuyNow}
-              className="
+              <button
+                onClick={handleBuyNow}
+                className="
 mt-10
 w-full
 bg-gradient-to-r
@@ -384,24 +452,25 @@ duration-300
 shadow-lg
 hover:shadow-xl
 "
-            >
-              Buy Now
-            </button>
+              >
+                Buy Now
+              </button>
 
-            <p
-              className="
+              <p
+                className="
 text-sm
 text-gray-500
 text-center
 mt-4
 "
-            >
-              🔒 Secure payment powered by Paystack
-            </p>
+              >
+                🔒 Secure payment powered by Paystack
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

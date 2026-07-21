@@ -8,6 +8,7 @@ import FAQ from "../../components/landing/FAQ";
 import CTA from "../../components/landing/CTA";
 import { Navigate } from "react-router-dom";
 import SEO from "../../components/SEO";
+import StructuredData from "../../components/StructuredData";
 
 function Home() {
   const token = localStorage.getItem("token");
@@ -21,8 +22,11 @@ function Home() {
       <SEO
         title="ResearchHub AI | AI Research Assistant for Students"
         description="Generate research topics, research questions, chapter outlines and access premium academic resources."
-        keywords="ResearchHub AI, research topics, project topics, AI research assistant, final year project"
+        keywords="ResearchHub AI, research topics, AI research assistant"
+        url="https://researchhubai.vercel.app"
       />
+
+      <StructuredData />
 
       <div className="bg-white overflow-hidden">
         <Hero />

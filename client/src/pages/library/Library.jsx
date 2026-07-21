@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API, { authFetch } from "../../api/api";
 import { toast } from "react-toastify";
+import SEO from "../../components/SEO";
 
 function Library() {
   const [orders, setOrders] = useState([]);
@@ -41,39 +42,48 @@ function Library() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12">
-      <div className="max-w-6xl mx-auto px-6">
-        <h1 className="text-4xl font-bold mb-10">My Library</h1>
+    <>
+      <SEO
+        title="My Library | ResearchHub AI"
+        description="Access every book you've purchased from ResearchHub AI."
+        keywords="My Library, Purchased Books, ResearchHub AI"
+      />
 
-        {orders.length === 0 ? (
-          <div className="bg-white rounded-xl shadow p-10 text-center">
-            <h2 className="text-2xl font-semibold">No Purchases Yet</h2>
+      <div className="min-h-screen bg-gray-100 py-12">
+        <div className="max-w-6xl mx-auto px-6">
+          <h1 className="text-4xl font-bold mb-10">My Library</h1>
 
-            <p className="text-gray-500 mt-3">
-              Books you purchase will appear here.
-            </p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {orders
-              .filter((order) => order.product)
-              .map((order) => (
-                <div
-                  key={order._id}
-                  className="bg-white rounded-xl shadow overflow-hidden"
-                >
-                  <img
-                    src={order.product.coverImage}
-                    alt={order.product.title}
-                    className="w-full h-64 object-cover"
-                  />
+          {orders.length === 0 ? (
+            <div className="bg-white rounded-xl shadow p-10 text-center">
+              <h2 className="text-2xl font-semibold">No Purchases Yet</h2>
 
-                  <div className="p-6">
-                    <h2 className="font-bold text-xl">{order.product.title}</h2>
+              <p className="text-gray-500 mt-3">
+                Books you purchase will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {orders
+                .filter((order) => order.product)
+                .map((order) => (
+                  <div
+                    key={order._id}
+                    className="bg-white rounded-xl shadow overflow-hidden"
+                  >
+                    <img
+                      src={order.product.coverImage}
+                      alt={order.product.title}
+                      className="w-full h-64 object-cover"
+                    />
 
-                    <button
-                      onClick={() => handleDownload(order.product._id)}
-                      className="
+                    <div className="p-6">
+                      <h2 className="font-bold text-xl">
+                        {order.product.title}
+                      </h2>
+
+                      <button
+                        onClick={() => handleDownload(order.product._id)}
+                        className="
   mt-6
   bg-green-600
   hover:bg-green-700
@@ -82,16 +92,17 @@ function Library() {
   py-3
   rounded-lg
   "
-                    >
-                      Download
-                    </button>
+                      >
+                        Download
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-          </div>
-        )}
+                ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { authFetch } from "../../api/api";
 import { toast } from "react-toastify";
+import SEO from "../../components/SEO";
 
 function ResearchQuestions() {
   const [topic, setTopic] = useState("");
@@ -61,45 +62,55 @@ function ResearchQuestions() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-2">Research Questions Generator</h1>
+    <>
+      <SEO
+        title="Research Questions Generator"
+        description="Generate quality research questions for your final year project."
+        keywords="research questions, AI research"
+      />
 
-      <p className="text-gray-500 mb-8">
-        Generate AI-powered research questions, hypotheses and objectives.
-      </p>
+      <div className="min-h-screen bg-gray-100 p-8">
+        <h1 className="text-3xl font-bold mb-2">
+          Research Questions Generator
+        </h1>
 
-      <div className="bg-white p-6 rounded-xl shadow max-w-3xl">
-        <div className="mb-4">
-          <label className="block mb-2 font-medium">Research Topic</label>
+        <p className="text-gray-500 mb-8">
+          Generate AI-powered research questions, hypotheses and objectives.
+        </p>
 
-          <input
-            type="text"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="Enter research topic"
-            className="w-full border rounded-lg px-4 py-3"
-          />
-        </div>
+        <div className="bg-white p-6 rounded-xl shadow max-w-3xl">
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">Research Topic</label>
 
-        <button
-          onClick={generateQuestions}
-          disabled={loading}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {loading ? "Generating..." : "Generate"}
-        </button>
-
-        {result && (
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">AI Result</h2>
-
-            <div className="bg-gray-50 border rounded-xl p-6 whitespace-pre-wrap">
-              {result}
-            </div>
+            <input
+              type="text"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="Enter research topic"
+              className="w-full border rounded-lg px-4 py-3"
+            />
           </div>
-        )}
+
+          <button
+            onClick={generateQuestions}
+            disabled={loading}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+          >
+            {loading ? "Generating..." : "Generate"}
+          </button>
+
+          {result && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">AI Result</h2>
+
+              <div className="bg-gray-50 border rounded-xl p-6 whitespace-pre-wrap">
+                {result}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

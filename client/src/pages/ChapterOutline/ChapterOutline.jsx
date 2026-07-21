@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
+import SEO from "../../components/SEO";
 
 function ChapterOutline() {
   const [topic, setTopic] = useState("");
@@ -41,48 +42,56 @@ function ChapterOutline() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-2">Chapter Outline Generator</h1>
+    <>
+      <SEO
+        title="Chapter Outline Generator"
+        description="Generate Chapter One to Chapter Five outlines instantly."
+        keywords="chapter outline, research chapters"
+      />
 
-      <p className="text-gray-500 mb-8">
-        Generate a Chapter One structure for your research topic.
-      </p>
+      <div className="min-h-screen bg-gray-100 p-8">
+        <h1 className="text-3xl font-bold mb-2">Chapter Outline Generator</h1>
 
-      <div className="bg-white p-6 rounded-xl shadow max-w-2xl">
-        <div className="mb-4">
-          <label className="block mb-2 font-medium">Research Topic</label>
+        <p className="text-gray-500 mb-8">
+          Generate a Chapter One structure for your research topic.
+        </p>
 
-          <input
-            type="text"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="Enter your topic"
-            className="w-full border rounded-lg px-4 py-3"
-          />
-        </div>
+        <div className="bg-white p-6 rounded-xl shadow max-w-2xl">
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">Research Topic</label>
 
-        <button
-          onClick={generateOutline}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-        >
-          Generate Outline
-        </button>
-
-        {outline.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Chapter One</h2>
-
-            <ul className="space-y-3">
-              {outline.map((item, index) => (
-                <li key={index} className="bg-gray-50 border rounded-lg p-3">
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <input
+              type="text"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="Enter your topic"
+              className="w-full border rounded-lg px-4 py-3"
+            />
           </div>
-        )}
+
+          <button
+            onClick={generateOutline}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+          >
+            Generate Outline
+          </button>
+
+          {outline.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">Chapter One</h2>
+
+              <ul className="space-y-3">
+                {outline.map((item, index) => (
+                  <li key={index} className="bg-gray-50 border rounded-lg p-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

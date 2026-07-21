@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../../api/api";
 import { toast } from "react-toastify";
+import SEO from "../../components/SEO";
 
 function Subscription() {
   const [user, setUser] = useState(null);
@@ -31,60 +32,68 @@ function Subscription() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold mb-6">Subscription</h1>
+    <>
+      <SEO
+        title="ResearchHub Premium"
+        description="Unlock unlimited AI research tools and premium academic resources."
+        keywords="ResearchHub Premium, AI subscription"
+      />
 
-        <div className="border rounded-xl p-6">
-          <h2 className="text-xl font-bold">
-            {user.plan === "premium" ? "Premium Plan ⭐" : "Free Plan"}
-          </h2>
+      <div className="min-h-screen bg-gray-100 p-10">
+        <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
+          <h1 className="text-3xl font-bold mb-6">Subscription</h1>
 
-          {user.plan === "free" && (
-            <>
-              <p className="mt-5">AI Usage</p>
+          <div className="border rounded-xl p-6">
+            <h2 className="text-xl font-bold">
+              {user.plan === "premium" ? "Premium Plan ⭐" : "Free Plan"}
+            </h2>
 
-              <div className="w-full bg-gray-200 rounded-full h-4 mt-2">
-                <div
-                  className="bg-blue-600 h-4 rounded-full"
-                  style={{
-                    width: `${percentage}%`,
-                  }}
-                />
+            {user.plan === "free" && (
+              <>
+                <p className="mt-5">AI Usage</p>
+
+                <div className="w-full bg-gray-200 rounded-full h-4 mt-2">
+                  <div
+                    className="bg-blue-600 h-4 rounded-full"
+                    style={{
+                      width: `${percentage}%`,
+                    }}
+                  />
+                </div>
+
+                <p className="mt-2 text-gray-600">
+                  {user.usageCount} / 20 AI generations used
+                </p>
+              </>
+            )}
+
+            {user.plan === "premium" && (
+              <div className="mt-6">
+                <p className="text-green-600 font-semibold">
+                  Unlimited AI Access Enabled
+                </p>
               </div>
+            )}
+          </div>
 
-              <p className="mt-2 text-gray-600">
-                {user.usageCount} / 20 AI generations used
-              </p>
-            </>
-          )}
-
-          {user.plan === "premium" && (
-            <div className="mt-6">
-              <p className="text-green-600 font-semibold">
-                Unlimited AI Access Enabled
-              </p>
-            </div>
+          {user.plan === "premium" ? (
+            <button
+              disabled
+              className="bg-green-600 text-white px-6 py-3 rounded-lg cursor-default"
+            >
+              Premium Active ✅
+            </button>
+          ) : (
+            <button
+              onClick={upgrade}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg"
+            >
+              Upgrade to Premium
+            </button>
           )}
         </div>
-
-        {user.plan === "premium" ? (
-          <button
-            disabled
-            className="bg-green-600 text-white px-6 py-3 rounded-lg cursor-default"
-          >
-            Premium Active ✅
-          </button>
-        ) : (
-          <button
-            onClick={upgrade}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg"
-          >
-            Upgrade to Premium
-          </button>
-        )}
       </div>
-    </div>
+    </>
   );
 }
 
