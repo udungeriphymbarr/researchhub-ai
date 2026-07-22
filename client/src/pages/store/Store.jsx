@@ -49,7 +49,7 @@ function Store() {
         title="Research Books Store | ResearchHub AI"
         description="Download premium research books, SIWES guides, project templates and academic resources."
         keywords="research books, project guide, SIWES report, ResearchHub AI"
-        url="https://researchhubai.vercel.app/store"
+        url="https://researchhub-ai-one.vercel.app/store"
       />
 
       <div className="min-h-screen bg-gray-50 py-14">

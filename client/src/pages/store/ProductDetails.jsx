@@ -246,7 +246,7 @@ function ProductDetails() {
         description={product.description}
         keywords={`${product.title}, ${product.category}, research guide`}
         image={product.coverImage}
-        url={`https://researchhubai.vercel.app/store/${product._id}`}
+        url={`https://researchhub-ai-one.vercel.app/store/${product._id}`}
       />
 
       <div className="min-h-screen bg-gray-100 py-14">

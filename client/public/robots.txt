@@ -2,4 +2,4 @@ User-agent: *
 
 Allow: /
 
-Sitemap: https://researchhubai.vercel.app/sitemap.xml
+Sitemap: https://researchhub-ai-one.vercel.app/sitemap.xml
