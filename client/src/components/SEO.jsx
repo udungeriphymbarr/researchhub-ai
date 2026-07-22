@@ -19,7 +19,7 @@ function SEO({
 
       <meta name="keywords" content={keywords} />
 
-      <link rel="canonical" href={url} />
+      {url && <link rel="canonical" href={url} />}
 
       <meta
         name="google-site-verification"
@@ -30,9 +30,8 @@ function SEO({
 
       <meta property="og:description" content={description} />
 
-      <meta property="og:image" content={image} />
-
-      <meta property="og:url" content={url} />
+      {image && <meta property="og:image" content={image} />}
+      {url && <meta property="og:url" content={url} />}
 
       <meta property="og:type" content="website" />
 
