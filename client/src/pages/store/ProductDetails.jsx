@@ -4,6 +4,7 @@ import API from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import SEO from "../../components/SEO";
+import StructuredData from "../../components/StructuredData";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -239,6 +240,24 @@ function ProductDetails() {
     }
   };
 
+  const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: product.title,
+  image: product.coverImage,
+  description: product.description,
+  brand: {
+    "@type": "Brand",
+    name: "ResearchHub AI",
+  },
+  offers: {
+    "@type": "Offer",
+    price: product.price,
+    priceCurrency: "NGN",
+    availability: "https://schema.org/InStock",
+  },
+};
+
   return (
     <>
       <SEO
@@ -248,6 +267,8 @@ function ProductDetails() {
         image={product.coverImage}
         url={`https://researchhub-ai-one.vercel.app/store/${product._id}`}
       />
+
+      <StructuredData data={productSchema} />
 
       <div className="min-h-screen bg-gray-100 py-14">
         <div className="max-w-6xl mx-auto px-6">
