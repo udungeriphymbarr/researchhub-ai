@@ -44,6 +44,7 @@ import Users from "./pages/admin/Users";
 import Orders from "./pages/admin/Orders";
 import Categories from "./pages/admin/Categories";
 import Settings from "./pages/admin/Settings";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -249,6 +250,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="*" element={<NotFound />} />
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
 

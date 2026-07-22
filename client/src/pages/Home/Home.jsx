@@ -24,8 +24,8 @@ function Home() {
   url: "https://researchhub-ai-one.vercel.app",
   logo: "https://researchhub-ai-one.vercel.app/emotion.png",
   sameAs: [
-    "https://facebook.com/yourpage",
-    "https://linkedin.com/in/yourprofile"
+    "https://facebook.com/profile.php?id=100034652832161",
+    "https://linkedin.com/in/udungeri-phymbarr-137404400/"
   ]
 };
 
@@ -45,12 +45,20 @@ const websiteSchema = {
 const appSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "ResearchHub AI",
-  applicationCategory: "EducationalApplication",
-  operatingSystem: "Web",
-  url: "https://researchhub-ai-one.vercel.app",
-  description:
-    "AI-powered research assistant for students to generate research topics, questions, chapter outlines and access premium academic resources.",
+  "name": "ResearchHub AI",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web",
+  "url": "https://researchhub-ai-one.vercel.app",
+  "description": "AI-powered research assistant for students.",
+  "creator": {
+    "@type": "Organization",
+    "name": "ResearchHub AI"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "NGN"
+  }
 };
 
 const faqSchema = {
