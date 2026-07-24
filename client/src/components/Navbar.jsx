@@ -136,51 +136,64 @@ function Navbar() {
         <div className="md:hidden bg-white border-t px-4 py-4 flex flex-col gap-4">
           {!user ? (
             <>
-              <Link to="/" onClick={() => setMenuOpen(false)}>
+              <Link to="/" className="text-gray-700 hover:text-blue-600">
                 Home
               </Link>
 
-              <a href="#features" onClick={() => setMenuOpen(false)}>
+              <Link to="/store" className="text-gray-700 hover:text-blue-600">
+                Store
+              </Link>
+
+              <a href="#features" className="text-gray-700 hover:text-blue-600">
                 Features
               </a>
 
-              <a href="#pricing" onClick={() => setMenuOpen(false)}>
+              <a href="#pricing" className="text-gray-700 hover:text-blue-600">
                 Pricing
               </a>
 
-              <Link to="/login" onClick={() => setMenuOpen(false)}>
+              <Link to="/login" className="text-gray-700 hover:text-blue-600">
                 Login
               </Link>
 
               <Link
                 to="/signup"
-                onClick={() => setMenuOpen(false)}
-                className="bg-blue-600 text-white py-2 rounded-lg text-center"
+                className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
               >
                 Get Started
               </Link>
             </>
           ) : (
             <>
-              <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
+              <Link
+                to="/dashboard"
+                className="text-gray-700 hover:text-blue-600"
+              >
                 Dashboard
               </Link>
 
-              <Link to="/projects" onClick={() => setMenuOpen(false)}>
+              <Link to="/store" className="text-gray-700 hover:text-blue-600">
+                Store
+              </Link>
+
+              <Link to="/library" className="text-gray-700 hover:text-blue-600">
+                Library
+              </Link>
+
+              <Link
+                to="/projects"
+                className="text-gray-700 hover:text-blue-600"
+              >
                 Projects
               </Link>
 
-              <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              <Link to="/profile" className="text-gray-700 hover:text-blue-600">
                 Profile
-              </Link>
-
-              <Link to="/subscription" onClick={() => setMenuOpen(false)}>
-                Subscription
               </Link>
 
               <button
                 onClick={handleLogout}
-                className="bg-red-500 text-white py-2 rounded-lg"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
               >
                 Logout
               </button>
