@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import API from "../../api/api";
 
 function Signup() {
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const redirectTo = location.state?.from || "/dashboard";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -85,7 +89,23 @@ function Signup() {
         setPassword("");
         setConfirmPassword("");
 
-        navigate("/login");
+        const pendingPurchase = localStorage.getItem("pendingPurchase");
+
+        if (pendingPurchase) {
+          localStorage.removeItem("pendingPurchase");
+
+          sessionStorage.setItem("resumePurchase", pendingPurchase);
+
+          navigate("/login", {
+            state: {
+              from: `/store/${pendingPurchase}`,
+            },
+          });
+        } else {
+          navigate(redirectTo, {
+            replace: true,
+          });
+        }
       } else {
         Swal.fire({
           icon: "error",
@@ -196,7 +216,11 @@ function Signup() {
 
         <p className="text-center mt-6">
           Already have an account?
-          <Link to="/login" className="text-blue-600 font-semibold ml-2">
+          <Link
+            to="/login"
+            state={{ from: location.state?.from }}
+            className="text-blue-600 font-semibold ml-2"
+          >
             Login
           </Link>
         </p>

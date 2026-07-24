@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import API from "../../api/api";
@@ -8,6 +8,7 @@ import { auth, googleProvider } from "../../firebase/firebase";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +16,8 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  const redirectTo = location.state?.from || "/dashboard";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -48,7 +51,21 @@ function Login() {
           showConfirmButton: false,
         });
 
-        navigate("/dashboard");
+        const pendingPurchase = localStorage.getItem("pendingPurchase");
+
+        if (pendingPurchase) {
+          localStorage.removeItem("pendingPurchase");
+
+          sessionStorage.setItem("resumePurchase", pendingPurchase);
+
+          navigate(`/store/${pendingPurchase}`, {
+            replace: true,
+          });
+        } else {
+          navigate(redirectTo, {
+            replace: true,
+          });
+        }
       } else {
         Swal.fire({
           icon: "error",
@@ -102,7 +119,21 @@ function Login() {
           showConfirmButton: false,
         });
 
-        navigate("/dashboard");
+        const pendingPurchase = localStorage.getItem("pendingPurchase");
+
+        if (pendingPurchase) {
+          localStorage.removeItem("pendingPurchase");
+
+          sessionStorage.setItem("resumePurchase", pendingPurchase);
+
+          navigate(`/store/${pendingPurchase}`, {
+            replace: true,
+          });
+        } else {
+          navigate(redirectTo, {
+            replace: true,
+          });
+        }
       } else {
         Swal.fire({
           icon: "error",
@@ -198,7 +229,11 @@ function Login() {
 
         <p className="text-center mt-6">
           Don't have an account?
-          <Link to="/signup" className="text-blue-600 font-semibold ml-2">
+          <Link
+            to="/signup"
+            state={{ from: location.state?.from }}
+            className="text-blue-600 font-semibold ml-2"
+          >
             Sign Up
           </Link>
         </p>

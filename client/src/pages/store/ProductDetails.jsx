@@ -10,8 +10,11 @@ function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [resumePurchase, setResumePurchase] = useState(false);
+
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [myReview, setMyReview] = useState(null);
 
   const [owned, setOwned] = useState(false);
   const [rating, setRating] = useState(5);
@@ -22,7 +25,38 @@ function ProductDetails() {
     fetchReviews();
     checkOwnership();
     fetchMyReview();
+
+    const shouldResume = sessionStorage.getItem("resumePurchase");
+
+    if (shouldResume === id) {
+      setResumePurchase(true);
+      sessionStorage.removeItem("resumePurchase");
+    }
   }, [id]);
+
+  useEffect(() => {
+    if (!resumePurchase || !product) return;
+
+    Swal.fire({
+      title: "Continue Purchase?",
+
+      text: `Proceed to payment for "${product.title}"?`,
+
+      icon: "question",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Continue",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setResumePurchase(false);
+
+        handleBuyNow();
+      } else {
+        setResumePurchase(false);
+      }
+    });
+  }, [resumePurchase, product]);
 
   const fetchProduct = async () => {
     try {
@@ -153,15 +187,21 @@ function ProductDetails() {
       const token = localStorage.getItem("token");
 
       if (!token) {
+        localStorage.setItem("pendingPurchase", product._id);
+
         Swal.fire({
           icon: "warning",
-
           title: "Login Required",
-
-          text: "Please login to continue.",
+          text: "Please login or create an account to continue your purchase.",
         });
 
-        navigate("/login");
+        const redirectPath = `/store/${product._id}`;
+
+        navigate("/login", {
+          state: {
+            from: redirectPath,
+          },
+        });
 
         return;
       }
@@ -241,22 +281,22 @@ function ProductDetails() {
   };
 
   const productSchema = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  name: product.title,
-  image: product.coverImage,
-  description: product.description,
-  brand: {
-    "@type": "Brand",
-    name: "ResearchHub AI",
-  },
-  offers: {
-    "@type": "Offer",
-    price: product.price,
-    priceCurrency: "NGN",
-    availability: "https://schema.org/InStock",
-  },
-};
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    image: product.coverImage,
+    description: product.description,
+    brand: {
+      "@type": "Brand",
+      name: "ResearchHub AI",
+    },
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: "NGN",
+      availability: "https://schema.org/InStock",
+    },
+  };
 
   return (
     <>

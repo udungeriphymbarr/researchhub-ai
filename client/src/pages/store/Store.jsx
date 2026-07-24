@@ -11,7 +11,12 @@ function Store() {
 
   useEffect(() => {
     fetchProducts();
-    fetchPurchasedBooks();
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      fetchPurchasedBooks();
+    }
   }, []);
 
   const fetchProducts = async () => {
@@ -28,6 +33,10 @@ function Store() {
   };
 
   const fetchPurchasedBooks = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
     try {
       const response = await authFetch("/api/orders/my-orders");
 
