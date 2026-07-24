@@ -8,6 +8,9 @@ import {
 } from "react-icons/fa";
 
 function Hero() {
+
+  const token = localStorage.getItem("token");
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-100 min-h-screen flex items-center">
       {/* Background Blur */}
@@ -43,20 +46,21 @@ function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap gap-5">
-            <Link
-              to="/signup"
-              className="bg-blue-600 hover:bg-blue-700 transition text-white px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl"
-            >
-              Get Started
-              <FaArrowRight />
-            </Link>
+<Link
+  to={token ? "/dashboard" : "/signup"}
+  className="bg-blue-600 hover:bg-blue-700 transition text-white px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl"
+>
+  {token ? "Go to Dashboard" : "Get Started"}
 
-            <Link
-              to="/login"
-              className="bg-white hover:bg-gray-100 transition text-blue-600 border-2 border-blue-600 px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl"
-            >
-              Login
-            </Link>
+  <FaArrowRight />
+</Link>
+
+<Link
+  to="/store"
+  className="bg-white hover:bg-gray-100 transition text-blue-600 border-2 border-blue-600 px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl"
+>
+  Browse Resources
+</Link>
           </div>
 
           <div className="mt-12 flex items-center gap-4">

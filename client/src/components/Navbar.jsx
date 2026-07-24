@@ -49,10 +49,7 @@ function Navbar() {
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link
-          to={user ? "/dashboard" : "/"}
-          className="text-xl md:text-2xl font-bold text-blue-600"
-        >
+        <Link to="/" className="text-xl md:text-2xl font-bold text-blue-600">
           ResearchHub AI
         </Link>
 
@@ -62,6 +59,10 @@ function Navbar() {
             <>
               <Link to="/" className="text-gray-700 hover:text-blue-600">
                 Home
+              </Link>
+
+              <Link to="/store" className="text-gray-700 hover:text-blue-600">
+                Store
               </Link>
 
               <a href="#features" className="text-gray-700 hover:text-blue-600">
@@ -92,6 +93,14 @@ function Navbar() {
                 Dashboard
               </Link>
 
+              <Link to="/store" className="text-gray-700 hover:text-blue-600">
+                Store
+              </Link>
+
+              <Link to="/library" className="text-gray-700 hover:text-blue-600">
+                Library
+              </Link>
+
               <Link
                 to="/projects"
                 className="text-gray-700 hover:text-blue-600"
@@ -101,13 +110,6 @@ function Navbar() {
 
               <Link to="/profile" className="text-gray-700 hover:text-blue-600">
                 Profile
-              </Link>
-
-              <Link
-                to="/subscription"
-                className="text-gray-700 hover:text-blue-600"
-              >
-                Subscription
               </Link>
 
               <button

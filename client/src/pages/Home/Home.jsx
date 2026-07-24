@@ -11,11 +11,8 @@ import SEO from "../../components/SEO";
 import StructuredData from "../../components/StructuredData";
 
 function Home() {
-  const token = localStorage.getItem("token");
 
-  if (token) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  const token = localStorage.getItem("token");
 
   const organizationSchema = {
   "@context": "https://schema.org",
