@@ -28,6 +28,8 @@ const adminRoutes = require("./routes/adminRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const settingRoutes = require("./routes/settingRoutes");
 
+const blogRoutes = require("./routes/blogRoutes");
+
 const app = express();
 
 // Connect Database
@@ -56,6 +58,7 @@ app.use("/api/research", researchRoutes);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/blogs", blogRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", require("./routes/reviewRoutes"));
 app.use("/api/admin", adminRoutes);
