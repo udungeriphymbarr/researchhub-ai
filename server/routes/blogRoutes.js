@@ -9,6 +9,7 @@ const {
   getSingleBlog,
   updateBlog,
   deleteBlog,
+  getAdminBlogs,
 } = require("../controllers/blogController");
 
 const router = express.Router();
@@ -18,6 +19,8 @@ router.get("/", getBlogs);
 
 router.get("/featured", getFeaturedBlogs);
 
+router.get("/admin/all", protect, getAdminBlogs);
+
 router.get("/:slug", getSingleBlog);
 
 // Admin Routes
@@ -26,5 +29,6 @@ router.post("/", upload.single("cover"), createBlog);
 router.put("/:id", protect, updateBlog);
 
 router.delete("/:id", protect, deleteBlog);
+
 
 module.exports = router;

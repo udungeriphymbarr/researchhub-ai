@@ -217,6 +217,28 @@ const deleteBlog = async (req, res) => {
 
 };
 
+const getAdminBlogs = async (req, res) => {
+  try {
+
+    const blogs = await Blog.find()
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      blogs,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+    });
+
+  }
+};
+
 module.exports = {
   createBlog,
   getBlogs,
@@ -224,4 +246,5 @@ module.exports = {
   getSingleBlog,
   updateBlog,
   deleteBlog,
+  getAdminBlogs,
 };
