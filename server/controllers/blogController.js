@@ -239,6 +239,74 @@ const getAdminBlogs = async (req, res) => {
   }
 };
 
+const getBlogStats = async (req, res) => {
+  try {
+
+    const totalArticles = await Blog.countDocuments();
+
+    const published = await Blog.countDocuments({
+      published: true,
+    });
+
+    const drafts = await Blog.countDocuments({
+      published: false,
+    });
+
+    const featured = await Blog.countDocuments({
+      featured: true,
+    });
+
+    const totalViews = await Blog.aggregate([
+      {
+        $group: {
+          _id: null,
+          views: {
+            $sum: "$views",
+          },
+        },
+      },
+    ]);
+
+    const mostViewed = await Blog.findOne()
+      .sort({
+        views: -1,
+      });
+
+    res.json({
+      success: true,
+
+      stats: {
+
+        totalArticles,
+
+        published,
+
+        drafts,
+
+        featured,
+
+        totalViews:
+          totalViews.length > 0
+            ? totalViews[0].views
+            : 0,
+
+        mostViewed,
+
+      },
+
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+    });
+
+  }
+};
+
 module.exports = {
   createBlog,
   getBlogs,
@@ -247,4 +315,6 @@ module.exports = {
   updateBlog,
   deleteBlog,
   getAdminBlogs,
+  
+  getBlogStats,
 };
