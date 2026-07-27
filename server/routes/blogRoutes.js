@@ -1,4 +1,6 @@
 const express = require("express");
+const protect = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadProduct");
 
 const {
   createBlog,
@@ -19,10 +21,10 @@ router.get("/featured", getFeaturedBlogs);
 router.get("/:slug", getSingleBlog);
 
 // Admin Routes
-router.post("/", createBlog);
+router.post("/", upload.single("cover"), createBlog);
 
-router.put("/:id", updateBlog);
+router.put("/:id", protect, updateBlog);
 
-router.delete("/:id", deleteBlog);
+router.delete("/:id", protect, deleteBlog);
 
 module.exports = router;

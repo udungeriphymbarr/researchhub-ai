@@ -1,9 +1,62 @@
+const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
+const slugify = require("slugify");
 const Blog = require("../models/Blog");
 
-// Create Blog
+//Create Blog
 const createBlog = async (req, res) => {
   try {
-    const blog = await Blog.create(req.body);
+    const {
+      title,
+      excerpt,
+      category,
+      tags,
+      featured,
+      published,
+      readingTime,
+      content,
+    } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Cover image is required.",
+      });
+    }
+
+    // Temporary image path
+    const coverTemp = req.file.path;
+
+    // Upload to Cloudinary
+    const imageUpload = await cloudinary.uploader.upload(coverTemp, {
+      folder: "researchhub-articles",
+    });
+
+    const coverImage = imageUpload.secure_url;
+
+    // Delete local temp file
+    fs.unlinkSync(coverTemp);
+
+    // Generate slug
+    const slug = slugify(title, {
+      lower: true,
+      strict: true,
+    });
+
+    const blog = await Blog.create({
+      title,
+      slug,
+      excerpt,
+      category,
+      coverImage,
+      content,
+      readingTime,
+
+      featured: featured === "true",
+      published: published === "true",
+
+      tags: tags ? JSON.parse(tags) : [],
+    });
 
     res.status(201).json({
       success: true,
@@ -15,7 +68,7 @@ const createBlog = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Unable to create article.",
+      message: "Unable to publish article.",
     });
   }
 };
