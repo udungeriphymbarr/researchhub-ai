@@ -127,25 +127,24 @@ const getFeaturedBlogs = async (req, res) => {
 
 // Get Single Blog
 const getSingleBlog = async (req, res) => {
-
   try {
-
     const blog = await Blog.findOne({
       slug: req.params.slug,
     });
 
     if (!blog) {
-
       return res.status(404).json({
         success: false,
-        message: "Article not found.",
+        message: "Article not found",
       });
-
     }
 
-    blog.views += 1;
+    const viewed = req.headers["x-viewed"];
 
-    await blog.save();
+    if (!viewed) {
+      blog.views += 1;
+      await blog.save();
+    }
 
     res.json({
       success: true,
