@@ -28,9 +28,14 @@ router.get("/admin/stats", protect, getBlogStats);
 router.get("/:slug", getSingleBlog);
 
 // Admin Routes
-router.post("/", upload.single("cover"), createBlog);
+router.post(
+  "/",
+  protect,
+  upload.single("cover"),
+  createBlog
+);
 
-router.put("/:id", protect, updateBlog);
+router.put("/:id", protect, upload.single("cover"), updateBlog);
 
 router.delete("/:id", protect, deleteBlog);
 
