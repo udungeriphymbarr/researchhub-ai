@@ -37,6 +37,7 @@ function Subscription() {
         title="ResearchHub Premium"
         description="Unlock unlimited AI research tools and premium academic resources."
         keywords="ResearchHub Premium, AI subscription"
+        url={`https://researchhub-ai-one.vercel.app/subscription`}
       />
 
       <div className="min-h-screen bg-gray-100 p-10">

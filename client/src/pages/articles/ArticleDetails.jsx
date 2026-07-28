@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import API from "../../api/api";
+import SEO from "../../components/SEO";
 import { FaFacebookF, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 
 import { Link2 } from "lucide-react";
@@ -128,6 +129,13 @@ function ArticleDetails() {
 
   return (
     <>
+      <SEO
+        title={article.title}
+        description={article.excerpt}
+        keywords={`${article.category}, research, project writing, ResearchHub AI`}
+        image={article.coverImage}
+      />
+
       <div
         className="fixed top-0 left-0 z-50 h-1 bg-blue-600 transition-all duration-150"
         style={{

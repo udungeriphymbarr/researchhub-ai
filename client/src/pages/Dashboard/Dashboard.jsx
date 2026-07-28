@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API, { authFetch } from "../../api/api";
 import UserCard from "./UserCard";
+import SEO from "../../components/SEO";
 import {
   FaFolderOpen,
   FaBook,
@@ -80,20 +81,27 @@ function Dashboard() {
     navigate("/login");
   };
 
-if (loading) {
-  return <PageLoader />;
-}
+  if (loading) {
+    return <PageLoader />;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      {/* Welcome */}
+    <>
+      <SEO
+        title="ResearchHub Dashboard | ResearchHub AI"
+        description="Start your research journey here, getting all academic resources and findind the right articles."
+        keywords="research questions, premium research books, academic papers, ResearchHub AI"
+        url={`https://researchhub-ai-one.vercel.app/dashboard`}
+      />
+      <div className="min-h-screen bg-gray-100 p-8">
+        {/* Welcome */}
 
-      {/* ===========================
+        {/* ===========================
     Hero Dashboard
 =========================== */}
 
-      <div
-        className="
+        <div
+          className="
   relative
   overflow-hidden
   rounded-3xl
@@ -106,42 +114,42 @@ if (loading) {
   mb-10
   shadow-xl
 "
-      >
-        {/* Decorative Blur */}
+        >
+          {/* Decorative Blur */}
 
-        <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
 
-        <div className="absolute -bottom-20 -left-16 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-16 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl"></div>
 
-        <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-          {/* LEFT */}
+          <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+            {/* LEFT */}
 
-          <div>
-            <p className="uppercase tracking-widest text-sm opacity-80 mb-2">
-              ResearchHub AI Workspace
-            </p>
+            <div>
+              <p className="uppercase tracking-widest text-sm opacity-80 mb-2">
+                ResearchHub AI Workspace
+              </p>
 
-            <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
-              Welcome back,
-              <br />
-              {user?.name}
-            </h1>
+              <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
+                Welcome back,
+                <br />
+                {user?.name}
+              </h1>
 
-            <p className="mt-5 max-w-xl text-white/90 leading-7">
-              Continue building your research project, generate academic
-              content, manage your purchased books, and complete your work
-              faster with AI.
-            </p>
+              <p className="mt-5 max-w-xl text-white/90 leading-7">
+                Continue building your research project, generate academic
+                content, manage your purchased books, and complete your work
+                faster with AI.
+              </p>
 
-            <div className="flex flex-wrap gap-3 mt-6">
-              {user.plan === "premium" ? (
-                <span className="bg-yellow-400 text-black px-4 py-2 rounded-full font-semibold">
-                  👑 Premium Active
-                </span>
-              ) : (
-                <Link
-                  to="/subscription"
-                  className="
+              <div className="flex flex-wrap gap-3 mt-6">
+                {user.plan === "premium" ? (
+                  <span className="bg-yellow-400 text-black px-4 py-2 rounded-full font-semibold">
+                    👑 Premium Active
+                  </span>
+                ) : (
+                  <Link
+                    to="/subscription"
+                    className="
             bg-yellow-400
             hover:bg-yellow-300
             text-black
@@ -151,17 +159,17 @@ if (loading) {
             font-semibold
             transition
             "
-                >
-                  Upgrade to Premium
-                </Link>
-              )}
+                  >
+                    Upgrade to Premium
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* RIGHT */}
+            {/* RIGHT */}
 
-          <div
-            className="
+            <div
+              className="
       bg-white/10
       backdrop-blur-md
       rounded-2xl
@@ -170,226 +178,142 @@ if (loading) {
       border
       border-white/20
       "
-          >
-            <h3 className="font-semibold text-lg mb-5">Workspace Overview</h3>
+            >
+              <h3 className="font-semibold text-lg mb-5">Workspace Overview</h3>
 
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span>Projects</span>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span>Projects</span>
 
-                <span className="font-bold">{stats.projects}</span>
-              </div>
+                  <span className="font-bold">{stats.projects}</span>
+                </div>
 
-              <div className="flex justify-between">
-                <span>Topics Generated</span>
+                <div className="flex justify-between">
+                  <span>Topics Generated</span>
 
-                <span className="font-bold">{stats.topics}</span>
-              </div>
+                  <span className="font-bold">{stats.topics}</span>
+                </div>
 
-              <div className="flex justify-between">
-                <span>Research Questions</span>
+                <div className="flex justify-between">
+                  <span>Research Questions</span>
 
-                <span className="font-bold">{stats.questions}</span>
-              </div>
+                  <span className="font-bold">{stats.questions}</span>
+                </div>
 
-              <div className="flex justify-between">
-                <span>Chapter Outlines</span>
+                <div className="flex justify-between">
+                  <span>Chapter Outlines</span>
 
-                <span className="font-bold">{stats.outlines}</span>
+                  <span className="font-bold">{stats.outlines}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <UserCard />
+        <UserCard />
 
-      {/* ===========================
+        {/* ===========================
     Statistics
 =========================== */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-12">
-        {/* Topics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-12">
+          {/* Topics */}
 
-        <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
-          <div className="flex justify-between items-center">
-            <FaBook size={28} />
+          <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
+            <div className="flex justify-between items-center">
+              <FaBook size={28} />
 
-            <span className="text-xs opacity-80">Topics</span>
+              <span className="text-xs opacity-80">Topics</span>
+            </div>
+
+            <h2 className="text-4xl font-bold mt-6">{stats.topics}</h2>
+
+            <p className="text-sm mt-2 opacity-80">Research topics generated</p>
           </div>
-
-          <h2 className="text-4xl font-bold mt-6">{stats.topics}</h2>
-
-          <p className="text-sm mt-2 opacity-80">Research topics generated</p>
-        </div>
-
-        {/* Questions */}
-
-        <div className="bg-gradient-to-br from-green-500 to-emerald-700 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
-          <div className="flex justify-between">
-            <FaQuestionCircle size={28} />
-
-            <span className="text-xs opacity-80">Questions</span>
-          </div>
-
-          <h2 className="text-4xl font-bold mt-6">{stats.questions}</h2>
-
-          <p className="text-sm mt-2 opacity-80">AI research questions</p>
-        </div>
-
-        {/* Outlines */}
-
-        <div className="bg-gradient-to-br from-purple-500 to-indigo-700 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
-          <div className="flex justify-between">
-            <BsStars size={28} />
-
-            <span className="text-xs opacity-80">Outlines</span>
-          </div>
-
-          <h2 className="text-4xl font-bold mt-6">{stats.outlines}</h2>
-
-          <p className="text-sm mt-2 opacity-80">Chapter outlines created</p>
-        </div>
-
-        {/* Projects */}
-
-        <div className="bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
-          <div className="flex justify-between">
-            <FaProjectDiagram size={28} />
-
-            <span className="text-xs opacity-80">Projects</span>
-          </div>
-
-          <h2 className="text-4xl font-bold mt-6">{stats.projects}</h2>
-
-          <p className="text-sm mt-2 opacity-80">Active research projects</p>
-        </div>
-
-        {/* Premium */}
-
-        <div className="bg-gradient-to-br from-yellow-400 to-orange-500 text-black rounded-2xl p-6 shadow-lg hover:scale-105 transition">
-          <div className="flex justify-between">
-            👑
-            <span className="text-xs font-semibold">Membership</span>
-          </div>
-
-          <h2 className="text-2xl font-bold mt-6">
-            {user.plan === "premium" ? "Premium" : "Free"}
-          </h2>
-
-          <p className="text-sm mt-2">
-            {user.plan === "premium"
-              ? "Unlimited AI access"
-              : "Upgrade available"}
-          </p>
-        </div>
-      </div>
-
-      {/* ===========================
-    AI Workspace
-=========================== */}
-
-      <div className="mb-14">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-3xl font-bold">AI Workspace</h2>
-
-            <p className="text-gray-500 mt-1">
-              Create research content faster using AI.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {/* Topic */}
-
-          <Link
-            to="/topic-generator"
-            className="
-      group
-      bg-white
-      rounded-2xl
-      p-6
-      shadow
-      hover:shadow-xl
-      transition
-      hover:-translate-y-1
-      "
-          >
-            <div className="text-4xl mb-5">🚀</div>
-
-            <h3 className="font-bold text-xl">Topic Generator</h3>
-
-            <p className="text-gray-500 mt-2">
-              Generate unique research topics instantly.
-            </p>
-
-            <span className="inline-block mt-6 text-blue-600 font-semibold group-hover:translate-x-1 transition">
-              Open →
-            </span>
-          </Link>
 
           {/* Questions */}
 
-          <Link
-            to="/research-questions"
-            className="
-      group
-      bg-white
-      rounded-2xl
-      p-6
-      shadow
-      hover:shadow-xl
-      transition
-      hover:-translate-y-1
-      "
-          >
-            <div className="text-4xl mb-5">❓</div>
+          <div className="bg-gradient-to-br from-green-500 to-emerald-700 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
+            <div className="flex justify-between">
+              <FaQuestionCircle size={28} />
 
-            <h3 className="font-bold text-xl">Research Questions</h3>
+              <span className="text-xs opacity-80">Questions</span>
+            </div>
 
-            <p className="text-gray-500 mt-2">
-              Generate quality research questions.
-            </p>
+            <h2 className="text-4xl font-bold mt-6">{stats.questions}</h2>
 
-            <span className="inline-block mt-6 text-green-600 font-semibold group-hover:translate-x-1 transition">
-              Open →
-            </span>
-          </Link>
+            <p className="text-sm mt-2 opacity-80">AI research questions</p>
+          </div>
 
-          {/* Literature */}
+          {/* Outlines */}
 
-          <Link
-            to="/literature-review"
-            className="
-      group
-      bg-white
-      rounded-2xl
-      p-6
-      shadow
-      hover:shadow-xl
-      transition
-      hover:-translate-y-1
-      "
-          >
-            <div className="text-4xl mb-5">📚</div>
+          <div className="bg-gradient-to-br from-purple-500 to-indigo-700 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
+            <div className="flex justify-between">
+              <BsStars size={28} />
 
-            <h3 className="font-bold text-xl">Literature Review</h3>
+              <span className="text-xs opacity-80">Outlines</span>
+            </div>
 
-            <p className="text-gray-500 mt-2">
-              Build your literature review with AI.
-            </p>
+            <h2 className="text-4xl font-bold mt-6">{stats.outlines}</h2>
 
-            <span className="inline-block mt-6 text-purple-600 font-semibold group-hover:translate-x-1 transition">
-              Open →
-            </span>
-          </Link>
+            <p className="text-sm mt-2 opacity-80">Chapter outlines created</p>
+          </div>
 
           {/* Projects */}
 
-          <Link
-            to="/projects"
-            className="
+          <div className="bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-2xl p-6 shadow-lg hover:scale-105 transition">
+            <div className="flex justify-between">
+              <FaProjectDiagram size={28} />
+
+              <span className="text-xs opacity-80">Projects</span>
+            </div>
+
+            <h2 className="text-4xl font-bold mt-6">{stats.projects}</h2>
+
+            <p className="text-sm mt-2 opacity-80">Active research projects</p>
+          </div>
+
+          {/* Premium */}
+
+          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 text-black rounded-2xl p-6 shadow-lg hover:scale-105 transition">
+            <div className="flex justify-between">
+              👑
+              <span className="text-xs font-semibold">Membership</span>
+            </div>
+
+            <h2 className="text-2xl font-bold mt-6">
+              {user.plan === "premium" ? "Premium" : "Free"}
+            </h2>
+
+            <p className="text-sm mt-2">
+              {user.plan === "premium"
+                ? "Unlimited AI access"
+                : "Upgrade available"}
+            </p>
+          </div>
+        </div>
+
+        {/* ===========================
+    AI Workspace
+=========================== */}
+
+        <div className="mb-14">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-3xl font-bold">AI Workspace</h2>
+
+              <p className="text-gray-500 mt-1">
+                Create research content faster using AI.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {/* Topic */}
+
+            <Link
+              to="/topic-generator"
+              className="
       group
       bg-white
       rounded-2xl
@@ -399,41 +323,125 @@ if (loading) {
       transition
       hover:-translate-y-1
       "
-          >
-            <div className="text-4xl mb-5">📁</div>
+            >
+              <div className="text-4xl mb-5">🚀</div>
 
-            <h3 className="font-bold text-xl">My Projects</h3>
+              <h3 className="font-bold text-xl">Topic Generator</h3>
 
-            <p className="text-gray-500 mt-2">
-              Continue working on saved projects.
-            </p>
+              <p className="text-gray-500 mt-2">
+                Generate unique research topics instantly.
+              </p>
 
-            <span className="inline-block mt-6 text-orange-600 font-semibold group-hover:translate-x-1 transition">
-              Open →
-            </span>
-          </Link>
+              <span className="inline-block mt-6 text-blue-600 font-semibold group-hover:translate-x-1 transition">
+                Open →
+              </span>
+            </Link>
+
+            {/* Questions */}
+
+            <Link
+              to="/research-questions"
+              className="
+      group
+      bg-white
+      rounded-2xl
+      p-6
+      shadow
+      hover:shadow-xl
+      transition
+      hover:-translate-y-1
+      "
+            >
+              <div className="text-4xl mb-5">❓</div>
+
+              <h3 className="font-bold text-xl">Research Questions</h3>
+
+              <p className="text-gray-500 mt-2">
+                Generate quality research questions.
+              </p>
+
+              <span className="inline-block mt-6 text-green-600 font-semibold group-hover:translate-x-1 transition">
+                Open →
+              </span>
+            </Link>
+
+            {/* Literature */}
+
+            <Link
+              to="/literature-review"
+              className="
+      group
+      bg-white
+      rounded-2xl
+      p-6
+      shadow
+      hover:shadow-xl
+      transition
+      hover:-translate-y-1
+      "
+            >
+              <div className="text-4xl mb-5">📚</div>
+
+              <h3 className="font-bold text-xl">Literature Review</h3>
+
+              <p className="text-gray-500 mt-2">
+                Build your literature review with AI.
+              </p>
+
+              <span className="inline-block mt-6 text-purple-600 font-semibold group-hover:translate-x-1 transition">
+                Open →
+              </span>
+            </Link>
+
+            {/* Projects */}
+
+            <Link
+              to="/projects"
+              className="
+      group
+      bg-white
+      rounded-2xl
+      p-6
+      shadow
+      hover:shadow-xl
+      transition
+      hover:-translate-y-1
+      "
+            >
+              <div className="text-4xl mb-5">📁</div>
+
+              <h3 className="font-bold text-xl">My Projects</h3>
+
+              <p className="text-gray-500 mt-2">
+                Continue working on saved projects.
+              </p>
+
+              <span className="inline-block mt-6 text-orange-600 font-semibold group-hover:translate-x-1 transition">
+                Open →
+              </span>
+            </Link>
+          </div>
         </div>
-      </div>
 
-      {/* ===========================
+        {/* ===========================
     Research Resources
 =========================== */}
 
-      <div className="mb-14">
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold">Research Resources</h2>
+        <div className="mb-14">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold">Research Resources</h2>
 
-          <p className="text-gray-500 mt-1">
-            Access your purchased books, saved work and AI history.
-          </p>
-        </div>
+            <p className="text-gray-500 mt-1">
+              Access your purchased books, saved work and AI history.
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {/* Store */}
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {/* Store */}
 
-          <Link
-            to="/store"
-            className="
+            <Link
+              to="/store"
+              className="
       bg-gradient-to-br
       from-sky-500
       to-blue-700
@@ -444,21 +452,21 @@ if (loading) {
       hover:scale-105
       transition
       "
-          >
-            <div className="text-5xl mb-5">🛒</div>
+            >
+              <div className="text-5xl mb-5">🛒</div>
 
-            <h3 className="text-xl font-bold">Store</h3>
+              <h3 className="text-xl font-bold">Store</h3>
 
-            <p className="mt-2 text-white/90">
-              Browse premium books, guides and research resources.
-            </p>
-          </Link>
+              <p className="mt-2 text-white/90">
+                Browse premium books, guides and research resources.
+              </p>
+            </Link>
 
-          {/* Library */}
+            {/* Library */}
 
-          <Link
-            to="/library"
-            className="
+            <Link
+              to="/library"
+              className="
       bg-gradient-to-br
       from-emerald-500
       to-green-700
@@ -469,21 +477,21 @@ if (loading) {
       hover:scale-105
       transition
       "
-          >
-            <div className="text-5xl mb-5">📚</div>
+            >
+              <div className="text-5xl mb-5">📚</div>
 
-            <h3 className="text-xl font-bold">My Library</h3>
+              <h3 className="text-xl font-bold">My Library</h3>
 
-            <p className="mt-2 text-white/90">
-              Download every book you've purchased.
-            </p>
-          </Link>
+              <p className="mt-2 text-white/90">
+                Download every book you've purchased.
+              </p>
+            </Link>
 
-          {/* History */}
+            {/* History */}
 
-          <Link
-            to="/history"
-            className="
+            <Link
+              to="/history"
+              className="
       bg-gradient-to-br
       from-violet-500
       to-purple-700
@@ -494,21 +502,21 @@ if (loading) {
       hover:scale-105
       transition
       "
-          >
-            <div className="text-5xl mb-5">🕘</div>
+            >
+              <div className="text-5xl mb-5">🕘</div>
 
-            <h3 className="text-xl font-bold">History</h3>
+              <h3 className="text-xl font-bold">History</h3>
 
-            <p className="mt-2 text-white/90">
-              Review previous AI generations.
-            </p>
-          </Link>
+              <p className="mt-2 text-white/90">
+                Review previous AI generations.
+              </p>
+            </Link>
 
-          {/* Projects */}
+            {/* Projects */}
 
-          <Link
-            to="/projects"
-            className="
+            <Link
+              to="/projects"
+              className="
       bg-gradient-to-br
       from-orange-500
       to-red-600
@@ -519,110 +527,111 @@ if (loading) {
       hover:scale-105
       transition
       "
+            >
+              <div className="text-5xl mb-5">📂</div>
+
+              <h3 className="text-xl font-bold">Projects</h3>
+
+              <p className="mt-2 text-white/90">
+                Organize and continue your research projects.
+              </p>
+            </Link>
+          </div>
+        </div>
+
+        {/* ===========================
+    AI Research Toolkit
+=========================== */}
+
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold">AI Research Toolkit</h2>
+
+          <p className="text-gray-500 mt-2">
+            Generate every section of your research project with AI assistance.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <Link
+            to="/problem-statement"
+            className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
           >
-            <div className="text-5xl mb-5">📂</div>
+            <div className="text-4xl mb-4">💡</div>
 
-            <h3 className="text-xl font-bold">Projects</h3>
+            <h3 className="font-bold text-xl">Problem Statement</h3>
 
-            <p className="mt-2 text-white/90">
-              Organize and continue your research projects.
+            <p className="text-gray-500 mt-2">
+              Generate a compelling research problem.
+            </p>
+          </Link>
+
+          <Link
+            to="/objectives"
+            className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
+          >
+            <div className="text-4xl mb-4">🎯</div>
+
+            <h3 className="font-bold text-xl">Objectives</h3>
+
+            <p className="text-gray-500 mt-2">
+              Create research objectives aligned with your topic.
+            </p>
+          </Link>
+
+          <Link
+            to="/methodology"
+            className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
+          >
+            <div className="text-4xl mb-4">🧪</div>
+
+            <h3 className="font-bold text-xl">Methodology</h3>
+
+            <p className="text-gray-500 mt-2">
+              Build a complete research methodology.
+            </p>
+          </Link>
+
+          <Link
+            to="/significance"
+            className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
+          >
+            <div className="text-4xl mb-4">🌍</div>
+
+            <h3 className="font-bold text-xl">Significance</h3>
+
+            <p className="text-gray-500 mt-2">
+              Explain the importance of your study.
+            </p>
+          </Link>
+
+          <Link
+            to="/abstract"
+            className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
+          >
+            <div className="text-4xl mb-4">📝</div>
+
+            <h3 className="font-bold text-xl">Abstract</h3>
+
+            <p className="text-gray-500 mt-2">
+              Generate a concise academic abstract.
+            </p>
+          </Link>
+
+          <Link
+            to="/chapter-outline"
+            className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
+          >
+            <div className="text-4xl mb-4">📑</div>
+
+            <h3 className="font-bold text-xl">Chapter Outline</h3>
+
+            <p className="text-gray-500 mt-2">
+              Produce a complete chapter structure.
             </p>
           </Link>
         </div>
       </div>
-
-      {/* ===========================
-    AI Research Toolkit
-=========================== */}
-
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold">AI Research Toolkit</h2>
-
-        <p className="text-gray-500 mt-2">
-          Generate every section of your research project with AI assistance.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <Link
-          to="/problem-statement"
-          className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
-        >
-          <div className="text-4xl mb-4">💡</div>
-
-          <h3 className="font-bold text-xl">Problem Statement</h3>
-
-          <p className="text-gray-500 mt-2">
-            Generate a compelling research problem.
-          </p>
-        </Link>
-
-        <Link
-          to="/objectives"
-          className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
-        >
-          <div className="text-4xl mb-4">🎯</div>
-
-          <h3 className="font-bold text-xl">Objectives</h3>
-
-          <p className="text-gray-500 mt-2">
-            Create research objectives aligned with your topic.
-          </p>
-        </Link>
-
-        <Link
-          to="/methodology"
-          className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
-        >
-          <div className="text-4xl mb-4">🧪</div>
-
-          <h3 className="font-bold text-xl">Methodology</h3>
-
-          <p className="text-gray-500 mt-2">
-            Build a complete research methodology.
-          </p>
-        </Link>
-
-        <Link
-          to="/significance"
-          className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
-        >
-          <div className="text-4xl mb-4">🌍</div>
-
-          <h3 className="font-bold text-xl">Significance</h3>
-
-          <p className="text-gray-500 mt-2">
-            Explain the importance of your study.
-          </p>
-        </Link>
-
-        <Link
-          to="/abstract"
-          className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
-        >
-          <div className="text-4xl mb-4">📝</div>
-
-          <h3 className="font-bold text-xl">Abstract</h3>
-
-          <p className="text-gray-500 mt-2">
-            Generate a concise academic abstract.
-          </p>
-        </Link>
-
-        <Link
-          to="/chapter-outline"
-          className="bg-white rounded-2xl shadow p-6 hover:shadow-xl transition"
-        >
-          <div className="text-4xl mb-4">📑</div>
-
-          <h3 className="font-bold text-xl">Chapter Outline</h3>
-
-          <p className="text-gray-500 mt-2">
-            Produce a complete chapter structure.
-          </p>
-        </Link>
-      </div>
-    </div>
+    </>
   );
 }
 

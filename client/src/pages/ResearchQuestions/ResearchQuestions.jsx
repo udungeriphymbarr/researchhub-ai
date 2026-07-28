@@ -67,6 +67,7 @@ function ResearchQuestions() {
         title="Research Questions Generator"
         description="Generate quality research questions for your final year project."
         keywords="research questions, AI research"
+        url={`https://researchhub-ai-one.vercel.app/research-questions`}
       />
 
       <div className="min-h-screen bg-gray-100 p-8">

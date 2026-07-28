@@ -47,6 +47,7 @@ function Library() {
         title="My Library | ResearchHub AI"
         description="Access every book you've purchased from ResearchHub AI."
         keywords="My Library, Purchased Books, ResearchHub AI"
+        url={`https://researchhub-ai-one.vercel.app/library`}
       />
 
       <div className="min-h-screen bg-gray-100 py-12">
