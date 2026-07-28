@@ -36,7 +36,7 @@ function ResearchQuestions() {
         const user = JSON.parse(localStorage.getItem("user"));
 
         if (user) {
-          await fetch(`${API}/api/generations`, {
+          await authFetch("/api/generations", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
