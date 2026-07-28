@@ -7,6 +7,7 @@ import {
   ShoppingCart,
   Users,
   Settings,
+  Newspaper,
 } from "lucide-react";
 
 function Sidebar({ closeSidebar }) {
@@ -40,6 +41,11 @@ function Sidebar({ closeSidebar }) {
       name: "Users",
       path: "/admin/users",
       icon: Users,
+    },
+        {
+      name: "Articles",
+      path: "/admin/articles",
+      icon: Newspaper,
     },
     {
       name: "Settings",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { authFetch } from "../../api/api";
+import API, { authFetch } from "../../api/api";
 
 import StatCard from "../../components/admin/StatCard";
 import AdminTopbar from "../../components/admin/AdminTopbar";
@@ -17,13 +17,37 @@ function AdminDashboard() {
 
   const [stats, setStats] = useState({});
 
+  const [blogStats, setBlogStats] = useState(null);
+
   const [recentUsers, setRecentUsers] = useState([]);
 
   const [recentOrders, setRecentOrders] = useState([]);
 
   useEffect(() => {
     fetchDashboard();
+
+    fetchBlogStats();
   }, []);
+
+  const fetchBlogStats = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${API}/api/blogs/admin/stats`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setBlogStats(data.stats);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchDashboard = async () => {
     try {
@@ -101,6 +125,57 @@ function AdminDashboard() {
           icon={<Wallet size={30} />}
           color="red"
         />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-6">
+        <StatCard
+          title="Articles"
+          value={(blogStats?.totalArticles || 0).toLocaleString()}
+          icon={<BookOpen size={30} />}
+          color="indigo"
+        />
+
+        <StatCard
+          title="Published"
+          value={(blogStats?.published || 0).toLocaleString()}
+          icon={<BookOpen size={30} />}
+          color="green"
+        />
+
+        <StatCard
+          title="Drafts"
+          value={(blogStats?.drafts || 0).toLocaleString()}
+          icon={<BookOpen size={30} />}
+          color="yellow"
+        />
+
+        <StatCard
+          title="Featured"
+          value={(blogStats?.featured || 0).toLocaleString()}
+          icon={<BookOpen size={30} />}
+          color="purple"
+        />
+
+        <StatCard
+          title="Views"
+          value={(blogStats?.totalViews || 0).toLocaleString()}
+          icon={<Users size={30} />}
+          color="blue"
+        />
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow mt-8">
+        <h3 className="font-bold text-lg">
+          {blogStats?.mostViewed?.title || "No articles yet"}
+        </h3>
+
+        <p className="text-gray-500 mt-2">
+          Category: {blogStats?.mostViewed?.category || "-"}
+        </p>
+
+        <p className="text-blue-600 mt-2 font-semibold">
+          👁 {(blogStats?.mostViewed?.views || 0).toLocaleString()} Views
+        </p>
       </div>
 
       {/* Recent Activity */}

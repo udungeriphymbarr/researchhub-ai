@@ -17,7 +17,7 @@ function ResearchQuestions() {
     try {
       setLoading(true);
 
-      const response = await fetch(`${API}/api/ai/generate`, {
+      const response = await authFetch(`/api/ai/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

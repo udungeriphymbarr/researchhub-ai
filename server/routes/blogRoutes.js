@@ -10,7 +10,7 @@ const {
   updateBlog,
   deleteBlog,
   getAdminBlogs,
-
+  getRelatedBlogs,
   getBlogStats,
 } = require("../controllers/blogController");
 
@@ -25,15 +25,12 @@ router.get("/admin/all", protect, getAdminBlogs);
 
 router.get("/admin/stats", protect, getBlogStats);
 
+router.get("/related/:id", getRelatedBlogs);
+
 router.get("/:slug", getSingleBlog);
 
 // Admin Routes
-router.post(
-  "/",
-  protect,
-  upload.single("cover"),
-  createBlog
-);
+router.post("/", protect, upload.single("cover"), createBlog);
 
 router.put("/:id", protect, upload.single("cover"), updateBlog);
 

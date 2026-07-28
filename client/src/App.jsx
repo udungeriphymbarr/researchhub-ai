@@ -46,6 +46,10 @@ import Categories from "./pages/admin/Categories";
 import Settings from "./pages/admin/Settings";
 import NotFound from "./pages/NotFound";
 
+import Articles from "./pages/articles/Articles";
+import ArticleDetails from "./pages/articles/ArticleDetails";
+import AdminArticles from "./pages/admin/AdminArticles";
+
 function App() {
   return (
     <>
@@ -235,6 +239,8 @@ function App() {
 
           <Route path="categories" element={<Categories />} />
 
+          <Route path="articles" element={<AdminArticles />} />
+
           <Route path="settings" element={<Settings />} />
         </Route>
 
@@ -250,6 +256,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/articles" element={<Articles />} />
+
+        <Route path="/articles/:slug" element={<ArticleDetails />} />
 
         <Route path="*" element={<NotFound />} />
 

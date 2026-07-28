@@ -73,6 +73,13 @@ function Navbar() {
                 Pricing
               </a>
 
+              <Link
+                to="/articles"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                Articles
+              </Link>
+
               <Link to="/login" className="text-gray-700 hover:text-blue-600">
                 Login
               </Link>
@@ -106,6 +113,13 @@ function Navbar() {
                 className="text-gray-700 hover:text-blue-600"
               >
                 Projects
+              </Link>
+
+              <Link
+                to="/articles"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                Articles
               </Link>
 
               <Link to="/profile" className="text-gray-700 hover:text-blue-600">
@@ -152,6 +166,13 @@ function Navbar() {
                 Pricing
               </a>
 
+              <Link
+                to="/articles"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                Articles
+              </Link>
+
               <Link to="/login" className="text-gray-700 hover:text-blue-600">
                 Login
               </Link>
@@ -185,6 +206,13 @@ function Navbar() {
                 className="text-gray-700 hover:text-blue-600"
               >
                 Projects
+              </Link>
+
+              <Link
+                to="/articles"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                Articles
               </Link>
 
               <Link to="/profile" className="text-gray-700 hover:text-blue-600">

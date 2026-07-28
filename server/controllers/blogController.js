@@ -307,14 +307,49 @@ const getBlogStats = async (req, res) => {
   }
 };
 
+// Related Articles
+const getRelatedBlogs = async (req, res) => {
+  try {
+
+    const currentBlog = await Blog.findById(req.params.id);
+
+    if (!currentBlog) {
+      return res.status(404).json({
+        success: false,
+        message: "Article not found",
+      });
+    }
+
+    const blogs = await Blog.find({
+      _id: { $ne: currentBlog._id },
+      published: true,
+      category: currentBlog.category,
+    })
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    res.json({
+      success: true,
+      blogs,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+    });
+  }
+};
+
 module.exports = {
   createBlog,
   getBlogs,
   getFeaturedBlogs,
+  getRelatedBlogs,
   getSingleBlog,
   updateBlog,
   deleteBlog,
   getAdminBlogs,
-  
   getBlogStats,
 };
