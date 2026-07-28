@@ -9,6 +9,8 @@ import {
   FaProjectDiagram,
 } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
+import DashboardSkeleton from "../../components/common/PageLoader";
+import PageLoader from "../../components/common/PageLoader";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -78,21 +80,9 @@ function Dashboard() {
     navigate("/login");
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen p-8 bg-gray-100">
-        <div className="animate-pulse">
-          <div className="h-32 rounded-3xl bg-gray-300 mb-8"></div>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="h-32 rounded-2xl bg-gray-300" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+if (loading) {
+  return <PageLoader />;
+}
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
