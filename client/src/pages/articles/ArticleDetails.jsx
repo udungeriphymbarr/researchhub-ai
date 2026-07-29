@@ -130,10 +130,36 @@ function ArticleDetails() {
   return (
     <>
       <SEO
-        title={article.title}
+        title={`${article.title} | ResearchHub AI`}
         description={article.excerpt}
-        keywords={`${article.category}, research, project writing, ResearchHub AI`}
+        keywords={`${article.category}, research, project writing, AI research, ${article.tags?.join(", ")}`}
         image={article.coverImage}
+        url={`https://researchhub-ai-one.vercel.app/articles/${article.slug}`}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: article.title,
+          description: article.excerpt,
+          image: article.coverImage,
+          author: {
+            "@type": "Organization",
+            name: "ResearchHub AI",
+          },
+          publisher: {
+            "@type": "Person",
+            name: article.author || "ResearchHub AI",
+            logo: {
+              "@type": "ImageObject",
+              url: "https://researchhub-ai-one.vercel.app/logo.png",
+            },
+          },
+          datePublished: article.createdAt,
+          dateModified: article.updatedAt,
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://researchhub-ai-one.vercel.app/articles/${article.slug}`,
+          },
+        }}
       />
 
       <div

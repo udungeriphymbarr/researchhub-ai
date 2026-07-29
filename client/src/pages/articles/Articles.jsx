@@ -10,11 +10,11 @@ function Articles() {
   return (
     <>
       <SEO
-        title={`${article.title} | ResearchHub AI`}
-        description={article.excerpt}
-        keywords={`${article.category}, research, project writing, AI research, ${article.tags?.join(", ")}`}
-        image={article.coverImage}
-        url={`https://researchhub-ai-one.vercel.app/articles/${article.slug}`}
+        title="Research Articles | ResearchHub AI"
+        description="Read practical articles on research writing, AI tools, project guides, academic success and final year tips."
+        keywords="research articles, project writing, AI for students, final year project, ResearchHub AI"
+        image="https://researchhub-ai-one.vercel.app/logo.png"
+        url="https://researchhub-ai-one.vercel.app/articles"
       />
 
       <div className="bg-gray-50 min-h-screen">

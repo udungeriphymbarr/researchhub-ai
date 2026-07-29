@@ -164,7 +164,6 @@ function ArticleForm({ editingArticle, setEditingArticle }) {
 
         <input
           name="slug"
-          readOnly
           placeholder="Slug"
           value={form.slug}
           onChange={handleChange}
@@ -242,6 +241,7 @@ function ArticleForm({ editingArticle, setEditingArticle }) {
               "lists",
               "link",
               "image",
+              "paste",
               "charmap",
               "preview",
               "anchor",
@@ -263,6 +263,10 @@ function ArticleForm({ editingArticle, setEditingArticle }) {
               "bullist numlist outdent indent | " +
               "link image media table | " +
               "removeformat code fullscreen preview",
+
+            paste_as_text: false,
+            paste_merge_formats: true,
+            paste_remove_styles_if_webkit: true,
 
             branding: false,
           }}
