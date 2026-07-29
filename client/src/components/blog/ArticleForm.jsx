@@ -254,13 +254,21 @@ function ArticleForm({ editingArticle, setEditingArticle }) {
               "emoticons",
             ],
 
+            content_style: `
+body{
+    font-family: Arial, sans-serif;
+    font-size:16px;
+    line-height:1.8;
+}
+`,
+
             toolbar:
               "undo redo | blocks | " +
               "bold italic underline | " +
-              "h1 h2 h3 | " +
-              "alignleft aligncenter alignright | " +
+              "alignleft aligncenter alignright alignjustify | " +
               "bullist numlist | " +
-              "blockquote | table | link image media | code preview fullscreen",
+              "blockquote | table | link image media | " +
+              "removeformat code fullscreen preview",
 
             paste_as_text: false,
             paste_merge_formats: true,

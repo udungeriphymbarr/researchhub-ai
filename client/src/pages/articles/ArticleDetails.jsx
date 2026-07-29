@@ -238,20 +238,38 @@ text-xl
 
           <div
             className="
-prose
-prose-lg
-lg:prose-xl
-max-w-none
-mt-12 
+    prose
+    prose-lg
+    lg:prose-xl
+    max-w-none
+    mt-12
 
-prose-headings:text-slate-900
-prose-p:text-slate-700
-prose-p:leading-8
-prose-img:rounded-2xl
-prose-img:shadow-lg
-prose-a:text-blue-600
-prose-blockquote:border-blue-500
-"
+    prose-slate
+
+    prose-headings:font-bold
+    prose-headings:tracking-tight
+
+    prose-p:leading-8
+
+    prose-a:text-blue-600
+    prose-a:no-underline
+    hover:prose-a:underline
+
+    prose-img:rounded-2xl
+    prose-img:shadow-lg
+
+    prose-blockquote:border-blue-600
+    prose-blockquote:bg-blue-50
+    prose-blockquote:px-4
+    prose-blockquote:py-2
+
+    prose-code:text-pink-600
+    prose-pre:bg-slate-900
+
+    prose-table:border
+    prose-th:border
+    prose-td:border
+  "
             dangerouslySetInnerHTML={{
               __html: article.content,
             }}
