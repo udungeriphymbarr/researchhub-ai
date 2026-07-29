@@ -241,7 +241,6 @@ function ArticleForm({ editingArticle, setEditingArticle }) {
               "lists",
               "link",
               "image",
-              "paste",
               "charmap",
               "preview",
               "anchor",
