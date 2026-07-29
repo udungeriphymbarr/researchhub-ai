@@ -242,7 +242,7 @@ prose
 prose-lg
 lg:prose-xl
 max-w-none
-mt-12
+mt-12 
 
 prose-headings:text-slate-900
 prose-p:text-slate-700

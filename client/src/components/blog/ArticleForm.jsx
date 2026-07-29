@@ -241,27 +241,26 @@ function ArticleForm({ editingArticle, setEditingArticle }) {
               "lists",
               "link",
               "image",
-              "charmap",
-              "preview",
-              "anchor",
-              "searchreplace",
-              "visualblocks",
-              "code",
-              "fullscreen",
-              "insertdatetime",
               "media",
               "table",
-              "help",
+              "code",
+              "fullscreen",
+              "preview",
+              "anchor",
+              "charmap",
+              "searchreplace",
+              "visualblocks",
               "wordcount",
+              "emoticons",
             ],
 
             toolbar:
-              "undo redo | formatselect | " +
-              "bold italic underline forecolor | " +
-              "alignleft aligncenter alignright alignjustify | " +
-              "bullist numlist outdent indent | " +
-              "link image media table | " +
-              "removeformat code fullscreen preview",
+              "undo redo | blocks | " +
+              "bold italic underline | " +
+              "h1 h2 h3 | " +
+              "alignleft aligncenter alignright | " +
+              "bullist numlist | " +
+              "blockquote | table | link image media | code preview fullscreen",
 
             paste_as_text: false,
             paste_merge_formats: true,
